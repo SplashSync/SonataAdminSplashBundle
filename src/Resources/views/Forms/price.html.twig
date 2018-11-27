@@ -1,0 +1,23 @@
+
+{#
+    Rendering of Splash Prices From Fields 
+#}
+{% block price_row %}
+    <div class="row margin-10" id="{{ form.vars.id }}">
+            <div class="col-xs-3 text-left">
+                {{ form_label(form) }}
+            </div>
+
+            <div class="col-xs-3 text-center">
+                {{ form_row(form.children.ht) }}
+            </div>
+
+            <div class="col-xs-3 text-center">
+                {{ form_row(form.children.vat) }}
+            </div>
+
+            <div class="col-xs-3 text-center">
+                {{ form_row(form.children.code) }}
+            </div>
+    </div>
+{% endblock %}

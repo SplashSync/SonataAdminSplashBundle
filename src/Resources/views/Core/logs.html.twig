@@ -1,0 +1,14 @@
+
+{% if log is defined and log is not empty %}
+    <section class="content" style="min-height: 10px;">
+        <div class="row">
+            <div class="col-xs-12 col-md-12">
+                <div class="box box-primary" style="margin-bottom: 10px;">
+                    <div class="box-body">
+                        {{ log | raw }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>    
+{% endif %}

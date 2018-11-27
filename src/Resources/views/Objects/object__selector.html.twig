@@ -1,0 +1,9 @@
+<div class="btn-block">
+    {% for type, object in objects %}
+        <a href="{{ admin.generateUrl('switch', { "ObjectType" : type} ) }}" 
+           class="btn navbar-btn btn-sm {% if app.request.session.get("ObjectType") | default("") == type %}btn-primary{% else %}btn-default{% endif %}">
+            <i class="{{ object.icon }}">&nbsp;</i>
+            {{ object.name }}
+        </a>
+    {% endfor %}
+</div>

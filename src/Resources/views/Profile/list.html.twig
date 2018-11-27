@@ -1,0 +1,85 @@
+{#
+
+This file is part of the Sonata package.
+
+(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+
+{% extends "@SonataAdmin/CRUD/base_list.html.twig" %}
+
+{%- block actions -%}
+
+{#    {% include '@SonataAdmin/CRUD/action_buttons.html.twig' %}#}
+{%- endblock -%}
+
+{#{%- block tab_menu -%}
+    {{ knp_menu_render(admin.sidemenu(action), {
+        'currentClass': 'active',
+        'template': get_global_template('tab_menu_template')
+    }, 'twig') }}
+{%- endblock -%}
+#}
+{% block title %}
+    {{ profile.title | default('No Connector Title Defined') }}
+    {#
+        The list template can be used in nested mode,
+        so we define the title corresponding to the parent's admin.
+    #}
+    {% if admin.isChild and admin.parent.subject %}
+        {{ "title_edit"|trans({'%name%': admin.parent.toString(admin.parent.subject)|truncate(15) }, 'SonataAdminBundle') }}
+    {% endif %}
+{% endblock %}
+
+{% block navbar_title %}
+    {{ block('title') }}
+{% endblock %}
+
+{% block list_table %}
+
+{% endblock %}
+
+{% block list_filters_actions %}
+
+{% endblock %}
+
+{% block list_filters %}
+    
+    <div class="col-xs-12 col-md-6">
+        
+        {% include "@AppExplorer/Profile/Blocks/idcard.html.twig" %}
+        
+        {% include "@AppExplorer/Profile/Blocks/infos.html.twig" %}
+        
+    </div>
+    
+    <div class="col-xs-12 col-md-6">
+        
+        {% include "@AppExplorer/Profile/Blocks/objects.html.twig" %}
+                
+        {% include "@AppExplorer/Profile/Blocks/test.html.twig" with { 
+                "result"    : results.selftest,
+                "title"     : 'Self-Test of Connector',
+                "log"       : selftest
+        } %}
+
+        {% include "@AppExplorer/Profile/Blocks/test.html.twig" with { 
+                "result"    : results.ping,
+                "title"     : 'Ping from Connector',
+                "log"       : ping
+        } %}
+
+        {% include "@AppExplorer/Profile/Blocks/test.html.twig" with { 
+                "result"    : results.connect,
+                "title"     : 'Connect from Connector',
+                "log"       : connect
+        } %}
+        
+    </div>
+
+    
+    
+{% endblock %}

@@ -1,0 +1,83 @@
+{#
+
+This file is part of the Sonata package.
+
+(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+
+{% extends "@SonataAdmin/CRUD/base_list.html.twig" %}
+{% import   "AppExplorerBundle:Macros:fields.html.twig"   as  Fields %}
+
+{%- block actions -%}
+    {% include '@SonataAdmin/CRUD/action_buttons.html.twig' %}
+{%- endblock -%}
+
+{%- block tab_menu -%}
+{%- endblock -%}
+
+{% block title %}
+    Explore Objects
+{% endblock %}
+
+{% block navbar_title %}
+    {{ block('title') }}
+{% endblock %}
+
+{% block list_table %}
+
+    {% include "@AppExplorer/Core/logs.html.twig" %}
+    
+    <section class="content">
+        <div class="row">
+            <div class="col-xs-12 col-md-12">
+                <div class="box box-primary" style="margin-bottom: 100px;">
+                    <div class="box-body table-responsive no-padding">
+                        <table class="table table-bordered table-striped table-hover sonata-ba-list">
+
+                            <thead>
+                                <tr class="sonata-ba-list-field-header">
+                                    <th class="sonata-ba-list-field-header">Id</th>
+                                {% for field in fields if field.inlist is not empty and field.inlist != "0" %}
+                                    <th class="sonata-ba-list-field-header">{{ field.name }}</th>
+                                {% endfor %}
+                                    <th class="sonata-ba-list-field-header pull-right">Actions</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for object in list %}
+                                <tr>
+                                        <td class="sonata-ba-list-field">{{ object.id | default("No ID???")}}</td>
+                                    {% for field in fields if field.inlist is not empty and field.inlist != "0" %}
+                                        <td class="sonata-ba-list-field">{{ Fields.data(field.type, object[field.id], admin) }}</td>
+                                    {% endfor %}
+                                        <td class="sonata-ba-list-field pull-right">
+                                            {% include "@AppExplorer/Objects/show_button.html.twig" %}
+                                            &nbsp;
+                                            {% include "@AppExplorer/Objects/edit_button.html.twig" %}
+                                            &nbsp;
+                                            {% include "@AppExplorer/Objects/delete_button.html.twig" %}
+                                        </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>     
+        
+{% endblock %}
+
+{% block list_filters_actions %}
+    {% include "@AppExplorer/Objects/object__selector.html.twig" %}
+{% endblock %}
+
+{% block list_filters %}
+{% endblock %}

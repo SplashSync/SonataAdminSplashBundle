@@ -1,0 +1,88 @@
+{#
+
+This file is part of the Sonata package.
+
+(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+
+{% extends "@SonataAdmin/CRUD/base_show.html.twig" %}
+{% import   "AppExplorerBundle:Macros:fields.html.twig"   as  Fields %}
+
+{% block title %}
+    {{ "title_show"|trans({'%name%': object.name|truncate(25) }, 'SonataAdminBundle') }}
+{% endblock %}
+
+{% block navbar_title %}
+    {{ block('title') }}
+{% endblock %}
+
+{%- block actions -%}
+{#    {% include '@SonataAdmin/CRUD/action_buttons.html.twig' %}#}
+{%- endblock -%}
+
+{% block tab_menu %}
+    {{ knp_menu_render(admin.sidemenu(action), {
+        'currentClass' : 'active',
+        'template': get_global_template('tab_menu_template')
+    }, 'twig') }}
+{% endblock %}
+
+{% block show %}
+
+    {% include "@AppExplorer/Core/logs.html.twig" %}
+    
+    <section class="content">
+        <div class="row">
+            <div class="col-xs-12 col-md-12">
+                <div class="box box-primary" style="margin-bottom: 100px;">
+                    <div class="box-body table-responsive no-padding">
+                        <table class="table table-bordered table-striped table-hover sonata-ba-list">
+
+                            <thead>
+                                <tr class="sonata-ba-list-field-header">
+                                    <th class="sonata-ba-list-field-header">Id</th>
+                                    <th class="sonata-ba-list-field-header">Tags</th>
+                                    <th class="sonata-ba-list-field-header">Type</th>
+                                    <th class="sonata-ba-list-field-header">Name</th>
+                                    <th class="sonata-ba-list-field-header">Metadata</th>
+                                    <th class="sonata-ba-list-field-header">Description</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                {% for field in fields %}
+                                <tr>
+                                    <td class="sonata-ba-list-field sonata-ba-list-field-batch">{{ field.id }}</td>
+                                    <td class="sonata-ba-list-field sonata-ba-list-field-batch">{{ Fields.flags(field) }}</td>
+                                    <td class="sonata-ba-list-field sonata-ba-list-field-batch">{{ Fields.format(field.type) }}</td>
+                                    <td class="sonata-ba-list-field sonata-ba-list-field-batch">{{ field.name }}</td>
+                                    <td class="sonata-ba-list-field sonata-ba-list-field-batch">
+                                        <a href="http://{{ field.itemtype }}" target="_blank">
+                                            <i class="fa fa-external-link-square"></i>
+                                            {{ field.itemtype }}&nbsp;:&nbsp;{{ field.itemprop }}
+                                        </a>
+                                    </td>
+                                    <td class="sonata-ba-list-field sonata-ba-list-field-batch">{{ field.desc }}</td>
+                                </tr>
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>    
+
+    <script>
+        $(function () {
+            $('[data-toggle="popover"]').popover();
+        })
+    </script>
+{% endblock %}

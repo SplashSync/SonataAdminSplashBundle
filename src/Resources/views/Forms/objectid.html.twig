@@ -1,0 +1,13 @@
+
+{#
+    Rendering of Splash Object Id From Fields 
+#}
+{% block object_id_widget %}
+    <div class="input-group col-xs-12"> 
+        <span class="input-group-addon label-primary">
+            <i class="fa fa-tag">&nbsp;{{ form.children.ObjectType.vars.data }}</i>
+        </span> 
+        {{ form_widget(form.children.ObjectId) }}
+    </div>    
+    {{ form_widget(form.children.ObjectType) }}
+{% endblock %}

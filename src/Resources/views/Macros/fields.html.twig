@@ -1,0 +1,348 @@
+
+{#
+    Generate an Html Field Format Block
+#}
+{% macro format(type,compact) %}
+    <!-- Objects Identifier Fields Format Block -->
+    {% if type | isListField() == true %}
+        {% set name = type | getListFieldName() %}
+        {% set type = type | getListFieldData() %}
+        {% if compact is empty %}
+            <span rel="popover-hover" data-original-title title data-placement="top" data-html="TRUE" data-content="{{ ('fields.lists.tooltip')|trans({}, 'AppExplorerBundle') }}">
+                <span class="label label-success">
+                    <i class="fa {{ ('fields.lists.ico')|trans({}, 'AppExplorerBundle')|raw }}"></i>
+                </span>
+            </span>&nbsp;>&nbsp;
+        {% endif %}
+    {% endif %}
+    <!-- End Objects Identifier Fields Format Block -->
+
+    <!-- Objects Identifier Fields Format Block -->
+    {% if type | isIdField() == true %}
+        {% set type = type | objectType() %}
+        <span rel="popover-hover" data-original-title title data-placement="top" data-html="TRUE" data-content="{{ ('fields.id.tooltip')|trans({}, 'AppExplorerBundle') }}">
+            <span class="label label-primary">
+                <i class="fa {{ ('fields.id.ico')|trans({}, 'AppExplorerBundle')|raw }}">
+                {% if compact is empty %}
+                    &nbsp;{{ type|default('fields.id.desc')|trans({}, 'AppExplorerBundle')|raw }}
+                {% endif %}
+                </i>
+            </span>
+        </span>
+    <!-- End Objects Identifier Fields Format Block -->
+
+    <!-- General/Simple Objects Fields Format Block -->
+    {% else %}
+        <span rel="popover-hover" data-original-title title data-placement="top" data-toggle="popover"  data-html="TRUE" data-content="{{ ('fields.'~type~'.tooltip')|trans({}, 'AppExplorerBundle') }}">
+            <span class="label label-info">
+                <i class="fa {{ ('fields.'~type|lower~'.ico')|trans({}, 'AppExplorerBundle')|raw }}">
+                {% if compact is empty %}
+                    &nbsp;{{ ('fields.'~type|lower~'.label')|trans({}, 'AppExplorerBundle')|raw }}
+                {% endif %}
+                </i>
+            </span>
+        </span>
+    {% endif %}
+    <!-- End General/Simple Objects Fields Format Block -->
+{% endmacro %}
+
+{#
+    Generate an Html Field Name Block
+#}
+{#{% macro name(name,isToSync) %}
+    {% if isToSync is defined and isToSync != 0 %}
+        <i class="fa fa-exclamation text-danger"></i><b>&nbsp;{{ name | raw }}</b>
+    {% else %}                     
+        {{ name | raw }}
+    {% endif %}     
+{% endmacro %}#}
+
+{#
+    Generate an Html Field Label Block
+#}
+{% macro label(name) %}
+
+    {% if name is not empty %}
+        <span class="label label-info">{{ name }}</span>
+    {% endif %}
+    
+{% endmacro %}
+
+{#
+    Generate an Html Field Data Block
+#}
+{% macro data(Format, Data, Admin) %}
+    
+    <!-- Identify List Fields Types -->
+    {% if Format | isListField() == true %}
+        {% set Format = Format | getListFieldData() %}
+    {% endif %}
+
+    <!-- Identify Objects Fields Types -->
+    {% if Format | isIdField() == true %}
+        {% set Format = Format | objectId() %}
+    {% endif %}
+
+    <!-- Objects Fields Data Block -->
+    {% if Format is empty %}
+        
+        <span class="text-danger"><i class="fa fa-envelope"></i>&nbsp;No Field Format Defined!</span>
+        
+    {% elseif Format == "varchar" or Format == "text" %}
+        
+        {% if Data is not iterable %}
+            {{ Data | truncate(250) }}       
+        {% else %}
+            <span class="text-danger"><i class="fa fa-envelope"></i>&nbsp; Wrong Field Format!</span>
+        {% endif %}
+        
+
+    {% elseif Format == "mvarchar" or Format == "mtext" %}
+
+        <ul class="list-unstyled">
+            {% for key, value in Data %}
+                {% set flag = key|split('_', 2) %}
+                {% set flagUrl = "bundles/appexplorer/flags/1x1/" ~ (flag[1]|default(flag[0]|default("")) | lower) ~ ".svg" %}
+                <li>
+                    <img src="{{ asset(flagUrl) }}" width="15px">
+                    {% if value is not iterable %}
+                        &nbsp;{{ value | truncate(250) }}       
+                    {% else %}
+                        <span class="text-danger"><i class="fa fa-envelope"></i>&nbsp;Wrong Field Format!</span>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>    
+        
+    {% elseif Format == "country" %}
+        
+        {% if Data  %}
+            {% set flagUrl = "bundles/appexplorer/flags/1x1/" ~ (Data | lower) ~ ".svg" %}
+                
+            <img src="{{ asset(flagUrl) }}" width="15px">
+            &nbsp;{{ Data | truncate(10) }}
+        {% endif %}        
+        
+    {% elseif Format == "currency" %}
+        
+        {{ Data }}
+
+    {% elseif Format == "state" %}
+        
+        <i class="fa fa-flag-o"></i>&nbsp;{{ Data }}
+        
+    {% elseif Format == "lang" %}
+        
+        {% set flag = Data|split('_', 2) %}
+        {% set flagUrl = "bundles/appexplorer/flags/1x1/" ~ (flag[1]|default(flag[0]|default("")) | lower) ~ ".svg" %}
+        <img src="{{ asset(flagUrl) }}" width="15px">
+        &nbsp;{{ Data }}
+        
+    {% elseif Format == "phone" %}
+      
+        {% if Data  %}
+            <i class="fa fa-phone"></i>&nbsp;{{ Data }}
+        {% endif %}        
+
+    {% elseif Format == "email" %}
+      
+        <a href="mailto:{{ Data }}">
+            <i class="fa fa-envelope"></i>&nbsp;{{ Data }}
+        </a>
+
+    {% elseif Format == "url" %}
+      
+        {% if Data  %}
+            <a href="{{ Data }}" target="_blank">
+                <i class="fa fa-external-link-square"></i>&nbsp;{{ Data }}
+            </a>
+        {% endif %}        
+
+    {% elseif Format == "date" or Format == "datetime"%}
+      
+        {% if Data  %}
+            <i class="fa fa-clock-o"></i>&nbsp;{{ Data }}
+        {% endif %}        
+
+    {% elseif Format == "objectid" %}
+        
+        {% if Data is not empty and Data | isIdField() %}
+            
+            <a href="{{ Admin.generateUrl('edit', {"id": Data | objectId, "ObjectType":Data | objectType | default(null) } ) }}">
+                <span class="label label-primary font-sm">
+                    <i class="fa fa-link"></i>&nbsp;&nbsp;
+                    {{ Data | objectType }}
+                </span>
+                &nbsp;&nbsp;
+                {{ Data | objectId }}
+            </a>
+        {% endif %}        
+
+    {% elseif Format == "price" %}
+        
+        {% if Data.code is defined %}
+            
+            {% if Data.ttc is defined %}
+                {% if Data.ttc matches '/^[-+]?[0-9]*\\.?[0-9]+$/' %}
+                    {{ Data.ttc|localizedcurrency(Data.code) }}
+                {% else %}            
+                    {{ Data.ttc }}
+                {% endif %}            
+            {% endif %}        
+            &nbsp;(
+            {% if Data.ht is defined %}
+                {% if Data.ht matches '/^[-+]?[0-9]*\\.?[0-9]+$/' %}
+                    {{ Data.ht|localizedcurrency(Data.code) }}
+                {% else %}            
+                    {{ Data.ht }}
+                {% endif %}            
+            {% endif %}        
+            +
+            {% if Data.vat is defined %}
+               &nbsp;{{ Data.vat }} 
+            {% endif %}        
+            %&nbsp;VAT)
+        {% else %}
+            <span class="text-danger"><i class="fa fa-envelope"></i>&nbsp;Undefined Price Currency Code!</span>
+            {% if Data.ttc is defined %}
+                {{ Data.ttc }}
+            {% endif %}        
+        {% endif %}
+
+    {% elseif Format == "int" %}
+        
+        {{ Data }}
+        
+    {% elseif Format == "double" %}
+        
+        {{ Data }}
+
+    {% elseif Format == "bool" %}
+        {% if Data  %}
+            <i class="fa fa-check-circle text-success">&nbsp;{{ ('yes')|trans({}, 'ThemeBundle')|raw }}</i>
+        {% else %}
+            <i class="fa fa-times-circle text-danger">&nbsp;{{ ('no')|trans({}, 'ThemeBundle')|raw }}</i>
+        {% endif %}
+        
+    {% elseif Format == "image" %}
+        
+        <div class="media">
+            
+            <div class="media-left">
+            {% if Data.url is defined and Data.url is not empty %}
+                <a href="{{ Data.url }}" target="_blank">
+                    <img class="media-object img-responsive" src="{{ Data.url }}" style="max-width: 120px;max-height: 120px;">
+                </a>
+            {% elseif Data.file is defined and Data.md5 is defined %}
+                {% set Url = Admin.generateUrl('image', {"Path": Data.path | base64_encode , "Md5": Data.md5} ) %}
+                <a href="{{ Url }}" target="_blank">
+                    <img class="media-object img-responsive" src="{{ Url }}" style="max-width: 120px;max-height: 120px;">
+                </a>
+            {% endif %}
+            </div>
+            
+            <div class="media-body">
+            {% if Data.name is defined and Data.name is not empty %}
+                <h4 class="media-heading">{{ Data.name }}</h4>
+            {% elseif Data.filename is defined and Data.filename is not empty %}
+                <h4 class="media-heading">{{ Data.filename }}</h4>
+            {% endif %}
+            <ul>
+                {% if Data.filename is defined %}
+                    <li> {{ ('fields.file.file')|trans({}, 'AppExplorerBundle') }}&nbsp;:&nbsp;{{ Data.filename }}</li>
+                {% endif %}
+                {% if Data.width is defined %}
+                    <li>{{ ('fields.image.dim')|trans({}, 'AppExplorerBundle') }}&nbsp;:&nbsp;{{ Data.width }}&nbsp;x&nbsp;{{ Data.height }}</li>
+                {% endif %}
+                {% if Data.md5 is defined %}
+                    <li> {{ ('fields.file.md5')|trans({}, 'AppExplorerBundle') }}&nbsp;:&nbsp;{{ Data.md5 }}</li>
+                {% endif %}
+                {% if Data.size is defined %}
+                    <li> {{ ('fields.file.size')|trans({}, 'AppExplorerBundle') }}&nbsp;:&nbsp;{{ Data.size }}</li>
+                {% endif %}
+            </ul>    
+          </div>
+        </div>            
+            
+    {% elseif Format == "file" %}
+        
+        <div class="media">
+            
+            {% if Data.file is defined and Data.md5 is defined %}
+                {% set Url = Admin.generateUrl('file', {"Path": Data.path | base64_encode , "Md5": Data.md5} ) %}
+            {% elseif Data.url is defined and Data.url is not empty %}
+                {% set Url = Data.url %}
+            {% endif %}
+            <div class="media-left">
+                <a href="{{ Url | default("#")}}" target="_blank">
+                    <img 
+                        src="/bundles/theme/img/icons/{{ Data.filename | default("_blank") | filetype }}.png" 
+                        onerror="this.onerror=null;this.src='/bundles/theme/img/icons/_blank.png';"
+                        style="max-width: 120px;max-height: 120px;">
+                </a>
+            </div>
+            
+            <div class="media-body">
+            {% if Data.name is defined and Data.name is not empty %}
+                <h4 class="media-heading">{{ Data.name }}</h4>
+            {% elseif Data.filename is defined and Data.filename is not empty %}
+                <h4 class="media-heading">{{ Data.filename }}</h4>
+            {% endif %}
+            <ul>
+                {% if Data.filename is defined %}
+                    <li> {{ ('fields.file.file')|trans({}, 'AppExplorerBundle') }}&nbsp;:&nbsp;{{ Data.filename }}</li>
+                {% endif %}
+                {% if Data.md5 is defined %}
+                    <li> {{ ('fields.file.md5')|trans({}, 'AppExplorerBundle') }}&nbsp;:&nbsp;{{ Data.md5 }}</li>
+                {% endif %}
+                {% if Data.size is defined %}
+                    <li> {{ ('fields.file.size')|trans({}, 'AppExplorerBundle') }}&nbsp;:&nbsp;{{ Data.size }}</li>
+                {% endif %}
+            </ul>    
+          </div>
+        </div>            
+            
+    {% else %}
+        
+        <span class="txt-danger"><i class="fa fa-warning"></i>Unknown Field Format!</span>
+    {% endif %}
+    <!-- End Objects Fields Data Block -->  
+{% endmacro %}
+
+{#
+    Generate an Html Field definition Flags Block
+#}
+{% macro flags(field) %}
+    <!-- Objects Fields Flags Block -->
+    {% if field.required == 1 %}
+        <span rel="popover-hover" data-original-title title data-placement="top" data-html="TRUE" data-content="{{ 'fields.required.tooltip'|trans({}, 'AppExplorerBundle') }}">
+            <span class="label label-danger"><i class="fa {{ 'fields.required.ico'|trans({}, 'AppExplorerBundle')|raw }}"></i></span>
+        </span>
+    {% endif %}
+    {% if field.itemtype is defined and field.itemtype is not empty  %}
+        <span rel="popover-hover" data-original-title title data-placement="top" data-html="TRUE" data-content="{{ 'fields.schema.tooltip'|trans({}, 'AppExplorerBundle') }}">
+            <span class="label label-success"><i class="fa {{ 'fields.schema.ico'|trans({}, 'AppExplorerBundle')|raw }}"></i></span>
+        </span>
+    {% endif %}
+    {% if field.read == 0 %}
+        <span rel="popover-hover" data-original-title title data-placement="top" data-html="TRUE" data-content="{{ 'fields.writeonly.tooltip'|trans({}, 'AppExplorerBundle') }}">
+            <span class="label label-primary"><i class="fa {{ 'fields.writeonly.ico'|trans({}, 'AppExplorerBundle')|raw }}"></i></span>
+        </span>
+    {% endif %}
+    {% if field.write == 0  %}
+        <span rel="popover-hover" data-original-title title data-placement="top" data-html="TRUE" data-content="{{ 'fields.readonly.tooltip'|trans({}, 'AppExplorerBundle') }}">
+            <span class="label label-primary"><i class="fa {{ 'fields.readonly.ico'|trans({}, 'AppExplorerBundle')|raw }}"></i></span>
+        </span>
+    {% endif %}
+    {% if field.tag is not empty  %}
+        <span rel="popover-hover" data-original-title title data-placement="top" data-html="TRUE" data-content="{{ 'fields.tag.tooltip'|trans({}, 'AppExplorerBundle') }}">
+            <span class="label label-warning"><i class="fa {{ 'fields.tag.ico'|trans({}, 'AppExplorerBundle')|raw }}"></i></span>
+        </span>
+    {% endif %}
+    {% if field.inlist == 1  %}
+        <span rel="popover-hover" data-original-title title data-placement="top" data-html="TRUE" data-content="{{ 'fields.inlist.tooltip'|trans({}, 'AppExplorerBundle') }}">
+            <span class="label label-primary"><i class="fa {{ 'fields.inlist.ico'|trans({}, 'AppExplorerBundle')|raw }}"></i></span>
+        </span>
+    {% endif %}
+    <!-- End Objects Fields Flags Block -->
+{% endmacro %}

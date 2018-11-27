@@ -1,0 +1,58 @@
+{#
+
+This file is part of the Sonata package.
+
+(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+
+{#{% extends '@SonataAdmin/CRUD/base_show_field.html.twig' %}#}
+{% import   "AppExplorerBundle:Macros:fields.html.twig"   as  Fields %}
+     
+{% if not field_description.options.splash_is_list %}
+    <th>{% block name %}{{ field_description.options.label }}{% endblock %}</th>
+    {% block field_value %}
+        {% spaceless %}
+            <td style="width: 150px !important;">{{ Fields.format(field_description.options.splash_field.type) }}</td>
+            <td>{{ Fields.data(field_description.options.splash_field.type, value, admin) }}</td>
+        {% endspaceless %}
+    {% endblock %}        
+    
+    {% block field_compare %}
+        {% if(value_compare is defined) %}
+            <td>
+                {% set value = value_compare %}
+                {{ block('field') }}
+            </td>
+        {% endif %}
+    {% endblock %}
+{% else %}
+    
+    {% for Data in value %}
+    <tr  style="border-top: 3px !important; border-top-style: solid  !important;" >
+        <th>{{ loop.index }}</th>
+        <td class="no-padding" style="padding: 0 0 0 0  !important" >
+            {# Items List Table #}            
+            <table class="table table-bordered table-condensed" >
+                <tbody>
+                {% for FieldId, FieldDefinition in field_description.options.splash_field %}
+                    <tr>
+                        {# Display Field List Item Data#}
+                        <th style="width: 1px !important;">{{ FieldDefinition.name }}</th>
+                        <td style="width: 150px !important;">{{ Fields.format(FieldDefinition.type) }}</td>
+                        <td>{{ Fields.data(FieldDefinition.type, Data[FieldId] | default(), admin) }}</td>
+                        </td>
+                    </tr>
+                {% endfor %}                  
+                </tbody>
+            </table>  
+        </td>
+    </tr>
+    {% endfor %}  
+{% endif %}
+
+
+

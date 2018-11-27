@@ -1,0 +1,71 @@
+
+<div class="box box-primary">
+    <div class="box-body ">
+        <div class="info-box">
+
+            <span class="info-box-icon bg-default">
+                {% if infos.icoraw | default(false) is not empty %}
+                <img src="data:image/gif;base64,{{ infos.icoraw }}" class="img-responsive">                            
+                {% else %}
+                <img src="{{ asset('bundles/splash/splash-logo.png') }}" class="img-responsive">                            
+                {% endif %}
+            </span>
+
+            <div class="info-box-content">
+
+                <span class="info-box-text">Connection Informations</span>
+
+                <div class="progress">
+                    <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                <span class="progress-description">
+                    <table class="table table-bordered table-striped table-hover sonata-ba-list">
+                        <tbody>
+                            <tr>
+                                <td>Short Description</td>
+                                <td>{{ infos.shortdesc | default('No shortdesc Defined') }}</td>
+                            </tr>
+                            <tr>
+                                <td>Long Description</td>
+                                <td>{{ infos.longdesc | default('?') }}</td>
+                            </tr>
+                            <tr>
+                                <td>Company</td>
+                                <td>{{ infos.company | default('?') }}</td>
+                            </tr>
+                            <tr>
+                                <td>Address</td>
+                                <td>{{ infos.address | default('?') }}</td>
+                            </tr>
+                            <tr>
+                                <td>City</td>
+                                <td>{{ infos.town | default('?') }} ({{ infos.zip | default('?') }})</td>
+                            </tr>
+                            <tr>
+                                <td>Country</td>
+                                <td>{{ infos.country | default('?') }}</td>
+                            </tr>
+                            <tr>
+                                <td>Email</td>
+                                <td>{{ infos.email | default('?') }}</td>
+                            </tr>
+                            <tr>
+                                <td>Www</td>
+                                <td>{{ infos.www | default('?') }}</td>
+                            </tr>
+                            <tr>
+                                <td>Server Type</td>
+                                <td>{{ infos.servertype | default('?') }}</td>
+                            </tr>
+                            <tr>
+                                <td>Server Url</td>
+                                <td>{{ infos.serverurl | default('?') }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </span>
+            </div><!-- /.info-box-content -->
+        </div>
+    </div>
+</div>
+

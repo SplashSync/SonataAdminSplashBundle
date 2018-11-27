@@ -1,0 +1,48 @@
+{
+    "name":     "splash/sonata-admin-splash-bundle",
+    "license":  "MIT",
+    "type":     "symfony-bundle",
+    
+    "description": "This Bundle is inspired from LexikMonologBrowserBundle, it provides a Doctrine DBAL handler for Monolog and Sonata Admin.",
+    "keywords": ["Symfony3", "Symfony4", "spalsh", "sync", "connectors", "synchronization", "sonata", "sonata-project", "admin", "explorer"],
+    
+    "authors": [
+        {
+            "name":"Splash Sync",
+            "email":"contact@splashsync.com"
+        }
+    ],
+    
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+
+    "require": {
+        "php":                          "^7.1",
+
+        "doctrine/doctrine-bundle":     "^1.6",
+        "doctrine/orm":                 "^2.5",
+
+        "sonata-project/admin-bundle":  ">=3.0 ",
+        "sonata-project/doctrine-orm-admin-bundle": ">=3.0",
+        
+        "burgov/key-value-form-bundle": "@stable",
+        
+        "splash/php-bundle":            "dev-master"
+    },
+    
+    "require-dev": {
+    },
+    
+    "autoload": {
+        "psr-4": {
+            "Splash\\Admin\\": "src/"
+        }
+    },
+    
+    "autoload-dev": {
+        "psr-4": {
+            "Splash\\Admin\\Tests\\": "tests/"
+        }        
+    }
+    
+}
