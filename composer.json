@@ -18,7 +18,9 @@
 
     "require": {
         "php":                          "^7.1",
-
+        
+        "symfony/cache":                "*",
+        
         "doctrine/doctrine-bundle":     "^1.6",
         "doctrine/orm":                 "^2.5",
 
