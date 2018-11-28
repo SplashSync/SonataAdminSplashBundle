@@ -14,7 +14,7 @@
  * @author Bernard Paquier <contact@splashsync.com>
  */
 
-namespace App\ExplorerBundle\Admin;
+namespace Splash\Admin\Admin;
 
 use Sonata\AdminBundle\Route\RouteCollection;
 

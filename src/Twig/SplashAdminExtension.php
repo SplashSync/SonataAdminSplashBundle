@@ -1,13 +1,13 @@
 <?php
 
-namespace App\ExplorerBundle\Twig;
+namespace Splash\Admin\Twig;
 
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
 use Splash\Components\FieldsManager;
 
-class ExplorerExtension extends AbstractExtension
+class SplashAdminExtension extends AbstractExtension
 {
     
     public function getFilters()

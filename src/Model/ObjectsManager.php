@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace App\ExplorerBundle\Model;
+namespace Splash\Admin\Model;
 
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\DBAL\DBALException;
@@ -148,7 +148,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
                 );
         //====================================================================//
         // Setup Server as Current Server
-        Splash::local()->identify($this->Manager->getWebserviceId($this->ServerId));
+        $this->Manager->identify($this->Manager->getWebserviceId($this->ServerId));
         Splash::reboot();
         //====================================================================//
         // Safety Check
@@ -166,7 +166,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     {
         //====================================================================//
         // Load Configuration from DataBase if Exists
-        $DbConfig   = $this->Entitymanager->getRepository("AppExplorerBundle:SplashServer")->findOneByIdentifier($this->ServerId);
+        $DbConfig   = $this->Entitymanager->getRepository("SplashAdminBundle:SplashServer")->findOneByIdentifier($this->ServerId);
         //====================================================================//
         // Return Configuration
         if (empty($DbConfig)) {

@@ -15,7 +15,7 @@
  * @author Bernard Paquier <contact@splashsync.com>
  */
 
-namespace App\ExplorerBundle\Controller;
+namespace Splash\Admin\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -73,7 +73,7 @@ class ConfigurationController extends CRUDController {
         $this->setFormTheme($formView, $this->admin->getFilterTheme());
         //====================================================================//
         // Render Connector Profile Page
-        return $this->render("@AppExplorer/Config/list.html.twig", array(
+        return $this->render("@SplashAdmin/Config/list.html.twig", array(
             'action'        => 'list',
             'admin'         =>  $this->admin,
             "profile"       =>  $Connector->getProfile(),

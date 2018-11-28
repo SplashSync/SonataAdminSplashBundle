@@ -15,7 +15,7 @@
  * @author Bernard Paquier <contact@splashsync.com>
  */
 
-namespace App\ExplorerBundle\Fields;
+namespace Splash\Admin\Fields;
 
 use ArrayObject;
 
@@ -33,10 +33,10 @@ use Symfony\Component\Form\Extension\Core\Type\CountryType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
-use App\ExplorerBundle\Form\Type\MultilangType;
-use App\ExplorerBundle\Form\Type\PriceType;
-use App\ExplorerBundle\Form\Type\ObjectIdType;
-use App\ExplorerBundle\Form\Type\ImageType;
+use Splash\Admin\Form\Type\MultilangType;
+use Splash\Admin\Form\Type\PriceType;
+use Splash\Admin\Form\Type\ObjectIdType;
+use Splash\Admin\Form\Type\ImageType;
 
 /**
  * Description of FieldsMapper
@@ -158,7 +158,7 @@ class FormHelper {
             "splash_field"      =>   $Field,
             //====================================================================//
             // Specify Sonata to Render Splash Specific Template     
-            "template"          =>   '@AppExplorer/CRUD/base_show_field.html.twig'
+            "template"          =>   '@SplashAdmin/CRUD/base_show_field.html.twig'
         );
     }   
     

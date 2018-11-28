@@ -15,7 +15,7 @@
  * @author Bernard Paquier <contact@splashsync.com>
  */
 
-namespace App\ExplorerBundle\Controller;
+namespace Splash\Admin\Controller;
 
 use ArrayObject;
 
@@ -75,7 +75,7 @@ class ProfileController extends CRUDController {
         }
         //====================================================================//
         // Render Connector Profile Page
-        return $this->render("@AppExplorer/Profile/list.html.twig", array(
+        return $this->render("@SplashAdmin/Profile/list.html.twig", array(
             'action'    => 'list',
             'admin'     =>  $this->admin,
             "profile"   =>  $Connector->getProfile(),
@@ -103,7 +103,7 @@ class ProfileController extends CRUDController {
         $Connector  =   $this->admin->getModelManager()->getConnector();
         //====================================================================//
         // Render Connector Profile Page
-        return $this->render("@AppExplorer/Profile/show.html.twig", array(
+        return $this->render("@SplashAdmin/Profile/show.html.twig", array(
             'action'    => 'list',
             "profile"   =>  $Connector->getProfile(),
             "object"    =>  $Connector->getObjectDescription($id),

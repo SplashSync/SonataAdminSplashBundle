@@ -14,7 +14,7 @@
  * @author Bernard Paquier <contact@splashsync.com>
  */
 
-namespace App\ExplorerBundle\Admin;
+namespace Splash\Admin\Admin;
 
 use ArrayObject;
 
@@ -24,9 +24,9 @@ use Sonata\AdminBundle\Show\ShowMapper;
 
 use Sonata\AdminBundle\Form\Type\CollectionType;
 
-use App\ExplorerBundle\Fields\FormHelper;
-use App\ExplorerBundle\Form\FieldsTransformer;
-use App\ExplorerBundle\Form\Type\FieldsListType;
+use Splash\Admin\Fields\FormHelper;
+use Splash\Admin\Form\FieldsTransformer;
+use Splash\Admin\Form\Type\FieldsListType;
 
 /**
  * @abstract    Objects Admin Class for Splash Connectors Explorer

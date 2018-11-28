@@ -22,22 +22,14 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-
-use App\ExplorerBundle\Admin\Admin;
-use App\ExplorerBundle\Admin\ConfigurationAdmin;
-//use App\ExplorerBundle\Admin\Admin;
-use App\ExplorerBundle\Controller\ConfigurationController;
-use App\ExplorerBundle\Controller\ProfileCRUDController;
-use App\ExplorerBundle\Controller\ObjectsCRUDController;
 
 /**
  * This is the class that loads and manages your bundle configuration
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class AppExplorerExtension extends Extension implements PrependExtensionInterface
+class SplashAdminExtension extends Extension implements PrependExtensionInterface
 {
     
     const TYPE_CONFIG   =   "configuration";
@@ -47,9 +39,9 @@ class AppExplorerExtension extends Extension implements PrependExtensionInterfac
     
     /** @var string */
     protected $formTypeTemplates = array(
-        '@AppExplorer/Forms/price.html.twig',
-        '@AppExplorer/Forms/image.html.twig',
-        '@AppExplorer/Forms/objectid.html.twig'
+        '@SplashAdmin/Forms/price.html.twig',
+        '@SplashAdmin/Forms/image.html.twig',
+        '@SplashAdmin/Forms/objectid.html.twig'
     );
     
     /**
@@ -96,8 +88,8 @@ class AppExplorerExtension extends Extension implements PrependExtensionInterfac
         );  
         //====================================================================//
         // Build Admin Class Name
-        $adminClass         =   "App\ExplorerBundle\Admin\\" .  ucwords($Type) . "Admin";
-        $controllerClass    =   "App\ExplorerBundle\Controller\\" .  ucwords($Type) . "Controller";
+        $adminClass         =   "Splash\Admin\Admin\\" .  ucwords($Type) . "Admin";
+        $controllerClass    =   "Splash\Admin\Controller\\" .  ucwords($Type) . "Controller";
         
         //====================================================================//
         // Build Service Configurations

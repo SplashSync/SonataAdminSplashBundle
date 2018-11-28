@@ -15,7 +15,7 @@
  * @author Bernard Paquier <contact@splashsync.com>
  */
 
-namespace App\ExplorerBundle\Controller;
+namespace Splash\Admin\Controller;
 
 use ArrayObject;
 
@@ -72,7 +72,7 @@ class ObjectsController extends CRUDController {
         unset($List["meta"]);
         //====================================================================//
         // Render Connector Profile Page
-        return $this->render("@AppExplorer/Objects/list.html.twig", array(
+        return $this->render("@SplashAdmin/Objects/list.html.twig", array(
             'action'    => 'list',
             'admin'     =>  $this->admin,
             "ObjectType"=>  $ObjectType,

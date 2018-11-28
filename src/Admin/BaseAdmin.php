@@ -14,7 +14,7 @@
  * @author Bernard Paquier <contact@splashsync.com>
  */
 
-namespace App\ExplorerBundle\Admin;
+namespace Splash\Admin\Admin;
 
 use ArrayObject;
 
@@ -32,10 +32,10 @@ use Sonata\AdminBundle\Form\Type\CollectionType;
 
 use Splash\Core\SplashCore as Splash;
 
-use App\ExplorerBundle\Fields\FormHelper;
-use App\ExplorerBundle\Form\FieldsListType;
+use Splash\Admin\Fields\FormHelper;
+use Splash\Admin\Form\FieldsListType;
 
-use App\ExplorerBundle\Model\ConnectorAwareAdminTrait;
+use Splash\Admin\Model\ConnectorAwareAdminTrait;
 
 /**
  * @abstract    Base Admin Class for Splash Sonata Admin Bundle

@@ -15,7 +15,7 @@
  * @author Bernard Paquier <contact@splashsync.com>
  */
 
-namespace App\ExplorerBundle\EventSubscriber;
+namespace Splash\Admin\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -25,7 +25,7 @@ use Splash\Bundle\Events\ObjectsCommitEvent;
 use Splash\Bundle\Events\UpdateConfigurationEvent;
 use Splash\Bundle\Services\ConnectorsManager;
 
-use App\ExplorerBundle\Entity\SplashServer;
+use Splash\Admin\Entity\SplashServer;
 
 /**
  * Symfony Events Subscriber

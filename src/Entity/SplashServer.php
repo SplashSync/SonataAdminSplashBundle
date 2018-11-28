@@ -15,7 +15,7 @@
  * @author Bernard Paquier <contact@splashsync.com>
  */
 
-namespace App\ExplorerBundle\Entity;
+namespace Splash\Admin\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 

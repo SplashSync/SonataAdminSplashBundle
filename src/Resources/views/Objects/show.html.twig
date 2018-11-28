@@ -1,16 +1,20 @@
 {#
 
-This file is part of the Sonata package.
-
-(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
-
-For the full copyright and license information, please view the LICENSE
-file that was distributed with this source code.
+ *  This file is part of SplashSync Project.
+ *
+ *  Copyright (C) 2015-2018 Splash Sync  <www.splashsync.com>
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
 
 #}
 
 {% extends "@SonataAdmin/CRUD/base_show.html.twig" %}
-{% import   "AppExplorerBundle:Macros:fields.html.twig"   as  Fields %}
+{% import   "@SplashAdmin/Macros/fields.html.twig"   as  Fields %}
 
 {% block title %}
     {{ "title_show"|trans({'%name%': object.name|truncate(25) }, 'SonataAdminBundle') }}
@@ -33,7 +37,7 @@ file that was distributed with this source code.
 
 {% block show %}
 
-    {% include "@AppExplorer/Core/logs.html.twig" %}
+    {% include "@SplashAdmin/Core/logs.html.twig" %}
     
     <section class="content">
         <div class="row">
@@ -80,5 +84,5 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block list_filters_actions %}
-    {% include "@AppExplorer/Objects/object__selector.html.twig" %}
+    {% include "@SplashAdmin/Objects/object__selector.html.twig" %}
 {% endblock %}

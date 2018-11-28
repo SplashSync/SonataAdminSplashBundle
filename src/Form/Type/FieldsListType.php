@@ -15,15 +15,15 @@
  * @author Bernard Paquier <contact@splashsync.com>
  */
 
-namespace App\ExplorerBundle\Form\Type;
+namespace Splash\Admin\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-use App\ExplorerBundle\Fields\FormHelper;
+use Splash\Admin\Fields\FormHelper;
 
-use App\ExplorerBundle\Form\FieldsTransformer;
+use Splash\Admin\Form\FieldsTransformer;
 
 /**
  * @abstract    Splash Objects Fields List Form Type

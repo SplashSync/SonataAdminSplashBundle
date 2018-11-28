@@ -4,19 +4,19 @@ services:
     ########################################################################
     # Splash Model Manager 
     sonata.admin.manager.splash:
-        class: App\ExplorerBundle\Model\ObjectsManager
+        class: Splash\Admin\Model\ObjectsManager
         arguments: [ '@splash.connectors.manager', "@doctrine.orm.entity_manager" ]
         public: true
 
     ########################################################################
     # Render Fields View 
-    splash.explorer.twig.extension:
-        class: App\ExplorerBundle\Twig\ExplorerExtension
+    splash.admin.twig.extension:
+        class: Splash\Admin\Twig\SplashAdminExtension
         tags:   ["twig.extension"]
 
     ########################################################################
     # Event Listner to Catch Commit & Config Save Events 
-    splash.explorer.subscriber:
-        class: App\ExplorerBundle\EventSubscriber\EventsSubscriber
+    splash.admin.subscriber:
+        class: Splash\Admin\EventSubscriber\EventsSubscriber
         arguments: [ '@splash.connectors.manager', "@doctrine.orm.entity_manager" ]
         tags:       ["kernel.event_subscriber"]
