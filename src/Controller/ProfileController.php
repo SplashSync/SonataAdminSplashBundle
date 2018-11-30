@@ -1,114 +1,109 @@
 <?php
 
-/**
- * This file is part of SplashSync Project.
+/*
+ *  This file is part of SplashSync Project.
  *
- * Copyright (C) Splash Sync <www.splashsync.com>
+ *  Copyright (C) 2015-2018 Splash Sync  <www.splashsync.com>
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- * 
- * @author Bernard Paquier <contact@splashsync.com>
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
  */
 
 namespace Splash\Admin\Controller;
 
 use ArrayObject;
-
-use Symfony\Component\HttpFoundation\Response;
-
 use Sonata\AdminBundle\Controller\CRUDController;
-
+use Splash\Admin\Model\ObjectManagerAwareTrait;
 use Splash\Core\SplashCore as Splash;
-use Splash\Bundle\Models\ConnectorInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Description of ObjectCRUDController
  *
  * @author nanard33
  */
-class ProfileController extends CRUDController {
+class ProfileController extends CRUDController
+{
+    use ObjectManagerAwareTrait;
     
     /**
      * List action.
-     *
-     * @throws AccessDeniedException If access is not granted
      *
      * @return Response
      */
     public function listAction()
     {
-        $Results = array();
+        $results = array();
         //====================================================================//
         // Setup Connector
-        $Connector  =   $this->admin->getModelManager()->getConnector();
+        $connector  =   $this->getConnector();
         //====================================================================//
         // Execute Splash Self-Test
-        $Results['selftest'] = $Connector->selfTest();
-        if ($Results['selftest']) {
+        $results['selftest'] = $connector->selfTest();
+        if ($results['selftest']) {
             Splash::log()->msg("Self-Test Passed");
         }
-        $SelfTest_Log = Splash::log()->GetHtmlLog(true);
+        $logSelfTest = Splash::log()->GetHtmlLog(true);
         //====================================================================//
         // Execute Splash Ping Test
-        $Results['ping']    = $Connector->ping();
-        $PingTest_Log       = Splash::log()->GetHtmlLog(true);
+        $results['ping']    = $connector->ping();
+        $logPingTest       = Splash::log()->GetHtmlLog(true);
         //====================================================================//
         // Execute Splash Connect Test
-        $Results['connect'] = $Connector->connect();
-        $ConnectTest_Log    = Splash::log()->GetHtmlLog(true);
+        $results['connect'] = $connector->connect();
+        $logConnectTest    = Splash::log()->GetHtmlLog(true);
         //====================================================================//
         // Load Connector Informations
-        $Informations    = array();
-        if ($Results['ping'] && $Results['connect']) {
-            $Informations    = $Connector->informations(new ArrayObject(array()));
+        $informations    = array();
+        if ($results['ping'] && $results['connect']) {
+            $informations    = $connector->informations(new ArrayObject(array()));
         }
         //====================================================================//
         // Load Objects Informations
-        $Objects   =   array();
-        foreach ($Connector->getAvailableObjects() as $ObjectType) {
-            $Objects[$ObjectType]    =   $Connector->getObjectDescription($ObjectType);            
+        $objects   =   array();
+        foreach ($connector->getAvailableObjects() as $objectType) {
+            $objects[$objectType]    =   $connector->getObjectDescription($objectType);
         }
         //====================================================================//
         // Render Connector Profile Page
         return $this->render("@SplashAdmin/Profile/list.html.twig", array(
             'action'    => 'list',
             'admin'     =>  $this->admin,
-            "profile"   =>  $Connector->getProfile(),
-            "infos"     =>  $Informations,
+            "profile"   =>  $connector->getProfile(),
+            "infos"     =>  $informations,
             "config"    =>  Splash::configuration(),
-            "results"   =>  $Results,
-            "selftest"  =>  $SelfTest_Log,
-            "ping"      =>  $PingTest_Log,
-            "connect"   =>  $ConnectTest_Log,
-            "objects"   =>  $Objects,
+            "results"   =>  $results,
+            "selftest"  =>  $logSelfTest,
+            "ping"      =>  $logPingTest,
+            "connect"   =>  $logConnectTest,
+            "objects"   =>  $objects,
         ));
     }
     
     /**
      * Show action.
      *
-     * @throws AccessDeniedException If access is not granted
+     * @param null|mixed $objectId
      *
      * @return Response
      */
-    public function showAction($id = null)
+    public function showAction($objectId = null)
     {
         //====================================================================//
         // Setup Connector
-        $Connector  =   $this->admin->getModelManager()->getConnector();
+        $connector  =   $this->getConnector();
         //====================================================================//
         // Render Connector Profile Page
         return $this->render("@SplashAdmin/Profile/show.html.twig", array(
             'action'    => 'list',
-            "profile"   =>  $Connector->getProfile(),
-            "object"    =>  $Connector->getObjectDescription($id),
-            "fields"    =>  $Connector->getObjectFields($id),
+            "profile"   =>  $connector->getProfile(),
+            "object"    =>  $connector->getObjectDescription($objectId),
+            "fields"    =>  $connector->getObjectFields($objectId),
             "log"       =>  Splash::log()->GetHtmlLog(true),
         ));
-    }    
+    }
 }

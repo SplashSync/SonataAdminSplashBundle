@@ -1,0 +1,64 @@
+{#
+
+This file is part of the Sonata package.
+
+(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+
+{% extends "@SonataAdmin/CRUD/base_list.html.twig" %}
+
+{%- block actions -%}
+{%- endblock -%}
+
+{% block title %}
+    {{ profile.title | default('No Connector Title Defined') }}
+    {#
+        The list template can be used in nested mode,
+        so we define the title corresponding to the parent's admin.
+    #}
+    {% if admin.isChild and admin.parent.subject %}
+        {{ "title_edit"|trans({'%name%': admin.parent.toString(admin.parent.subject)|truncate(15) }, 'SonataAdminBundle') }}
+    {% endif %}
+{% endblock %}
+
+{% block navbar_title %}
+    {{ block('title') }}
+{% endblock %}
+
+{% block list_table %}
+
+{% endblock %}
+
+{% block list_filters_actions %}
+
+{% endblock %}
+
+{% block list_filters %}
+
+    <link href="{{ asset('bundles/splashwidgets/css/SplashWidgets.css') }}" type="text/css" rel="stylesheet" media="screen" />
+
+    
+    {% include "@SplashAdmin/Core/logs.html.twig" %}
+    
+    <div class="col-xs-12">
+        
+        <div class="row">
+            {% for Widget in Widgets %}
+                {{ render(controller('SplashWidgetsBundle:View:delayed', { 'Service' : Widget.service,  'Type' : Widget.type })) }}
+            {% endfor %} 
+        </div>  
+    </div>
+
+    <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+
+    <script type="text/javascript" src="{{ asset('bundles/splashwidgets/js/SplashWidgetsBundle.js') }}"></script>
+    <script type="text/javascript" src="http://omnipotent.net/jquery.sparkline/2.1.2/jquery.sparkline.min.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+  
+{% endblock %}

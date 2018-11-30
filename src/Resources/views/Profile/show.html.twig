@@ -10,7 +10,7 @@ file that was distributed with this source code.
 #}
 
 {% extends "@SonataAdmin/CRUD/base_show.html.twig" %}
-{% import   "AppExplorerBundle:Macros:fields.html.twig"   as  Fields %}
+{% import  "@SplashAdmin/Macros/fields.html.twig"   as  Fields %}
 
 {% block title %}
     {{ "title_show"|trans({'%name%': object.name|truncate(25) }, 'SonataAdminBundle') }}

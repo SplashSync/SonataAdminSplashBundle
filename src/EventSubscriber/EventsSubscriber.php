@@ -1,85 +1,79 @@
 <?php
 
-/**
- * This file is part of SplashSync Project.
+/*
+ *  This file is part of SplashSync Project.
  *
- * Copyright (C) Splash Sync <www.splashsync.com>
+ *  Copyright (C) 2015-2018 Splash Sync  <www.splashsync.com>
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * @author Bernard Paquier <contact@splashsync.com>
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
  */
 
 namespace Splash\Admin\EventSubscriber;
 
+use Doctrine\ORM\EntityManager;
+use Splash\Bundle\Events\ObjectsCommitEvent;
+use Splash\Bundle\Services\ConnectorsManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-use Doctrine\ORM\EntityManager;
-
-use Splash\Bundle\Events\ObjectsCommitEvent;
-use Splash\Bundle\Events\UpdateConfigurationEvent;
-use Splash\Bundle\Services\ConnectorsManager;
-
-use Splash\Admin\Entity\SplashServer;
-
 /**
- * Symfony Events Subscriber
+ * Symfony Events Subscriber.
  */
 class EventsSubscriber implements EventSubscriberInterface
 {
-    
     /**
      * @abstract    Splash Connectors Manager
+     *
      * @var ConnectorsManager
      */
-    private $Manager;
-    
+    private $manager;
+
     /**
      * @abstract    Doctrine Entity Manager
+     *
      * @var EntityManager
      */
-    private $EntityManager;
-    
+    private $entityManager;
+
     //====================================================================//
     //  CONSTRUCTOR
     //====================================================================//
-    
+
     /**
      * @abstract    Service Constructor
+     *
+     * @param ConnectorsManager $manager
+     * @param EntityManager     $entityManager
      */
-    public function __construct(ConnectorsManager $Manager, EntityManager $EntityManager)
+    public function __construct(ConnectorsManager $manager, EntityManager $entityManager)
     {
         //====================================================================//
         // Store Splash Connectors Manager
-        $this->Manager          =   $Manager;
+        $this->manager = $manager;
         //====================================================================//
         // Store Entity Manager
-        $this->EntityManager    =   $EntityManager;
+        $this->entityManager = $entityManager;
     }
-    
+
     //====================================================================//
     //  SUBSCRIBER
     //====================================================================//
-    
+
     /**
      * @abstract    Configure Event Subscriber
-     * @return  void
+     *
+     * @return array
      */
     public static function getSubscribedEvents()
     {
         return array(
             // Connector Objects Commit Events
-            ObjectsCommitEvent::NAME   => array(
-               array('onObjectCommit', 100)
-            ),
-            // Connectors Update Configuration Events
-            UpdateConfigurationEvent::NAME   => array(
-               array('onSave', 100)
+            ObjectsCommitEvent::NAME => array(
+                array('onObjectCommit', 100),
             ),
         );
     }
@@ -90,53 +84,20 @@ class EventsSubscriber implements EventSubscriberInterface
 
     /**
      * @abstract    On Standalone Object Commit Event
-     * @param   ObjectsCommitEvent $event
-     * @return  void
+     *
+     * @param ObjectsCommitEvent $event
      */
     public function onObjectCommit(ObjectsCommitEvent $event)
     {
         //====================================================================//
         // Detect Pointed Server Host
-        $ServerId   = $this->Manager->hasWebserviceConfiguration($event->getServerId());
-        $Host       = $this->Manager->getWebserviceHost($ServerId);
+        $serverId = $this->manager->hasWebserviceConfiguration($event->getWebserviceId());
+        $host = $this->manager->getWebserviceHost((string) $serverId);
         //====================================================================//
-        // If Server Host is False or Empty 
-        // => Stop Event Propagation to Avoid Tying to Commit
-        if (!$Host) {
+        // If Server Host is False or Empty
+        // => Stop Event Propagation to Avoid Commit
+        if (!$host) {
             $event->stopPropagation();
         }
     }
-    
-    /**
-     * @abstract    On Connector Configuration Update Event
-     * @param   UpdateConfigurationEvent $event
-     * @return  void
-     */
-    public function onSave(UpdateConfigurationEvent $event)
-    {     
-        $ServerId   =   $this->Manager->hasWebserviceConfiguration($event->getWebserviceId());
-        //====================================================================//
-        // Detect Pointed Server Host
-        if ($ServerId) {
-            //====================================================================//
-            // Load Configuration from DataBase if Exists
-            $DbConfig   = $this->EntityManager->getRepository("AppExplorerBundle:SplashServer")->findOneByIdentifier($ServerId);
-            //====================================================================//
-            // Not Found => Create Configuration
-            if (empty($DbConfig)) {
-                $DbConfig   =   new SplashServer();
-                $DbConfig->setIdentifier($ServerId);
-            }
-            //====================================================================//
-            // Update Configuration
-            $DbConfig->setSettings($event->getConfiguration());        
-            $this->EntityManager->persist($DbConfig);
-            $this->EntityManager->flush();
-            $this->EntityManager->clear();         
-        }
-        //====================================================================//
-        // Stop Event Propagation to Avoid Tying to Commit
-        $event->stopPropagation();
-    }
-    
 }

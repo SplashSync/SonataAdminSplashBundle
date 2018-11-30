@@ -1,32 +1,28 @@
 <?php
 
-/**
- * This file is part of SplashSync Project.
+/*
+ *  This file is part of SplashSync Project.
  *
- * Copyright (C) Splash Sync <www.splashsync.com>
+ *  Copyright (C) 2015-2018 Splash Sync  <www.splashsync.com>
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- * 
- * @author Bernard Paquier <contact@splashsync.com>
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
  */
 
 namespace Splash\Admin\Form\Type;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\CallbackTransformer;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-
 use Splash\Models\Fields\FieldsManagerTrait;
-
 use Splash\Models\Helpers\ObjectsHelper;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * @abstract    Splash Objects Fields Object Id Form Type
@@ -35,49 +31,57 @@ class ObjectIdType extends AbstractType
 {
     use FieldsManagerTrait;
         
-    public function buildForm(FormBuilderInterface $FormBuilder, array $options)
+    /**
+     * @abstract Build Object Id Form
+     *
+     * @param FormBuilderInterface $formBuilder
+     * @param array                $options
+     */
+    public function buildForm(FormBuilderInterface $formBuilder, array $options)
     {
         //==============================================================================
         //  Object ID Widget
-        $FormBuilder->add("ObjectId", TextType::class,  array(
-                'required'          => true,
-        )); 
+        $formBuilder->add("ObjectId", TextType::class, array(
+            'required'          => true,
+        ));
         //==============================================================================
         //  Object Type Widget
-        $FormBuilder->add("ObjectType", HiddenType::class,  array(
-                'required'          => true,
-                'empty_data'        => $options['object_type'],
-                'data'              => $options['object_type'],
-        )); 
+        $formBuilder->add("ObjectType", HiddenType::class, array(
+            'required'          => true,
+            'empty_data'        => $options['object_type'],
+            'data'              => $options['object_type'],
+        ));
         //==============================================================================
         //  Add Data Transformers to Form
-        $FormBuilder
+        $formBuilder
             ->addModelTransformer(new CallbackTransformer(
                 function ($data) {
                     if (!self::isIdField($data)) {
                         return array();
                     }
+
                     return self::isIdField($data);
                 },
                 function ($data) {
                     if (empty($data["ObjectId"])) {
                         return null;
                     }
-                    return ObjectsHelper::encode( $data["ObjectType"], $data["ObjectId"]);
+
+                    return ObjectsHelper::encode($data["ObjectType"], $data["ObjectId"]);
                 }
-            ));               
+            ));
     }
     
     /**
      * {@inheritdoc}
-     */    
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults(array(
             'object_type'       =>  null,
         ));
-    } 
+    }
     
     /**
      * @return string
@@ -86,5 +90,4 @@ class ObjectIdType extends AbstractType
     {
         return 'splash_object_id';
     }
-    
 }

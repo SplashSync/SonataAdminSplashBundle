@@ -20,3 +20,12 @@ services:
         class: Splash\Admin\EventSubscriber\EventsSubscriber
         arguments: [ '@splash.connectors.manager', "@doctrine.orm.entity_manager" ]
         tags:       ["kernel.event_subscriber"]
+
+    ########################################################################
+    # Splash Admin Widgets Factroy Service
+    splash.admin.widget.factory:
+        class: Splash\Admin\Services\WidgetFactoryService
+        public: true
+        arguments: 
+            -   "@Splash.Widgets.Factory"
+            -   "@splash.connectors.manager"

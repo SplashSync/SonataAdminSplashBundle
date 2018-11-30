@@ -1,126 +1,125 @@
 <?php
 
-/**
- * This file is part of SplashSync Project.
+/*
+ *  This file is part of SplashSync Project.
  *
- * Copyright (C) Splash Sync <www.splashsync.com>
+ *  Copyright (C) 2015-2018 Splash Sync  <www.splashsync.com>
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- * 
- * @author Bernard Paquier <contact@splashsync.com>
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
  */
 
 namespace Splash\Admin\Controller;
 
-use ArrayObject;
-
+use Sonata\AdminBundle\Controller\CRUDController;
+use Splash\Admin\Admin\ObjectsAdmin;
+use Splash\Admin\Model\ObjectManagerAwareTrait;
+use Splash\Core\SplashCore as Splash;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-use Sonata\AdminBundle\Controller\CRUDController;
-
-use Splash\Core\SplashCore as Splash;
-use Splash\Bundle\Models\ConnectorInterface;
-
 /**
- * Description of ObjectCRUDController
+ * Description of ObjectCRUDController.
  *
  * @author nanard33
  */
-class ObjectsController extends CRUDController {
-    
+class ObjectsController extends CRUDController
+{
+    use ObjectManagerAwareTrait;
+
     /**
-     * Switch Between Object Types
+     * @var ObjectsAdmin
+     */
+    protected $admin;
+
+    /**
+     * @abstract    Switch Between Object Types
+     *
+     * @param Request $request
      *
      * @return Response
      */
-    public function switchAction(Request $request = null)
+    public function switchAction(Request $request)
     {
-        $ObjectType     =   $request->get("ObjectType");
-        $ObjectTypes    =   $this->admin->getModelManager()->getObjects();
-        
-        if ($ObjectType && in_array($ObjectType, $ObjectTypes))  {
-            $request->getSession()->set("ObjectType" , $ObjectType);
+        $objectType = $request->get('ObjectType');
+        $objectTypes = $this->getObjectsManager()->getObjects();
+        $session = $request->getSession();
+        if ($objectType && in_array($objectType, $objectTypes, true) && $session) {
+            $session->set('ObjectType', $objectType);
         }
 
         return $this->redirectToList();
-                
     }
-        
+
     /**
      * List action.
      *
-     * @throws AccessDeniedException If access is not granted
-     *
      * @return Response
      */
-    public function listAction(Request $request = null)
+    public function listAction()
     {
         //====================================================================//
         // Detect Current Object Type
-        $ObjectType  =  $this->admin->getObjectType();
-        $this->admin->getModelManager()->setObjectType($ObjectType);   
+        $objectType = $this->admin->getObjectType();
+        $this->getObjectsManager()->setObjectType($objectType);
         //====================================================================//
-        // Read Object List        
-        $List = $this->admin->getModelManager()->findBy($ObjectType);
-        $Meta   =   isset($List["meta"]) ? $List["meta"] : array();
-        unset($List["meta"]);
+        // Read Object List
+        $objectsList = $this->getObjectsManager()->findBy($objectType);
+//        $Meta   =   isset($List["meta"]) ? $List["meta"] : array();
+        unset($objectsList['meta']);
         //====================================================================//
         // Render Connector Profile Page
-        return $this->render("@SplashAdmin/Objects/list.html.twig", array(
-            'action'    => 'list',
-            'admin'     =>  $this->admin,
-            "ObjectType"=>  $ObjectType,
-            "objects"   =>  $this->admin->getModelManager()->getObjectsDefinition(),
-            "fields"    =>  $this->admin->getModelManager()->getObjectFields($ObjectType),
-            "list"      =>  $List,
-            "log"       =>  Splash::log()->GetHtmlLog(true),
+        return $this->render('@SplashAdmin/Objects/list.html.twig', array(
+            'action' => 'list',
+            'admin' => $this->admin,
+            'ObjectType' => $objectType,
+            'objects' => $this->getObjectsManager()->getObjectsDefinition(),
+            'fields' => $this->getObjectsManager()->getObjectFields(),
+            'list' => $objectsList,
+            'log' => Splash::log()->GetHtmlLog(true),
         ));
     }
-    
+
     /**
      * Show action.
      *
-     * @throws AccessDeniedException If access is not granted
+     * @param string $objectId
      *
      * @return Response
      */
-    public function showAction($id = null, Request $request = null)
+    public function showAction($objectId = null)
     {
         //====================================================================//
         // Detect Current Object Type
-        $this->admin->getModelManager()->setObjectType($this->admin->getObjectType());           
+        $this->getObjectsManager()->setObjectType($this->admin->getObjectType());
         //====================================================================//
         // Base Admin Action
-        return parent::showAction($id);
-    }    
-    
+        return parent::showAction($objectId);
+    }
+
     /**
      * Edit action.
      *
-     * @throws AccessDeniedException If access is not granted
+     * @param string $objectId
      *
      * @return Response
      */
-    public function editAction($id = null)
+    public function editAction($objectId = null)
     {
         //====================================================================//
         // Detect Current Object Type
-        $this->admin->getModelManager()->setObjectType($this->admin->getObjectType());           
+        $this->getObjectsManager()->setObjectType($this->admin->getObjectType());
         //====================================================================//
         // Base Admin Action
-        return parent::editAction($id);
-    }        
-    
+        return parent::editAction($objectId);
+    }
+
     /**
      * Create action.
-     *
-     * @throws AccessDeniedException If access is not granted
      *
      * @return Response
      */
@@ -128,77 +127,80 @@ class ObjectsController extends CRUDController {
     {
         //====================================================================//
         // Detect Current Object Type
-        $this->admin->getModelManager()->setObjectType($this->admin->getObjectType());           
+        $this->getObjectsManager()->setObjectType($this->admin->getObjectType());
         //====================================================================//
         // Base Admin Action
         return parent::createAction();
     }
-    
+
     /**
      * Delete action.
      *
-     * @throws AccessDeniedException If access is not granted
+     * @param string $objectId
      *
      * @return Response
      */
-    public function deleteAction($id = null)
+    public function deleteAction($objectId = null)
     {
         //====================================================================//
         // Detect Current Object Type
-        $this->admin->getModelManager()->setObjectType($this->admin->getObjectType());           
+        $this->getObjectsManager()->setObjectType($this->admin->getObjectType());
         //====================================================================//
         // Base Admin Action
-        return parent::deleteAction($id);
-    }    
-    
+        return parent::deleteAction($objectId);
+    }
+
     /**
      * Show Image action.
      *
-     * @throws AccessDeniedException If access is not granted
+     * @param string $path
+     * @param string $md5
      *
      * @return Response
      */
-    public function imageAction(string $Path, string $Md5)
+    public function imageAction(string $path, string $md5)
     {
         //====================================================================//
         // Detect Current Object Type
-        $this->admin->getModelManager()->setObjectType($this->admin->getObjectType());           
+        $this->getObjectsManager()->setObjectType($this->admin->getObjectType());
         //====================================================================//
         // Load File From Connnector
-        $FileArray  =   $this->admin->getModelManager()
-                ->getConnector()
-                ->getFile(base64_decode($Path), $Md5);
+        $fileArray = $this->getObjectsManager()
+            ->getConnector()
+            ->getFile((string) base64_decode($path, true), $md5);
         //==============================================================================
-        // Return Image Response    
+        // Return Image Response
         $headers = array(
-            'Content-Type'          => 'image/png',
-            'Content-Disposition'   => 'inline; filename="'.$FileArray["filename"].'"');
-        return new Response(base64_decode($FileArray["raw"]), 200, $headers);        
-    } 
+            'Content-Type' => 'image/png',
+            'Content-Disposition' => 'inline; filename="'.$fileArray['filename'].'"', );
+
+        return new Response(base64_decode($fileArray['raw'], true), 200, $headers);
+    }
 
     /**
      * File action.
      *
-     * @throws AccessDeniedException If access is not granted
+     * @param string $path
+     * @param string $md5
      *
      * @return Response
      */
-    public function fileAction(string $Path, string $Md5)
+    public function fileAction(string $path, string $md5)
     {
         //====================================================================//
         // Detect Current Object Type
-        $this->admin->getModelManager()->setObjectType($this->admin->getObjectType());           
+        $this->getObjectsManager()->setObjectType($this->admin->getObjectType());
         //====================================================================//
         // Load File From Connnector
-        $FileArray  =   $this->admin->getModelManager()
-                ->getConnector()
-                ->getFile(base64_decode($Path), $Md5);
+        $fileArray = $this->getObjectsManager()
+            ->getConnector()
+            ->getFile((string) base64_decode($path, true), $md5);
         //==============================================================================
         // Return Image Response
         $headers = array(
-            'Content-Type'          => 'application/force-download',
-            'Content-Disposition'   => 'inline; filename="'.$FileArray["filename"].'"');
-        return new Response(base64_decode($FileArray["raw"]), 200, $headers);        
-    } 
-    
+            'Content-Type' => 'application/force-download',
+            'Content-Disposition' => 'inline; filename="'.$fileArray['filename'].'"', );
+
+        return new Response(base64_decode($fileArray['raw'], true), 200, $headers);
+    }
 }
