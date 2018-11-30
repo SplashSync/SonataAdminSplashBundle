@@ -15,6 +15,7 @@
 
 namespace Splash\Admin\Model;
 
+use Exception;
 use Splash\Bundle\Models\AbstractConnector;
 
 /**
@@ -25,7 +26,7 @@ trait ObjectManagerAwareTrait
     /**
      * @abstract    Get Splash Object Manager
      *
-     * @throws Exception
+     * @throws \Exception
      *
      * @return ObjectsManager
      */
@@ -44,7 +45,7 @@ trait ObjectManagerAwareTrait
     /**
      * @abstract    Get Currently Used Connector
      *
-     * @throws Exception
+     * @throws \Exception
      *
      * @return AbstractConnector
      */

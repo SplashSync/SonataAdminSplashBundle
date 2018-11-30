@@ -1,0 +1,44 @@
+{#
+
+ *  This file is part of SplashSync Project.
+ *
+ *  Copyright (C) 2015-2018 Splash Sync  <www.splashsync.com>
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+
+#}
+
+{% extends "@SonataAdmin/CRUD/base_list.html.twig" %}
+{% import   "@SplashAdmin/Macros/fields.html.twig"   as  Fields %}
+
+{%- block actions -%}
+    {% include '@SonataAdmin/CRUD/action_buttons.html.twig' %}
+{%- endblock -%}
+
+{%- block tab_menu -%}
+{%- endblock -%}
+
+{% block title %}
+    Explore Objects
+{% endblock %}
+
+{% block navbar_title %}
+    {{ block('title') }}
+{% endblock %}
+
+{% block list_table %}
+
+    {% include "@SplashAdmin/Core/logs.html.twig" %}    
+        
+{% endblock %}
+
+{% block list_filters_actions %}
+{% endblock %}
+
+{% block list_filters %}
+{% endblock %}

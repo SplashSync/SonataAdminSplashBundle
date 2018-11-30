@@ -65,6 +65,19 @@ class ObjectsController extends CRUDController
         //====================================================================//
         // Detect Current Object Type
         $objectType = $this->admin->getObjectType();
+        if (empty($objectType)) {
+            //====================================================================//
+            // Add Error To Splahs Log
+            Splash::log()->err("No Object Type found on this Server.");
+            //====================================================================//
+            // Render Connector Profile Page
+            return $this->render('@SplashAdmin/Objects/empty.html.twig', array(
+                'action' => 'list',
+                'admin' => $this->admin,
+                'log' => Splash::log()->GetHtmlLog(true),
+            ));
+        }
+        
         $this->getObjectsManager()->setObjectType($objectType);
         //====================================================================//
         // Read Object List
