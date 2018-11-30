@@ -195,9 +195,9 @@ class FormHelper
      *
      * @param array $fieldChoices
      *
-     * @return array
+     * @return array|ArrayObject
      */
-    private static function toFormChoice(array $fieldChoices)
+    private static function toFormChoice($fieldChoices)
     {
         $response   =    array();
         foreach ($fieldChoices as $choice) {

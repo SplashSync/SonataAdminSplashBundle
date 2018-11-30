@@ -20,6 +20,7 @@ use Splash\Bundle\Models\AbstractConnector;
 use Splash\Bundle\Services\ConnectorsManager;
 use Splash\Widgets\Entity\Widget;
 use Splash\Widgets\Models\Interfaces\WidgetProviderInterface;
+use Splash\Widgets\Models\Traits\ParametersTrait;
 use Splash\Widgets\Services\FactoryService;
 use Symfony\Component\Cache\Simple\FilesystemCache;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -29,6 +30,8 @@ use Symfony\Component\Form\FormBuilderInterface;
  */
 class WidgetFactoryService implements WidgetProviderInterface
 {
+    use ParametersTrait;
+
     const SERVICE = 'splash.admin.widget.factory';
 
     const ORIGIN = "<i class='fa fa-github text-success' aria-hidden='true'>&nbsp;</i>&nbsp;";
@@ -94,10 +97,16 @@ class WidgetFactoryService implements WidgetProviderInterface
         // Build Widget Definition
         $this->buildWidgetDefinition($connectorWidgetType);
         //====================================================================//
+        // Merge Input Parameter with Cached
+        $mergedParameters = array_merge_recursive($this->getWidgetParameters($connectorWidgetType), $parameters);
+        //====================================================================//
+        // Add Dates from Presets
+        $datedParameters = self::addDatesPresets($mergedParameters);
+        //====================================================================//
         // Load Widget Contents
         $this->addWidgetContents(
             $connectorWidgetType,
-            array_merge_recursive($parameters, $this->getWidgetParameters($connectorWidgetType))
+            $datedParameters
         );
         //====================================================================//
         // Return Splash Widget
