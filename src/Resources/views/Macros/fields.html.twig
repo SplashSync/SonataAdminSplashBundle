@@ -61,17 +61,6 @@
 {% endmacro %}
 
 {#
-    Generate an Html Field Name Block
-#}
-{#{% macro name(name,isToSync) %}
-    {% if isToSync is defined and isToSync != 0 %}
-        <i class="fa fa-exclamation text-danger"></i><b>&nbsp;{{ name | raw }}</b>
-    {% else %}                     
-        {{ name | raw }}
-    {% endif %}     
-{% endmacro %}#}
-
-{#
     Generate an Html Field Label Block
 #}
 {% macro label(name) %}

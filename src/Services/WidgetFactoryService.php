@@ -98,7 +98,7 @@ class WidgetFactoryService implements WidgetProviderInterface
         $this->buildWidgetDefinition($connectorWidgetType);
         //====================================================================//
         // Merge Input Parameter with Cached
-        $mergedParameters = array_merge_recursive($this->getWidgetParameters($connectorWidgetType), $parameters);
+        $mergedParameters = array_replace_recursive($this->getWidgetParameters($connectorWidgetType), $parameters);
         //====================================================================//
         // Add Dates from Presets
         $datedParameters = self::addDatesPresets($mergedParameters);

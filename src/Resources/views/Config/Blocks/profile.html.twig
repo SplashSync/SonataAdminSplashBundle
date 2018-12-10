@@ -3,11 +3,21 @@
     <div class="box-body">
         <div class="info-box">
             {% if connector.selftest != true  %}
-                {% include connector.newTemplate        ignore missing with { "connector" : connector, "configuration" : configuration } only %}
-            {% elseif connector.ping != true or connector.connect != true  %}
-                {% include connector.offlineTemplate    ignore missing with { "connector" : connector, "configuration" : configuration } only %}
+                {% include connector.newTemplate        ignore missing with { 
+                        "connector" : connector, 
+                        "configuration" : configuration 
+                } only %}
+            {% elseif connector.ping != true or connector.connect != true  %}            
+                {% include connector.offlineTemplate    ignore missing with { 
+                        "connector" : connector, 
+                        "configuration" : configuration 
+                } only %}
             {% else %}
-                {% include connector.connectedTemplate  ignore missing with { "connector" : connector, "configuration" : configuration } only %}
+                {% include connector.connectedTemplate  ignore missing with { 
+                        "connector" : connector, 
+                        "configuration" : configuration, 
+                        "informations" : informations 
+                } only %}
             {% endif %}
         </div>
     </div>

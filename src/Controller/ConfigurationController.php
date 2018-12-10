@@ -15,8 +15,10 @@
 
 namespace Splash\Admin\Controller;
 
+use ArrayObject;
 use Sonata\AdminBundle\Controller\CRUDController;
 use Splash\Admin\Model\ObjectManagerAwareTrait;
+use Splash\Core\SplashCore as Splash;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormRenderer;
 use Symfony\Component\Form\FormView;
@@ -66,6 +68,13 @@ class ConfigurationController extends CRUDController
             $connector->updateConfiguration();
         }
         //==============================================================================
+        // Fetch Connector Informations
+        if ($connector->selftest()) {
+            if ($connector->ping() && $connector->connect()) {
+                $informations    = $connector->informations(new ArrayObject(array()));
+            }
+        }
+        //==============================================================================
         // Create Form View
         $formView = $form->createView();
         // set the theme for the current Admin Form
@@ -76,8 +85,10 @@ class ConfigurationController extends CRUDController
             'action' => 'list',
             'admin' => $this->admin,
             'profile' => $connector->getProfile(),
+            'log' => Splash::log()->GetHtmlLog(true),
             'connector' => $connector,
             'configuration' => $this->getObjectsManager()->getConfiguration(),
+            'informations' => isset($informations) ? $informations : new ArrayObject(array()),
             'form' => $formView,
         ));
     }

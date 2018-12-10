@@ -50,11 +50,11 @@ class ProfileController extends CRUDController
         $logSelfTest = Splash::log()->GetHtmlLog(true);
         //====================================================================//
         // Execute Splash Ping Test
-        $results['ping']    = $connector->ping();
+        $results['ping']    = $results['selftest'] ? $connector->ping() : false;
         $logPingTest       = Splash::log()->GetHtmlLog(true);
         //====================================================================//
         // Execute Splash Connect Test
-        $results['connect'] = $connector->connect();
+        $results['connect'] = $results['selftest'] ? $connector->connect() : false;
         $logConnectTest    = Splash::log()->GetHtmlLog(true);
         //====================================================================//
         // Load Connector Informations

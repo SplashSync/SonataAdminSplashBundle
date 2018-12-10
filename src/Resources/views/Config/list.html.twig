@@ -47,42 +47,15 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block list_filters %}
-    
-    <div class="col-xs-12 col-md-6">
 
-{#        {% include "@SplashAdmin/Profile/Blocks/idcard.html.twig" %}#}
-        
-{#        {% include "@SplashAdmin/Profile/Blocks/infos.html.twig" %}#}
+    {% include "@SplashAdmin/Core/logs.html.twig" %}
+
+    <div class="col-xs-12 col-md-6">
         {% include "@SplashAdmin/Config/Blocks/profile.html.twig" %}
-        
     </div>
     
     <div class="col-xs-12 col-md-6">
         {% include "@SplashAdmin/Config/Blocks/form.html.twig" %}
-        
-        
-{#        {% include "@SplashAdmin/Profile/Blocks/objects.html.twig" %}#}
-                
-{#        {% include "@SplashAdmin/Profile/Blocks/test.html.twig" with { 
-                "result"    : results.selftest,
-                "title"     : 'Self-Test of Connector',
-                "log"       : selftest
-        } %}
-#}
-{#        {% include "@SplashAdmin/Profile/Blocks/test.html.twig" with { 
-                "result"    : results.ping,
-                "title"     : 'Ping from Connector',
-                "log"       : ping
-        } %}
-#}
-{#        {% include "@SplashAdmin/Profile/Blocks/test.html.twig" with { 
-                "result"    : results.connect,
-                "title"     : 'Connect from Connector',
-                "log"       : connect
-        } %}
-#}        
     </div>
-
-    
     
 {% endblock %}
