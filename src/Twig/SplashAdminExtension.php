@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2018 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -47,9 +47,9 @@ class SplashAdminExtension extends AbstractExtension
     /**
      * @abstract   Identify if a string is an Object Identifier Data
      *
-     * @param      string $input Id Field String
+     * @param string $input Id Field String
      *
-     * @return     array|false
+     * @return array|false
      */
     public function isIdField($input)
     {
@@ -59,9 +59,9 @@ class SplashAdminExtension extends AbstractExtension
     /**
      * @abstract   Decode a string to extract Object Identifier Data Type
      *
-     * @param      string $unput Id Field String
+     * @param string $unput Id Field String
      *
-     * @return     bool|string
+     * @return bool|string
      */
     public function objectType($unput)
     {
@@ -71,9 +71,9 @@ class SplashAdminExtension extends AbstractExtension
     /**
      * @abstract   Decode a string to extract Object Identifier Data Type
      *
-     * @param      string $input Id Field String
+     * @param string $input Id Field String
      *
-     * @return     bool|string
+     * @return bool|string
      */
     public function objectId($input)
     {
@@ -83,9 +83,9 @@ class SplashAdminExtension extends AbstractExtension
     /**
      * @abstract   Identify if a string is a List Field String
      *
-     * @param      string $input List Field String
+     * @param string $input List Field String
      *
-     * @return     bool
+     * @return bool
      */
     public function isListField($input)
     {
@@ -107,9 +107,9 @@ class SplashAdminExtension extends AbstractExtension
     /**
      * @abstract   Decode a list string to extract Field Identifier
      *
-     * @param      string $input List Field String
+     * @param string $input List Field String
      *
-     * @return     bool|string
+     * @return bool|string
      */
     public function getListFieldData($input)
     {
@@ -133,9 +133,9 @@ class SplashAdminExtension extends AbstractExtension
     /**
      * @abstract   Decode a string to extract List Name String
      *
-     * @param      string $input List Field String
+     * @param string $input List Field String
      *
-     * @return     bool|string
+     * @return bool|string
      */
     public function getListFieldName($input)
     {
@@ -159,9 +159,9 @@ class SplashAdminExtension extends AbstractExtension
     /**
      * @abstract   Access PHP Core Function
      *
-     * @param      string $input
+     * @param string $input
      *
-     * @return     bool|string
+     * @return bool|string
      */
     public function base64Encode($input)
     {
@@ -171,9 +171,9 @@ class SplashAdminExtension extends AbstractExtension
     /**
      * @abstract   Access PHP Core Function
      *
-     * @param      string $input
+     * @param string $input
      *
-     * @return     bool|string
+     * @return bool|string
      */
     public function base64Decode($input)
     {
@@ -183,9 +183,9 @@ class SplashAdminExtension extends AbstractExtension
     /**
      * @abstract   Get File Path Extension Name
      *
-     * @param      string $input
+     * @param string $input
      *
-     * @return     bool|string
+     * @return bool|string
      */
     public function filetypeFilter($input)
     {
@@ -193,7 +193,7 @@ class SplashAdminExtension extends AbstractExtension
     }
     
     /**
-     * @return     string
+     * @return string
      */
     public function getName()
     {

@@ -110,6 +110,7 @@ class ObjectsController extends CRUDController
         //====================================================================//
         // Detect Current Object Type
         $this->getObjectsManager()->setObjectType($this->admin->getObjectType());
+        $this->getObjectsManager()->setShowMode();
         
         try {
             //====================================================================//
@@ -118,7 +119,7 @@ class ObjectsController extends CRUDController
         } catch (NotFoundHttpException $ex) {
             //====================================================================//
             // Redirect to Objects List
-            $this->addFlash("warning", "Object " .$objectId. " was not found on this Server");
+            $this->addFlash("warning", "Object ".$objectId." was not found on this Server");
 
             return $this->listAction();
         }
@@ -154,7 +155,7 @@ class ObjectsController extends CRUDController
             }
             //====================================================================//
             // Redirect to Objects List
-            $this->addFlash("warning", "Object " .$objectId. " was not found on this Server");
+            $this->addFlash("warning", "Object ".$objectId." was not found on this Server");
 
             return $this->listAction();
         }

@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2018 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -72,6 +72,7 @@ abstract class AbstractAdmin extends BaseAdmin
 
     /**
      * Get Current Object Type
+     *
      * @return string
      */
     public function getObjectType()
@@ -98,6 +99,7 @@ abstract class AbstractAdmin extends BaseAdmin
 
     /**
      * Get Current Server Id
+     *
      * @return string
      */
     public function getServerId()
@@ -107,6 +109,7 @@ abstract class AbstractAdmin extends BaseAdmin
 
     /**
      * Configure Splash Objects Manager
+     *
      * @return void
      */
     protected function configureModelManager()

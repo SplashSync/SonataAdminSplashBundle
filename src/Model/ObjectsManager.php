@@ -40,6 +40,7 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
 /**
  * @abstract Splas Objects Model Manager for Soinata Admin
  *
+ * @SuppressWarnings(PHPMD.ExcessivePublicCount)
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -151,13 +152,11 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     /**
      * Select Show Mode to Allow reading of ReadOnly Fields
      *
-     * @param bool $isShowMode
-     *
      * @return $this
      */
-    public function setShowMode(bool $isShowMode = true)
+    public function setShowMode()
     {
-        $this->isShowMode = $isShowMode;
+        $this->isShowMode = true;
 
         return $this;
     }
