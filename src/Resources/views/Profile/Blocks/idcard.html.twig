@@ -22,7 +22,7 @@
                         <tbody>
                             <tr>
                                 <td>Title</td>
-                                <td>{{ profile.label | default('No Connector Label Defined') }}</td>
+                                <td>{{ profile.label | trans({}, profile.domain ) | default('No Connector Label Defined') }}</td>
                             </tr>
                             <tr>
                                 <td>Name</td>

@@ -24,7 +24,7 @@ file that was distributed with this source code.
 {%- endblock -%}
 #}
 {% block title %}
-    {{ profile.title | default('No Connector Title Defined') }}
+    {{ profile.title | trans({}, profile.domain ) | default('No Connector Title Defined') }}
     {#
         The list template can be used in nested mode,
         so we define the title corresponding to the parent's admin.
