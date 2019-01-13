@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2018 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -30,6 +30,7 @@ use Sonata\AdminBundle\Model\LockInterface;
 use Sonata\AdminBundle\Model\ModelManagerInterface;
 use Sonata\DoctrineORMAdminBundle\Admin\FieldDescription;
 use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
+use Splash\Bundle\Events\ObjectsIdChangedEvent;
 use Splash\Bundle\Models\AbstractConnector;
 use Splash\Bundle\Services\ConnectorsManager;
 use Splash\Components\FieldsManager;
@@ -56,6 +57,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      * @var EntityManager[]
      */
     protected $cache = array();
+    
     /**
      * @var ConnectorsManager
      */
@@ -72,6 +74,11 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     private $serverId;
 
     /**
+     * @var bool
+     */
+    private $isShowMode = false;
+    
+    /**
      * Current Splash Connector Service.
      *
      * @var AbstractConnector
@@ -84,14 +91,21 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     private $objectType;
 
     /**
-     * @abstract    Fields Cache
+     * Fields Cache
      *
      * @var array
      */
     private $fields = array();
 
     /**
-     * @abstract    Class Constructor
+     * Store New Object Id when Changed during Edit
+     *
+     * @var string
+     */
+    private $newObjectId;
+    
+    /**
+     * Class Constructor
      *
      * @param ConnectorsManager $manager
      * @param EntityManager     $entityManager
@@ -107,7 +121,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     //====================================================================//
 
     /**
-     * @abstract    Setup Current Splash Object Type
+     * Setup Current Splash Object Type
      *
      * @param string $objectType
      *
@@ -121,7 +135,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * @abstract    Select Splash Bundle Connection to Use
+     * Select Splash Bundle Connection to Use
      *
      * @param string $serverId
      *
@@ -135,7 +149,21 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * @abstract    Get Splash Bundle Connection Server Id
+     * Select Show Mode to Allow reading of ReadOnly Fields
+     *
+     * @param bool $isShowMode
+     *
+     * @return $this
+     */
+    public function setShowMode(bool $isShowMode = true)
+    {
+        $this->isShowMode = $isShowMode;
+
+        return $this;
+    }
+    
+    /**
+     * Get Splash Bundle Connection Server Id
      *
      * @return string
      */
@@ -145,7 +173,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * @abstract    Get Current Splash Connetor
+     * Get Current Splash Connetor
      *
      * @return AbstractConnector
      */
@@ -168,7 +196,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * @abstract    Get Current Connector Service Configuration
+     * Get Current Connector Service Configuration
      *
      * @return array
      */
@@ -178,7 +206,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * @abstract    Fetch Connector Available Objects Types
+     * Fetch Connector Available Objects Types
      *
      * @return array
      */
@@ -190,7 +218,31 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * @abstract    Fetch Connector Available Objects List
+     * Detect Object Id was Changed so that we could redirect to New Id Page
+     *
+     * @param ObjectsIdChangedEvent $event
+     *
+     * @return void
+     */
+    public function onObjectIdChangedEvent(ObjectsIdChangedEvent $event) : void
+    {
+        //====================================================================//
+        // Store New Object Id
+        $this->newObjectId = $event->getNewObjectId();
+    }
+    
+    /**
+     * If Object Id was Changed, Return New Object Id so that we could redirect to New Id Page
+     *
+     * @return null|string
+     */
+    public function getNewObjectId()
+    {
+        return isset($this->newObjectId) ? $this->newObjectId : null;
+    }
+    
+    /**
+     * Fetch Connector Available Objects List
      *
      * @return array
      */
@@ -212,7 +264,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * @abstract    Get Object Fields Array
+     * Get Object Fields Array
      *
      * @return array[ArrayObject]
      */
@@ -263,7 +315,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * @abstract    Create A New Object via Connector
+     * Create A New Object via Connector
      *
      * @param ArrayObject $object
      *
@@ -297,7 +349,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * @abstract    Update Object via Connector
+     * Update Object via Connector
      *
      * @param ArrayObject $object
      *
@@ -340,7 +392,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * @abstract    Delete Object via Connector
+     * Delete Object via Connector
      *
      * @param ArrayObject $object
      *
@@ -451,7 +503,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
         /** @var ArrayObject $field */
         foreach ($this->getObjectFields() as $field) {
             // Only for Writable Fields
-            if (empty($field->write)) {
+            if (!$this->isShowMode && empty($field->write)) {
                 continue;
             }
             if (!FieldsManager::isListField($field->type)) {
@@ -467,7 +519,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
         $writeFields = FieldsManager::reduceFieldList(
             $this->getObjectFields(),
             true,
-            true
+            !$this->isShowMode
         );
         //====================================================================//
         // Remove Read Only Fields

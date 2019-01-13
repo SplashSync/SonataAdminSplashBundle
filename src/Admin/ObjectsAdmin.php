@@ -165,7 +165,7 @@ class ObjectsAdmin extends AbstractAdmin
         foreach ($objectFields as $field) {
             //====================================================================//
             // Filter ReadOnly Fields
-            if (empty($field->write)) {
+            if (!($mapper instanceof ShowMapper) && empty($field->write)) {
                 continue;
             }
             //====================================================================//

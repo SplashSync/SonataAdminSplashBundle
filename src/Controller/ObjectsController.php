@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2018 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,6 +21,7 @@ use Splash\Admin\Model\ObjectManagerAwareTrait;
 use Splash\Core\SplashCore as Splash;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Description of ObjectCRUDController.
@@ -37,7 +38,7 @@ class ObjectsController extends CRUDController
     protected $admin;
 
     /**
-     * @abstract    Switch Between Object Types
+     * Switch Between Object Types
      *
      * @param Request $request
      *
@@ -109,9 +110,18 @@ class ObjectsController extends CRUDController
         //====================================================================//
         // Detect Current Object Type
         $this->getObjectsManager()->setObjectType($this->admin->getObjectType());
-        //====================================================================//
-        // Base Admin Action
-        return parent::showAction($objectId);
+        
+        try {
+            //====================================================================//
+            // Base Admin Action
+            return parent::showAction($objectId);
+        } catch (NotFoundHttpException $ex) {
+            //====================================================================//
+            // Redirect to Objects List
+            $this->addFlash("warning", "Object " .$objectId. " was not found on this Server");
+
+            return $this->listAction();
+        }
     }
 
     /**
@@ -126,9 +136,32 @@ class ObjectsController extends CRUDController
         //====================================================================//
         // Detect Current Object Type
         $this->getObjectsManager()->setObjectType($this->admin->getObjectType());
+
+        try {
+            //====================================================================//
+            // Base Admin Action
+            $response = parent::editAction($objectId);
+        } catch (NotFoundHttpException $ex) {
+            //====================================================================//
+            // Detect Object Id Changed
+            $newObjectId = $this->getObjectsManager()->getNewObjectId();
+            if ($newObjectId) {
+                //====================================================================//
+                // Redirect to New Object Edit Url
+                $redirectUrl = $this->admin->generateUrl("edit", array("id" => $newObjectId));
+
+                return $this->redirectTo($redirectUrl);
+            }
+            //====================================================================//
+            // Redirect to Objects List
+            $this->addFlash("warning", "Object " .$objectId. " was not found on this Server");
+
+            return $this->listAction();
+        }
+        
         //====================================================================//
-        // Base Admin Action
-        return parent::editAction($objectId);
+        // Return Standard Response
+        return $response;
     }
 
     /**
