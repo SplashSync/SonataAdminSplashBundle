@@ -87,11 +87,11 @@ class ProfileController extends CRUDController
     /**
      * Show action.
      *
-     * @param null|mixed $objectId
+     * @param null|mixed $id
      *
      * @return Response
      */
-    public function showAction($objectId = null)
+    public function showAction($id = null)
     {
         //====================================================================//
         // Setup Connector
@@ -101,8 +101,8 @@ class ProfileController extends CRUDController
         return $this->render("@SplashAdmin/Profile/show.html.twig", array(
             'action'    => 'list',
             "profile"   =>  $connector->getProfile(),
-            "object"    =>  $connector->getObjectDescription($objectId),
-            "fields"    =>  $connector->getObjectFields($objectId),
+            "object"    =>  $connector->getObjectDescription($id),
+            "fields"    =>  $connector->getObjectFields($id),
             "log"       =>  Splash::log()->GetHtmlLog(true),
         ));
     }
