@@ -345,6 +345,10 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
         //====================================================================//
         // Catch Splash Logs
         $this->manager->pushLogToSession(true);
+
+        //====================================================================//
+        // Return New Object
+        return $object;
     }
 
     /**
