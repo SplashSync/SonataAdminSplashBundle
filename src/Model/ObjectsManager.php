@@ -30,6 +30,7 @@ use Sonata\AdminBundle\Model\LockInterface;
 use Sonata\AdminBundle\Model\ModelManagerInterface;
 use Sonata\DoctrineORMAdminBundle\Admin\FieldDescription;
 use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
+use Sonata\Exporter\Source\SourceIteratorInterface;
 use Splash\Bundle\Events\ObjectsIdChangedEvent;
 use Splash\Bundle\Models\AbstractConnector;
 use Splash\Bundle\Services\ConnectorsManager;
@@ -319,6 +320,9 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      * @param ArrayObject $object
      *
      * @throws ModelManagerException
+     *
+     * @return ArrayObject
+     *
      */
     public function create($object)
     {
@@ -669,6 +673,8 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return SourceIteratorInterface
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
