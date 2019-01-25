@@ -672,8 +672,10 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * @param null|int $firstResult
-     * @param null|int $maxResult
+     * @param DatagridInterface $datagrid
+     * @param array             $fields
+     * @param null|int          $firstResult
+     * @param null|int          $maxResult
      *
      * @return SourceIteratorInterface
      *
