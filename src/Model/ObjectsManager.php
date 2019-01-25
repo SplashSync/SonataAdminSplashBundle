@@ -672,7 +672,8 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param null|int $firstResult
+     * @param null|int $maxResult
      *
      * @return SourceIteratorInterface
      *
