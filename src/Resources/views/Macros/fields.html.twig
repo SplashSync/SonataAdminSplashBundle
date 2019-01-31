@@ -171,7 +171,7 @@
         
         {% if Data is not empty and Data | isIdField() %}
             
-            <a href="{{ Admin.generateUrl('edit', {"id": Data | objectId, "ObjectType":Data | objectType | default(null) } ) }}">
+            <a href="{{ Admin.generateUrl('show', {"id": Data | objectId, "ObjectType":Data | objectType | default(null) } ) }}" target="_blank">
                 <span class="label label-primary font-sm">
                     <i class="fa fa-link"></i>&nbsp;&nbsp;
                     {{ Data | objectType }}
