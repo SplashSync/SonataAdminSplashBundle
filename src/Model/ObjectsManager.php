@@ -477,6 +477,9 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
         //====================================================================//
         // Read Object Data
         $object = $this->getConnector()->getObject($this->objectType, $objectId, $fields);
+        //====================================================================//
+        // Catch Splash Logs
+        $this->manager->pushLogToSession(true);        
         if (empty($object)) {
             return false;
         }
