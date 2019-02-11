@@ -45,9 +45,9 @@ file that was distributed with this source code.
                             <thead>
                                 <tr class="sonata-ba-list-field-header">
                                     <th class="sonata-ba-list-field-header">Id</th>
-                                    <th class="sonata-ba-list-field-header">Tags</th>
+                                    <th class="sonata-ba-list-field-header" width="150px">Tags</th>
                                     <th class="sonata-ba-list-field-header">Type</th>
-                                    <th class="sonata-ba-list-field-header">Name</th>
+                                    <th class="sonata-ba-list-field-header" width="150px">Name</th>
                                     <th class="sonata-ba-list-field-header">Metadata</th>
                                     <th class="sonata-ba-list-field-header">Description</th>
                                 </tr>
@@ -60,14 +60,14 @@ file that was distributed with this source code.
                                     <td class="sonata-ba-list-field sonata-ba-list-field-batch">{{ field.id }}</td>
                                     <td class="sonata-ba-list-field sonata-ba-list-field-batch">{{ Fields.flags(field) }}</td>
                                     <td class="sonata-ba-list-field sonata-ba-list-field-batch">{{ Fields.format(field.type) }}</td>
-                                    <td class="sonata-ba-list-field sonata-ba-list-field-batch">{{ field.name }}</td>
+                                    <td class="sonata-ba-list-field sonata-ba-list-field-batch">{{ field.name | raw }}</td>
                                     <td class="sonata-ba-list-field sonata-ba-list-field-batch">
                                         <a href="http://{{ field.itemtype }}" target="_blank">
                                             <i class="fa fa-external-link-square"></i>
                                             {{ field.itemtype }}&nbsp;:&nbsp;{{ field.itemprop }}
                                         </a>
                                     </td>
-                                    <td class="sonata-ba-list-field sonata-ba-list-field-batch">{{ field.desc }}</td>
+                                    <td class="sonata-ba-list-field sonata-ba-list-field-batch">{{ field.desc | raw }}</td>
                                 </tr>
                                 {% endfor %}
 

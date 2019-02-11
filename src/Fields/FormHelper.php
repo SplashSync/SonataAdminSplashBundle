@@ -161,8 +161,10 @@ class FormHelper
                 break;
         }
         
+        $extra = isset($field->options["language"]) ? " (".$field->options["language"].")" : null;
+        
         return array_replace_recursive($options, array(
-            'label'         =>  $field->name,
+            'label'         => html_entity_decode($field->name).$extra,
             //====================================================================//
             // Manage Required Tag
             "required"      =>   !empty($field->required),

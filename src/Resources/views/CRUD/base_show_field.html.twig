@@ -16,7 +16,14 @@
 {% import   "@SplashAdmin/Macros/fields.html.twig"   as  Fields %}
      
 {% if not field_description.options.splash_is_list %}
-    <th>{% block name %}{{ field_description.options.label }}{% endblock %}</th>
+    <th>
+        {% block name %}
+            {% if field_description.options.splash_field.options.language is defined %}
+                {{ Fields.lang(field_description.options.splash_field.options.language) }}
+            {% endif %}            
+            {{ field_description.options.splash_field.name | raw }}
+        {% endblock %}
+    </th>
     {% block field_value %}
         {% spaceless %}
             <td style="width: 150px !important;">{{ Fields.format(field_description.options.splash_field.type) }}</td>

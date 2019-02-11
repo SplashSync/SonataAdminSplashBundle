@@ -48,3 +48,5 @@
 /.web-server-pid
 /.php_cs.cache
 /composer.lock
+/nbproject/private/
+/src/.php_cs.cache

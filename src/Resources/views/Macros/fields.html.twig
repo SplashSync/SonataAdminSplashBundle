@@ -74,6 +74,18 @@
 {#
     Generate an Html Field Data Block
 #}
+{% macro lang(isoCode) %}
+    {% if isoCode is not empty %}
+        {% set flag = isoCode|split('_', 2) %}
+        {% set flagUrl = "bundles/splashadmin/flags/1x1/" ~ (flag[1]|default(flag[0]|default("")) | lower) ~ ".svg" %}
+        <img src="{{ asset(flagUrl) }}" width="15px">
+    {% endif %}  
+            
+{% endmacro %}
+  
+{#
+    Generate an Html Field Data Block
+#}
 {% macro data(Format, Data, Admin) %}
     
     <!-- Identify List Fields Types -->
@@ -94,7 +106,7 @@
     {% elseif Format == "varchar" or Format == "text" %}
         
         {% if Data is not iterable %}
-            {{ Data | truncate(250) }}       
+            {{ Data | truncate(250) }} 
         {% else %}
             <span class="text-danger"><i class="fa fa-envelope"></i>&nbsp; Wrong Field Format!</span>
         {% endif %}
@@ -347,5 +359,10 @@
             <span class="label label-primary"><i class="fa {{ 'fields.inlist.ico'|trans({}, 'AppExplorerBundle')|raw }}"></i></span>
         </span>
     {% endif %}
+    
+    {% if field.options.language is defined %}
+        {% import   _self   as  Fields %}
+        {{ Fields.lang(field.options.language) }}
+    {% endif %}       
     <!-- End Objects Fields Flags Block -->
 {% endmacro %}
