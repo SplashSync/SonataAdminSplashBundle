@@ -41,7 +41,7 @@ trait ObjectManagerAwareTrait
 
         return $objectManager;
     }
-    
+
     /**
      * @abstract    Get Currently Used Connector
      *

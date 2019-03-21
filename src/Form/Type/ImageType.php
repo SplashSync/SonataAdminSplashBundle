@@ -38,11 +38,11 @@ class ImageType extends AbstractType
         //==============================================================================
         //  Object Type Widget
         $formBuilder->add("upload", FileType::class, array(
-            'required'          => false,
-            'label'             => false,
+            'required' => false,
+            'label' => false,
         ));
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -50,7 +50,7 @@ class ImageType extends AbstractType
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults(array(
-            'data_class'        =>  null,
+            'data_class' => null,
         ));
     }
 

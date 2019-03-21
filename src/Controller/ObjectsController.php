@@ -78,7 +78,7 @@ class ObjectsController extends CRUDController
                 'log' => Splash::log()->GetHtmlLog(true),
             ));
         }
-        
+
         $this->getObjectsManager()->setObjectType($objectType);
         //====================================================================//
         // Read Object List
@@ -111,7 +111,7 @@ class ObjectsController extends CRUDController
         // Detect Current Object Type
         $this->getObjectsManager()->setObjectType($this->admin->getObjectType());
         $this->getObjectsManager()->setShowMode();
-        
+
         try {
             //====================================================================//
             // Base Admin Action
@@ -159,7 +159,7 @@ class ObjectsController extends CRUDController
 
             return $this->listAction();
         }
-        
+
         //====================================================================//
         // Return Standard Response
         return $response;

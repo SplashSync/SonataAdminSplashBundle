@@ -29,7 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
 class ProfileController extends CRUDController
 {
     use ObjectManagerAwareTrait;
-    
+
     /**
      * List action.
      *
@@ -40,7 +40,7 @@ class ProfileController extends CRUDController
         $results = array();
         //====================================================================//
         // Setup Connector
-        $connector  =   $this->getConnector();
+        $connector = $this->getConnector();
         //====================================================================//
         // Execute Splash Self-Test
         $results['selftest'] = $connector->selfTest();
@@ -50,40 +50,40 @@ class ProfileController extends CRUDController
         $logSelfTest = Splash::log()->GetHtmlLog(true);
         //====================================================================//
         // Execute Splash Ping Test
-        $results['ping']    = $results['selftest'] ? $connector->ping() : false;
-        $logPingTest       = Splash::log()->GetHtmlLog(true);
+        $results['ping'] = $results['selftest'] ? $connector->ping() : false;
+        $logPingTest = Splash::log()->GetHtmlLog(true);
         //====================================================================//
         // Execute Splash Connect Test
         $results['connect'] = $results['selftest'] ? $connector->connect() : false;
-        $logConnectTest    = Splash::log()->GetHtmlLog(true);
+        $logConnectTest = Splash::log()->GetHtmlLog(true);
         //====================================================================//
         // Load Connector Informations
-        $informations    = array();
+        $informations = array();
         if ($results['ping'] && $results['connect']) {
-            $informations    = $connector->informations(new ArrayObject(array()));
+            $informations = $connector->informations(new ArrayObject(array()));
         }
         //====================================================================//
         // Load Objects Informations
-        $objects   =   array();
+        $objects = array();
         foreach ($connector->getAvailableObjects() as $objectType) {
-            $objects[$objectType]    =   $connector->getObjectDescription($objectType);
+            $objects[$objectType] = $connector->getObjectDescription($objectType);
         }
         //====================================================================//
         // Render Connector Profile Page
         return $this->render("@SplashAdmin/Profile/list.html.twig", array(
-            'action'    => 'list',
-            'admin'     =>  $this->admin,
-            "profile"   =>  $connector->getProfile(),
-            "infos"     =>  $informations,
-            "config"    =>  Splash::configuration(),
-            "results"   =>  $results,
-            "selftest"  =>  $logSelfTest,
-            "ping"      =>  $logPingTest,
-            "connect"   =>  $logConnectTest,
-            "objects"   =>  $objects,
+            'action' => 'list',
+            'admin' => $this->admin,
+            "profile" => $connector->getProfile(),
+            "infos" => $informations,
+            "config" => Splash::configuration(),
+            "results" => $results,
+            "selftest" => $logSelfTest,
+            "ping" => $logPingTest,
+            "connect" => $logConnectTest,
+            "objects" => $objects,
         ));
     }
-    
+
     /**
      * Show action.
      *
@@ -95,15 +95,15 @@ class ProfileController extends CRUDController
     {
         //====================================================================//
         // Setup Connector
-        $connector  =   $this->getConnector();
+        $connector = $this->getConnector();
         //====================================================================//
         // Render Connector Profile Page
         return $this->render("@SplashAdmin/Profile/show.html.twig", array(
-            'action'    => 'list',
-            "profile"   =>  $connector->getProfile(),
-            "object"    =>  $connector->getObjectDescription($id),
-            "fields"    =>  $connector->getObjectFields($id),
-            "log"       =>  Splash::log()->GetHtmlLog(true),
+            'action' => 'list',
+            "profile" => $connector->getProfile(),
+            "object" => $connector->getObjectDescription($id),
+            "fields" => $connector->getObjectFields($id),
+            "log" => Splash::log()->GetHtmlLog(true),
         ));
     }
 }

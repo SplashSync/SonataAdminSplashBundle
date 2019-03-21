@@ -42,31 +42,31 @@ class PriceType extends AbstractType
         //==============================================================================
         //  Create Without Tax Price Widget
         $formBuilder->add("ht", NumberType::class, array(
-            'required'          => false,
-            'label'             => "Tax Excl.",
-            'empty_data'        => '0',
+            'required' => false,
+            'label' => "Tax Excl.",
+            'empty_data' => '0',
         ));
         //==============================================================================
         //  Create With Tax Price Widget
         $formBuilder->add("ttc", HiddenType::class, array(
-            'required'          => false,
-            'label'             => "Tax incl.",
-            'empty_data'        => '0',
+            'required' => false,
+            'label' => "Tax incl.",
+            'empty_data' => '0',
         ));
         //==============================================================================
         //  Create VAT Percent Widget
         $formBuilder->add("vat", PercentType::class, array(
-            'required'          => false,
-            'label'             => "VAT",
-            'type'              => 'integer',
-            'empty_data'        => '0',
+            'required' => false,
+            'label' => "VAT",
+            'type' => 'integer',
+            'empty_data' => '0',
         ));
         //==============================================================================
         //  Create Currency Code Widget
         $formBuilder->add("code", CurrencyType::class, array(
-            'required'          => true,
-            'label'             => "Currency",
-            'empty_data'        => 'EUR',
+            'required' => true,
+            'label' => "Currency",
+            'empty_data' => 'EUR',
         ));
 
         //==============================================================================
@@ -85,7 +85,7 @@ class PriceType extends AbstractType
                 }
             ));
     }
-    
+
     /**
      * @return string
      */

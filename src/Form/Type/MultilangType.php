@@ -44,11 +44,11 @@ class MultilangType extends KeyValueType
 
                 return;
             }
-            
+
             if (null === $input) {
                 return;
             }
-            
+
             $output = array();
 
             foreach ($input as $key => $value) {
@@ -61,24 +61,24 @@ class MultilangType extends KeyValueType
             $e->setData($output);
         }, 1);
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-        
+
         $resolver->setDefaults(array(
-            'value_type'        =>  TextareaType::class,
-            'key_type'          =>  LocaleType::class,
+            'value_type' => TextareaType::class,
+            'key_type' => LocaleType::class,
             //====================================================================//
             // Collection Form Parameters
-            'allow_add'         => true,
-            'allow_delete'      => true,
+            'allow_add' => true,
+            'allow_delete' => true,
         ));
     }
-    
+
     /**
      * {@inheritdoc}
      */

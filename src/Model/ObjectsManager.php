@@ -59,7 +59,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      * @var EntityManager[]
      */
     protected $cache = array();
-    
+
     /**
      * @var ConnectorsManager
      */
@@ -79,7 +79,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      * @var bool
      */
     private $isShowMode = false;
-    
+
     /**
      * Current Splash Connector Service.
      *
@@ -105,7 +105,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      * @var string
      */
     private $newObjectId;
-    
+
     /**
      * Class Constructor
      *
@@ -161,7 +161,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
 
         return $this;
     }
-    
+
     /**
      * Get Splash Bundle Connection Server Id
      *
@@ -221,8 +221,6 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      * Detect Object Id was Changed so that we could redirect to New Id Page
      *
      * @param ObjectsIdChangedEvent $event
-     *
-     * @return void
      */
     public function onObjectIdChangedEvent(ObjectsIdChangedEvent $event) : void
     {
@@ -230,7 +228,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
         // Store New Object Id
         $this->newObjectId = $event->getNewObjectId();
     }
-    
+
     /**
      * If Object Id was Changed, Return New Object Id so that we could redirect to New Id Page
      *
@@ -240,7 +238,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     {
         return isset($this->newObjectId) ? $this->newObjectId : null;
     }
-    
+
     /**
      * Fetch Connector Available Objects List
      *
@@ -322,7 +320,6 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      * @throws ModelManagerException
      *
      * @return ArrayObject
-     *
      */
     public function create($object)
     {
@@ -455,7 +452,6 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     *
      * @param mixed $class
      * @param mixed $objectId
      *

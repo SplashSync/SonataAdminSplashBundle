@@ -30,7 +30,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ObjectIdType extends AbstractType
 {
     use FieldsManagerTrait;
-        
+
     /**
      * @abstract Build Object Id Form
      *
@@ -42,14 +42,14 @@ class ObjectIdType extends AbstractType
         //==============================================================================
         //  Object ID Widget
         $formBuilder->add("ObjectId", TextType::class, array(
-            'required'          => true,
+            'required' => true,
         ));
         //==============================================================================
         //  Object Type Widget
         $formBuilder->add("ObjectType", HiddenType::class, array(
-            'required'          => true,
-            'empty_data'        => $options['object_type'],
-            'data'              => $options['object_type'],
+            'required' => true,
+            'empty_data' => $options['object_type'],
+            'data' => $options['object_type'],
         ));
         //==============================================================================
         //  Add Data Transformers to Form
@@ -71,7 +71,7 @@ class ObjectIdType extends AbstractType
                 }
             ));
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -79,10 +79,10 @@ class ObjectIdType extends AbstractType
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults(array(
-            'object_type'       =>  null,
+            'object_type' => null,
         ));
     }
-    
+
     /**
      * @return string
      */

@@ -71,7 +71,7 @@ class ConfigurationController extends CRUDController
         // Fetch Connector Informations
         if ($connector->selftest()) {
             if ($connector->ping() && $connector->connect()) {
-                $informations    = $connector->informations(new ArrayObject(array()));
+                $informations = $connector->informations(new ArrayObject(array()));
             }
         }
         //==============================================================================

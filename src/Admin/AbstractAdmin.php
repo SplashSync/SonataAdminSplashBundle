@@ -109,8 +109,6 @@ abstract class AbstractAdmin extends BaseAdmin
 
     /**
      * Configure Splash Objects Manager
-     *
-     * @return void
      */
     protected function configureModelManager()
     {

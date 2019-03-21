@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
 class WidgetsController extends CRUDController
 {
     use ObjectManagerAwareTrait;
-    
+
     /**
      * List action.
      *

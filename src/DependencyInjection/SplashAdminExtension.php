@@ -29,11 +29,11 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  */
 class SplashAdminExtension extends Extension implements PrependExtensionInterface
 {
-    const TYPE_CONFIG   =   "configuration";
-    const TYPE_PROFILE  =   "profile";
-    const TYPE_OBJECTS  =   "objects";
-    const TYPE_WIDGETS  =   "widgets";
-    
+    const TYPE_CONFIG = "configuration";
+    const TYPE_PROFILE = "profile";
+    const TYPE_OBJECTS = "objects";
+    const TYPE_WIDGETS = "widgets";
+
     /**
      * @var array
      */
@@ -42,12 +42,12 @@ class SplashAdminExtension extends Extension implements PrependExtensionInterfac
         '@SplashAdmin/Forms/image.html.twig',
         '@SplashAdmin/Forms/objectid.html.twig',
     );
-    
+
     /**
      * @var ContainerBuilder
      */
     private $container;
-    
+
     /**
      * {@inheritdoc}
      */
@@ -55,7 +55,7 @@ class SplashAdminExtension extends Extension implements PrependExtensionInterfac
     {
         //====================================================================//
         // Store Container
-        $this->container    =   $container;
+        $this->container = $container;
         //====================================================================//
         // Load Bundle Services
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
@@ -74,7 +74,7 @@ class SplashAdminExtension extends Extension implements PrependExtensionInterfac
             $this->addAdminService(self::TYPE_WIDGETS, $tagId, $connection["name"]);
         }
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -82,7 +82,7 @@ class SplashAdminExtension extends Extension implements PrependExtensionInterfac
     {
         $this->configureTwigBundle($container);
     }
-    
+
     /**
      * @abstract    Add Form Fields to Twig Form Themes
      *
@@ -102,7 +102,7 @@ class SplashAdminExtension extends Extension implements PrependExtensionInterfac
             }
         }
     }
-    
+
     /**
      * @abstract    Add Admin Service to Container
      *
@@ -114,27 +114,27 @@ class SplashAdminExtension extends Extension implements PrependExtensionInterfac
     {
         //====================================================================//
         // Build Service Tags Array
-        $tags   =   array(
-            "manager_type"  => "orm",
-            "group"         => $name,
-            "label"         => ucwords($type),
-            "icon"          => '<span class="fa fa-server"></span>',
+        $tags = array(
+            "manager_type" => "orm",
+            "group" => $name,
+            "label" => ucwords($type),
+            "icon" => '<span class="fa fa-server"></span>',
         );
         //====================================================================//
         // Build Admin Class Name
-        $adminClass         =   "Splash\\Admin\\Admin\\".ucwords($type)."Admin";
-        $controllerClass    =   "Splash\\Admin\\Controller\\".ucwords($type)."Controller";
-        
+        $adminClass = "Splash\\Admin\\Admin\\".ucwords($type)."Admin";
+        $controllerClass = "Splash\\Admin\\Controller\\".ucwords($type)."Controller";
+
         //====================================================================//
         // Build Service Configurations
-        $args   =   array(
+        $args = array(
             null,
             ArrayObject::class,     // Data Type
             $controllerClass,       // Controller Class Name
             $tagId,                    // Splash Server Id
             $type,                   // Admin Type Name
         );
-        
+
         //====================================================================//
         // Create Sonata Admin Service
         $this->container

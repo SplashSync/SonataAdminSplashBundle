@@ -42,7 +42,7 @@ use Symfony\Component\Form\Extension\Core\Type\UrlType;
 class FormHelper
 {
     use FieldsManagerTrait;
-    
+
     /**
      * @abstract    Detect Form Group for a Field
      *
@@ -61,7 +61,7 @@ class FormHelper
 
         return "default";
     }
-    
+
     /**
      * @abstract    Detect form type to Use for Editing a Field
      *
@@ -109,10 +109,10 @@ class FormHelper
             case SPL_T_TEXT:
                 return empty($field->choices) ? TextType::class : ChoiceType::class;
         }
-        
+
         return TextType::class;
     }
-    
+
     /**
      * @abstract Get Form Options for Renderieng a Field Form
      *
@@ -131,27 +131,27 @@ class FormHelper
                     break;
                 }
                 $options = array(
-                    'choices'   => self::toFormChoice($field->choices),
+                    'choices' => self::toFormChoice($field->choices),
                 );
 
                 break;
             case SPL_T_DATE:
             case SPL_T_DATETIME:
                 $options = array(
-                    'widget'                => 'single_text',
-                    'input'                 => 'string',
+                    'widget' => 'single_text',
+                    'input' => 'string',
                 );
 
                 break;
             case SPL_T_ID:
-                $objectType =   self::isIdField($field->type)["ObjectType"];
+                $objectType = self::isIdField($field->type)["ObjectType"];
                 //====================================================================//
                 // Detect Lists
                 if (self::isListField($objectType)) {
-                    $objectType =   self::isListField($objectType)["fieldname"];
+                    $objectType = self::isListField($objectType)["fieldname"];
                 }
                 $options = array(
-                    'object_type'   => $objectType,
+                    'object_type' => $objectType,
                 );
 
                 break;
@@ -160,14 +160,14 @@ class FormHelper
 
                 break;
         }
-        
+
         $extra = isset($field->options["language"]) ? " (".$field->options["language"].")" : null;
-        
+
         return array_replace_recursive($options, array(
-            'label'         => html_entity_decode($field->name).$extra,
+            'label' => html_entity_decode($field->name).$extra,
             //====================================================================//
             // Manage Required Tag
-            "required"      =>   !empty($field->required),
+            "required" => !empty($field->required),
         ));
     }
 
@@ -184,16 +184,16 @@ class FormHelper
         return array(
             //====================================================================//
             // Add List Flag
-            "splash_is_list"    =>   !empty($isList),
+            "splash_is_list" => !empty($isList),
             //====================================================================//
             // Add Fields Informations
-            "splash_field"      =>   $field,
+            "splash_field" => $field,
             //====================================================================//
             // Specify Sonata to Render Splash Specific Template
-            "template"          =>   '@SplashAdmin/CRUD/base_show_field.html.twig',
+            "template" => '@SplashAdmin/CRUD/base_show_field.html.twig',
         );
     }
-    
+
     /**
      * @abstract Transform Splash choices array to Symfony Choices
      *
@@ -203,9 +203,9 @@ class FormHelper
      */
     private static function toFormChoice($fieldChoices)
     {
-        $response   =    array();
+        $response = array();
         foreach ($fieldChoices as $choice) {
-            $response[$choice["value"]] =   $choice["key"];
+            $response[$choice["value"]] = $choice["key"];
         }
 
         return $response;

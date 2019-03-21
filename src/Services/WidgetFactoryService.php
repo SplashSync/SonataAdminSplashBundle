@@ -26,7 +26,7 @@ use Symfony\Component\Cache\Simple\FilesystemCache;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * @abstract    Splash Admin Widgets Factory Service
+ *    Splash Admin Widgets Factory Service
  */
 class WidgetFactoryService implements WidgetProviderInterface
 {
@@ -65,7 +65,7 @@ class WidgetFactoryService implements WidgetProviderInterface
     //====================================================================//
 
     /**
-     * @abstract    Service Constructor
+     * Service Constructor
      *
      * @param FactoryService    $widgetFactory
      * @param ConnectorsManager $connectorsManager
@@ -84,21 +84,24 @@ class WidgetFactoryService implements WidgetProviderInterface
     }
 
     /**
-     * @abstract   Read Widget Contents
+     * Read Widget Contents
      *
-     * @param string $connectorWidgetType Widgets Type Identifier
-     * @param array  $parameters          Widget Parameters
+     * @param string     $connectorWidgetType Widgets Type Identifier
+     * @param null|array $parameters          Widget Parameters
      *
-     * @return Widget
+     * @return null|Widget
      */
-    public function getWidget(string $connectorWidgetType, $parameters = array())
+    public function getWidget(string $connectorWidgetType, ?array $parameters = array()): ?Widget
     {
         //====================================================================//
         // Build Widget Definition
         $this->buildWidgetDefinition($connectorWidgetType);
         //====================================================================//
         // Merge Input Parameter with Cached
-        $mergedParameters = array_replace_recursive($this->getWidgetParameters($connectorWidgetType), $parameters);
+        $mergedParameters = array_replace_recursive(
+            $this->getWidgetParameters($connectorWidgetType),
+            is_null($parameters) ? array() : $parameters
+        );
         //====================================================================//
         // Add Dates from Presets
         $datedParameters = self::addDatesPresets($mergedParameters);
@@ -114,7 +117,7 @@ class WidgetFactoryService implements WidgetProviderInterface
     }
 
     /**
-     * @abstract   Return Widget Options Array
+     * Return Widget Options Array
      *
      * @param string $connectorWidgetType Widgets Type Identifier
      *
@@ -142,7 +145,7 @@ class WidgetFactoryService implements WidgetProviderInterface
     }
 
     /**
-     * @abstract   Update Widget Options Array
+     * Update Widget Options Array
      *
      * @param string $connectorWidgetType Widgets Type Identifier
      * @param array  $options             Updated Options
@@ -157,7 +160,7 @@ class WidgetFactoryService implements WidgetProviderInterface
     }
 
     /**
-     * @abstract   Return Widget Parameters Array
+     * Return Widget Parameters Array
      *
      * @param string $connectorWidgetType Widgets Type Identifier
      *
@@ -176,7 +179,7 @@ class WidgetFactoryService implements WidgetProviderInterface
     }
 
     /**
-     * @abstract   Update Widget Parameters Array
+     * Update Widget Parameters Array
      *
      * @param string $connectorWidgetType Widgets Type Identifier
      * @param array  $parameters          Updated Parameters
@@ -191,12 +194,12 @@ class WidgetFactoryService implements WidgetProviderInterface
     }
 
     /**
-     * @abstract   Return Widget Parameters Fields Array
+     * Return Widget Parameters Fields Array
      *
      * @param FormBuilderInterface $builder
      * @param string               $connectorWidgetType Widgets Type Identifier
      */
-    public function populateWidgetForm(FormBuilderInterface $builder, string $connectorWidgetType)
+    public function populateWidgetForm(FormBuilderInterface $builder, string $connectorWidgetType): void
     {
         //==============================================================================
         // Verify Parameter Fields are Available
@@ -218,7 +221,7 @@ class WidgetFactoryService implements WidgetProviderInterface
     }
 
     /**
-     * @abstract    Get Widget Connector Service
+     * Get Widget Connector Service
      *
      * @param string $connectorWidgetType
      *
@@ -252,7 +255,7 @@ class WidgetFactoryService implements WidgetProviderInterface
     }
 
     /**
-     * @abstract    Read Widgets Definition from Connector
+     * Read Widgets Definition from Connector
      *
      * @param string $connectorWidgetType
      *
@@ -277,7 +280,7 @@ class WidgetFactoryService implements WidgetProviderInterface
     }
 
     /**
-     * @abstract    Widgets Listing
+     * Widgets Listing
      *
      * @param string $connectorWidgetType
      *
@@ -319,7 +322,7 @@ class WidgetFactoryService implements WidgetProviderInterface
     }
 
     /**
-     * @abstract    Get & Add Contents to Current Widget
+     * Get & Add Contents to Current Widget
      *
      * @param string $connectorWidgetType
      * @param array  $parameters

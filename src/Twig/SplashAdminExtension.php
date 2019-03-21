@@ -79,7 +79,7 @@ class SplashAdminExtension extends AbstractExtension
     {
         return FieldsManager::objectId($input);
     }
-    
+
     /**
      * @abstract   Identify if a string is a List Field String
      *
@@ -155,7 +155,7 @@ class SplashAdminExtension extends AbstractExtension
 
         return false;
     }
-    
+
     /**
      * @abstract   Access PHP Core Function
      *
@@ -179,7 +179,7 @@ class SplashAdminExtension extends AbstractExtension
     {
         return base64_decode($input, true);
     }
-    
+
     /**
      * @abstract   Get File Path Extension Name
      *
@@ -191,7 +191,7 @@ class SplashAdminExtension extends AbstractExtension
     {
         return pathinfo($input, PATHINFO_EXTENSION);
     }
-    
+
     /**
      * @return string
      */

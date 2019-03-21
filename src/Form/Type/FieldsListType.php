@@ -28,7 +28,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class FieldsListType extends AbstractType
 {
     private $listname;
-    
+
     /**
      * @param FormBuilderInterface $builder
      * @param array                $options
@@ -40,11 +40,11 @@ class FieldsListType extends AbstractType
         foreach ($options["fields"] as $field) {
             //====================================================================//
             // Detect List Fields
-            $list           =   FormHelper::isListField($field->id);
-            $this->listname =   $list["listname"];
+            $list = FormHelper::isListField($field->id);
+            $this->listname = $list["listname"];
             //====================================================================//
             // Detect Edit or Show
-            $options    =   ($builder instanceof ShowMapper)
+            $options = ($builder instanceof ShowMapper)
                     ? FormHelper::showOptions($field)
                     : FormHelper::formOptions($field);
             //====================================================================//
@@ -54,23 +54,23 @@ class FieldsListType extends AbstractType
                 FormHelper::formType($field),
                 $options
             );
-            
+
             $builder->get($list["fieldname"])->addModelTransformer(new FieldsTransformer($field->type));
         }
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-        
+
         $resolver->setDefaults(array(
             'fields' => array(),
         ));
     }
-    
+
     /**
      * {@inheritdoc}
      */
