@@ -205,7 +205,7 @@ class FormHelper
     {
         $response = array();
         foreach ($fieldChoices as $choice) {
-            $response[$choice["value"]] = $choice["key"];
+            $response[html_entity_decode($choice["value"], ENT_QUOTES)] = $choice["key"];
         }
 
         return $response;

@@ -48,7 +48,7 @@ file that was distributed with this source code.
         
         <div class="row">
             {% for Widget in Widgets %}
-                {{ render(controller('SplashWidgetsBundle:View:delayed', { 'Service' : Widget.service,  'Type' : Widget.type })) }}
+                {{ render(controller('SplashWidgetsBundle:View:delayed', { 'service' : Widget.service,  'type' : Widget.type })) }}
             {% endfor %} 
         </div>  
     </div>

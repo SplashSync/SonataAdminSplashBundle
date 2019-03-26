@@ -55,7 +55,7 @@
                             {% if FieldDefinition.options.language is defined %}
                                 {{ Fields.lang(FieldDefinition.options.language) }}
                             {% endif %}                            
-                            {{ FieldDefinition.name }}
+                            {{ FieldDefinition.name | raw }}
                         </th>
                         <td style="width: 150px !important;">{{ Fields.format(FieldDefinition.type) }}</td>
                         <td>{{ Fields.data(FieldDefinition.type, Data[FieldId] | default(), admin) }}</td>
