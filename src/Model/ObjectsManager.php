@@ -491,7 +491,15 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      */
     public function findBy($class, array $criteria = array())
     {
-        return $this->getConnector()->getObjectList($class);
+        //====================================================================//
+        // Load Objects List from Splash Connector
+        $list = $this->getConnector()->getObjectList($class);
+        //====================================================================//
+        // Catch Splash Logs
+        $this->manager->pushLogToSession(true);
+        //====================================================================//
+        // Return Objects List
+        return $list;
     }
 
     /**
