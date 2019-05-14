@@ -27,7 +27,15 @@
     {% block field_value %}
         {% spaceless %}
             <td style="width: 150px !important;">{{ Fields.format(field_description.options.splash_field.type) }}</td>
-            <td>{{ Fields.data(field_description.options.splash_field.type, value, admin) }}</td>
+            <td>
+                {% if field_description.options.splash_field.read is empty %}
+                    <i class="fa fa-question text-warning"></i>
+                    <span class="text-warning">&nbsp;Write Only&nbsp;</span>
+                    <i class="fa fa-question text-warning"></i>
+                {% else %}
+                    {{ Fields.data(field_description.options.splash_field.type, value, admin) }}
+                {% endif %}
+            </td>
         {% endspaceless %}
     {% endblock %}        
     

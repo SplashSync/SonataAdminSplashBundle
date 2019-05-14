@@ -516,23 +516,13 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
         // Detect Empty Lists
         /** @var ArrayObject $field */
         foreach ($this->getObjectFields() as $field) {
-            // Only for Writable Fields
-            if (!$this->isShowMode && empty($field->write)) {
-                continue;
-            }
-            if (!FieldsManager::isListField($field->type)) {
-                continue;
-            }
-            $listName = FieldsManager::isListField($field->id)['listname'];
-            if (empty($instance[$listName])) {
-                $instance[$listName] = array();
-            }
+            $this->modelCompleteField($field, $instance);
         }
         //====================================================================//
         // Prepare Writable Fields List
         $writeFields = FieldsManager::reduceFieldList(
             $this->getObjectFields(),
-            true,
+            $this->isShowMode,
             !$this->isShowMode
         );
         //====================================================================//
@@ -544,6 +534,37 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
         //====================================================================//
         // Return Object
         return new ArrayObject($filtered, ArrayObject::ARRAY_AS_PROPS);
+    }
+
+    /**
+     * @param ArrayObject $field
+     * @param array       $instance
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function modelCompleteField(ArrayObject $field, &$instance)
+    {
+        //====================================================================//
+        // Only for Writable Fields
+        if (!$this->isShowMode && empty($field->write)) {
+            return;
+        }
+        //====================================================================//
+        // If List Fields
+        if (FieldsManager::isListField($field->type)) {
+            // Get List Name
+            $listName = FieldsManager::listName($field->id);
+            if (empty($instance[$listName])) {
+                $instance[$listName] = array();
+            }
+
+            return;
+        }
+        //====================================================================//
+        // If Simple Fields
+        if (!isset($instance[$field->id])) {
+            $instance[$field->id] = null;
+        }
     }
 
     /**
