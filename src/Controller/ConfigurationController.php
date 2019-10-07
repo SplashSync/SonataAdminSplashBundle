@@ -50,6 +50,7 @@ class ConfigurationController extends CRUDController
             $connector->getFormBuilderName(),
             $connector->getConfiguration()
         );
+        
         //====================================================================//
         // Add Submit Button
         $form->add('submit', SubmitType::class, array(
@@ -78,7 +79,7 @@ class ConfigurationController extends CRUDController
         // Create Form View
         $formView = $form->createView();
         // set the theme for the current Admin Form
-        $this->setFormTheme($formView, $this->admin->getFilterTheme());
+        $this->setFormTheme($formView, $this->admin->getFormTheme());
         //====================================================================//
         // Render Connector Profile Page
         return $this->render('@SplashAdmin/Config/list.html.twig', array(
