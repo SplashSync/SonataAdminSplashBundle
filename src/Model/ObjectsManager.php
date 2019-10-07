@@ -800,7 +800,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      */
     public function collectionClear(&$collection)
     {
-        return $collection->clear();
+        $collection->clear();
     }
 
     /**
