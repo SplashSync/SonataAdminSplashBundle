@@ -30,7 +30,8 @@
         "burgov/key-value-form-bundle": "@stable",
         
         "splash/php-bundle":            "dev-master",
-        "splash/widgets-bundle":        "dev-master"
+        "splash/widgets-bundle":        "dev-master",
+        "splash/console":               "dev-master"
     },
     
     "require-dev": {
