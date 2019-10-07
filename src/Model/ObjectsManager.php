@@ -22,6 +22,8 @@ use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\QueryBuilder;
+use PDOException;
+use RuntimeException;
 use Sonata\AdminBundle\Admin\FieldDescriptionInterface;
 use Sonata\AdminBundle\Datagrid\DatagridInterface;
 use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
@@ -189,7 +191,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
         //====================================================================//
         // Safety Check
         if (is_null($connector)) {
-            throw new \RuntimeException('Unable to Identify linked Connector');
+            throw new RuntimeException('Unable to Identify linked Connector');
         }
 
         return $this->connector = $connector;
@@ -303,7 +305,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     public function getNewFieldDescriptionInstance($class, $name, array $options = array())
     {
         if (!is_string($name)) {
-            throw new \RuntimeException('The name argument must be a string');
+            throw new RuntimeException('The name argument must be a string');
         }
         $fieldDescription = new FieldDescription();
         $fieldDescription->setName($name);
@@ -330,7 +332,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
             // Write Object Data
             $object->id = $this->getConnector()
                 ->setObject($this->objectType, null, $object->getArrayCopy());
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             throw new ModelManagerException(
                 sprintf('Failed to create object: %s', ClassUtils::getClass($object)),
                 $e->getCode(),
@@ -346,6 +348,14 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
         //====================================================================//
         // Catch Splash Logs
         $this->manager->pushLogToSession(true);
+
+        //====================================================================//
+        // Catch Create Fails
+        if (empty($object->id)) {
+            throw new ModelManagerException(
+                sprintf('Failed to create object: %s', ClassUtils::getClass($object))
+            );
+        }
 
         //====================================================================//
         // Return New Object
@@ -377,7 +387,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
             // Write Object Data
             $this->getConnector()
                 ->setObject($this->objectType, $objectId, $objectData);
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             throw new ModelManagerException(
                 sprintf('Failed to update object: %s', ClassUtils::getClass($object)),
                 $e->getCode(),
@@ -409,7 +419,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
             // Delete Object Data
             $this->getConnector()
                 ->deleteObject($this->objectType, $object->id);
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             throw new ModelManagerException(
                 sprintf('Failed to delete object: %s', ClassUtils::getClass($object)),
                 $e->getCode(),
