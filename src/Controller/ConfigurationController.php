@@ -50,7 +50,7 @@ class ConfigurationController extends CRUDController
             $connector->getFormBuilderName(),
             $connector->getConfiguration()
         );
-        
+
         //====================================================================//
         // Add Submit Button
         $form->add('submit', SubmitType::class, array(
