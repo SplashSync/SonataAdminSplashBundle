@@ -797,8 +797,6 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
 
     /**
      * @param ArrayCollection $collection
-     *
-     * @return ArrayCollection
      */
     public function collectionClear(&$collection)
     {
@@ -809,7 +807,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      * @param ArrayCollection $collection
      * @param mixed           $element
      *
-     * @return ArrayCollection
+     * @return bool
      */
     public function collectionHasElement(&$collection, &$element)
     {
@@ -820,7 +818,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      * @param ArrayCollection $collection
      * @param mixed           $element
      *
-     * @return ArrayCollection
+     * @return bool
      */
     public function collectionAddElement(&$collection, &$element)
     {
@@ -831,7 +829,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      * @param ArrayCollection $collection
      * @param mixed           $element
      *
-     * @return ArrayCollection
+     * @return bool
      */
     public function collectionRemoveElement(&$collection, &$element)
     {
