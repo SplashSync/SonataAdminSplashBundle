@@ -16,6 +16,7 @@
 namespace Splash\Admin\Model;
 
 use ArrayObject;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Types\Type;
@@ -779,8 +780,8 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
         return array(
             '_sort_order' => 'ASC',
             '_sort_by' => implode(',', array($this->getModelIdentifier($class))),
-            '_page' => 1,
-            '_per_page' => 25,
+            '_page' => (string) 1,
+            '_per_page' => (string) 25,
         );
     }
 
@@ -791,13 +792,13 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      */
     public function getModelCollectionInstance($class)
     {
-        return new \Doctrine\Common\Collections\ArrayCollection();
+        return new ArrayCollection();
     }
 
     /**
-     * {@inheritdoc}
+     * @param ArrayCollection $collection
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @return ArrayCollection
      */
     public function collectionClear(&$collection)
     {
@@ -805,7 +806,10 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param ArrayCollection $collection
+     * @param mixed           $element
+     *
+     * @return ArrayCollection
      */
     public function collectionHasElement(&$collection, &$element)
     {
@@ -813,7 +817,10 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param ArrayCollection $collection
+     * @param mixed           $element
+     *
+     * @return ArrayCollection
      */
     public function collectionAddElement(&$collection, &$element)
     {
@@ -821,7 +828,10 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param ArrayCollection $collection
+     * @param mixed           $element
+     *
+     * @return ArrayCollection
      */
     public function collectionRemoveElement(&$collection, &$element)
     {
