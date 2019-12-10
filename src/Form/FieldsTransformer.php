@@ -78,42 +78,54 @@ class FieldsTransformer implements DataTransformerInterface
      */
     public function reverseTransform($data)
     {
+        $fieldType = self::baseType($this->type);
         //====================================================================//
         // Get Form Type
-        switch (self::baseType($this->type)) {
+        switch ($fieldType) {
             case SPL_T_IMG:
             case SPL_T_FILE:
-                //====================================================================//
-                // Check Uploaded File
-                if (!isset($data['upload']) && array_key_exists("upload", $data) && (1 == count($data))) {
-                    return null;
-                }
-                if (!isset($data['upload']) || !($data['upload'] instanceof UploadedFile) || (!$data['upload']->isValid())) {
-                    return $data;
-                }
-                //====================================================================//
-                // Prepare data For Encoding
-                $originalName = (string) $data['upload']->getClientOriginalName();
-                $fileName = $data['upload']->getFilename();
-                $filePath = $data['upload']->getPath().'/';
-                //====================================================================//
-                // Convert Symfony File to Splash File|Image Array
-                $file = (SPL_T_IMG == self::baseType($this->type))
-                    ? self::images()->encode($originalName, $fileName, $filePath)
-                    : self::files()->encode($originalName, $fileName, $filePath);
-                //====================================================================//
-                // Safety Check
-                if (!$file) {
-                    return $data;
-                }
-                //====================================================================//
-                // Copy Path to File (For Writing)
-                $file['file'] = $file['path'];
-                $file['filename'] = $data['upload']->getClientOriginalName();
-
-                return $file;
+                return $this->reverseFileTransform($fieldType, $data);
         }
 
         return $data;
+    }
+
+    /**
+     * @param string $type
+     * @param array  $data
+     *
+     * @return null|array
+     */
+    private function reverseFileTransform(string $type, array $data)
+    {
+        //====================================================================//
+        // Check Uploaded File
+        if (!isset($data['upload']) && array_key_exists("upload", $data) && (1 == count($data))) {
+            return null;
+        }
+        if (!isset($data['upload']) || !($data['upload'] instanceof UploadedFile) || (!$data['upload']->isValid())) {
+            return $data;
+        }
+        //====================================================================//
+        // Prepare data For Encoding
+        $originalName = (string) $data['upload']->getClientOriginalName();
+        $fileName = $data['upload']->getFilename();
+        $filePath = $data['upload']->getPath().'/';
+        //====================================================================//
+        // Convert Symfony File to Splash File|Image Array
+        $file = (SPL_T_IMG == $type)
+            ? self::images()->encode($originalName, $fileName, $filePath)
+            : self::files()->encode($originalName, $fileName, $filePath);
+        //====================================================================//
+        // Safety Check
+        if (!$file) {
+            return $data;
+        }
+        //====================================================================//
+        // Copy Path to File (For Writing)
+        $file['file'] = $file['path'];
+        $file['filename'] = $data['upload']->getClientOriginalName();
+
+        return $file;
     }
 }
