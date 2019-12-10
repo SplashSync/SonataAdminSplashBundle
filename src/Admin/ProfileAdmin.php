@@ -18,14 +18,14 @@ namespace Splash\Admin\Admin;
 use Sonata\AdminBundle\Route\RouteCollection;
 
 /**
- * @abstract    Profile View Admin Class for Splash Connectors Explorer
+ * Profile View Admin Class for Splash Connectors Explorer
  */
 class ProfileAdmin extends AbstractAdmin
 {
     /**
      * @param RouteCollection $collection
      */
-    protected function configureRoutes(RouteCollection $collection)
+    protected function configureRoutes(RouteCollection $collection): void
     {
         $collection->remove('batch');
         $collection->remove('create');

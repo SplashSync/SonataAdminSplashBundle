@@ -21,19 +21,21 @@ use Symfony\Component\Form\FormBuilderInterface ;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * @abstract    Form Type for Splash Images
+ * Form Type for Splash Images
  */
 class ImageType extends AbstractType
 {
     /**
-     * @abstract Build Image Form
+     * Build Image Form
      *
      * @param FormBuilderInterface $formBuilder
      * @param array                $options
      *
+     * @return void
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function buildForm(FormBuilderInterface $formBuilder, array $options)
+    public function buildForm(FormBuilderInterface $formBuilder, array $options): void
     {
         //==============================================================================
         //  Object Type Widget
@@ -46,7 +48,7 @@ class ImageType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults(array(

@@ -25,19 +25,21 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * @abstract    Splash Objects Fields Object Id Form Type
+ * Splash Objects Fields Object Id Form Type
  */
 class ObjectIdType extends AbstractType
 {
     use FieldsManagerTrait;
 
     /**
-     * @abstract Build Object Id Form
+     * Build Object Id Form
      *
      * @param FormBuilderInterface $formBuilder
      * @param array                $options
+     *
+     * @return void
      */
-    public function buildForm(FormBuilderInterface $formBuilder, array $options)
+    public function buildForm(FormBuilderInterface $formBuilder, array $options): void
     {
         //==============================================================================
         //  Object ID Widget
@@ -75,7 +77,7 @@ class ObjectIdType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults(array(

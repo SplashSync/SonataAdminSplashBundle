@@ -22,7 +22,7 @@ use Splash\Core\SplashCore as Splash;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @abstract    Admin Controller for Splash Widgets Explorer
+ * Admin Controller for Splash Widgets Explorer
  */
 class WidgetsController extends CRUDController
 {

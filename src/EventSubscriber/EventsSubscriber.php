@@ -26,14 +26,14 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class EventsSubscriber implements EventSubscriberInterface
 {
     /**
-     * @abstract    Splash Connectors Manager
+     * Splash Connectors Manager
      *
      * @var ConnectorsManager
      */
     private $manager;
 
     /**
-     * @abstract    Doctrine Entity Manager
+     * Doctrine Entity Manager
      *
      * @var EntityManager
      */
@@ -44,7 +44,7 @@ class EventsSubscriber implements EventSubscriberInterface
     //====================================================================//
 
     /**
-     * @abstract    Service Constructor
+     * Service Constructor
      *
      * @param ConnectorsManager $manager
      * @param EntityManager     $entityManager
@@ -64,7 +64,7 @@ class EventsSubscriber implements EventSubscriberInterface
     //====================================================================//
 
     /**
-     * @abstract    Configure Event Subscriber
+     * Configure Event Subscriber
      *
      * @return array
      */
@@ -83,11 +83,13 @@ class EventsSubscriber implements EventSubscriberInterface
     //====================================================================//
 
     /**
-     * @abstract    On Standalone Object Commit Event
+     * On Standalone Object Commit Event
      *
      * @param ObjectsCommitEvent $event
+     *
+     * @return void
      */
-    public function onObjectCommit(ObjectsCommitEvent $event)
+    public function onObjectCommit(ObjectsCommitEvent $event): void
     {
         //====================================================================//
         // Detect Pointed Server Host

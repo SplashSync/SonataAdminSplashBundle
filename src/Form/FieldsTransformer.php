@@ -22,7 +22,7 @@ use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * @abstract    Splash Fields Data Transformer.
+ * Splash Fields Data Transformer.
  */
 class FieldsTransformer implements DataTransformerInterface
 {
@@ -32,7 +32,7 @@ class FieldsTransformer implements DataTransformerInterface
     private $type;
 
     /**
-     * @abstract    Class Constructor
+     * Class Constructor
      *
      * @param string $objectType
      */
@@ -42,7 +42,9 @@ class FieldsTransformer implements DataTransformerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed $data
+     *
+     * @return mixed
      */
     public function transform($data)
     {
@@ -67,7 +69,9 @@ class FieldsTransformer implements DataTransformerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed $data
+     *
+     * @return mixed
      */
     public function reverseTransform($data)
     {

@@ -99,8 +99,10 @@ class ConfigurationController extends CRUDController
      *
      * @param FormView $formView
      * @param array    $theme
+     *
+     * @return void
      */
-    private function setFormTheme(FormView $formView, array $theme = null)
+    private function setFormTheme(FormView $formView, array $theme = null): void
     {
         /** @var \Twig\Environment $twig */
         $twig = $this->get('twig');

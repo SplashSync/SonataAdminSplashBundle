@@ -49,7 +49,7 @@ class ObjectsController extends CRUDController
         $objectType = $request->get('ObjectType');
         $objectTypes = $this->getObjectsManager()->getObjects();
         $session = $request->getSession();
-        if ($objectType && in_array($objectType, $objectTypes, true) && $session) {
+        if ($objectType && in_array($objectType, $objectTypes, true)) {
             $session->set('ObjectType', $objectType);
         }
 
@@ -151,7 +151,7 @@ class ObjectsController extends CRUDController
                 // Redirect to New Object Edit Url
                 $redirectUrl = $this->admin->generateUrl("edit", array("id" => $newObjectId));
 
-                return $this->redirectTo($redirectUrl);
+                return $this->redirect($redirectUrl);
             }
             //====================================================================//
             // Redirect to Objects List
@@ -215,6 +215,9 @@ class ObjectsController extends CRUDController
         $fileArray = $this->getObjectsManager()
             ->getConnector()
             ->getFile((string) base64_decode($path, true), $md5);
+        if (!$fileArray) {
+            throw $this->createNotFoundException(sprintf('unable to find the file with path: %s', $path));
+        }
         //==============================================================================
         // Return Image Response
         $headers = array(
@@ -242,6 +245,9 @@ class ObjectsController extends CRUDController
         $fileArray = $this->getObjectsManager()
             ->getConnector()
             ->getFile((string) base64_decode($path, true), $md5);
+        if (!$fileArray) {
+            throw $this->createNotFoundException(sprintf('unable to find the file with path: %s', $path));
+        }
         //==============================================================================
         // Return Image Response
         $headers = array(

@@ -19,19 +19,19 @@ use Sonata\AdminBundle\Admin\AbstractAdmin as BaseAdmin;
 use Splash\Admin\Model\ObjectsManager;
 
 /**
- * @abstract    Base Admin Class for Splash Sonata Admin Bundle
+ * Base Admin Class for Splash Sonata Admin Bundle
  */
 abstract class AbstractAdmin extends BaseAdmin
 {
     /**
-     * @abstract    Current Server Id
+     * Current Server Id
      *
      * @var string
      */
     private $serverId;
 
     /**
-     * @abstract    Current Object Type
+     * Current Object Type
      *
      * @var string
      */
@@ -59,7 +59,7 @@ abstract class AbstractAdmin extends BaseAdmin
     /**
      * Configure Admin Service
      */
-    public function configure()
+    public function configure(): void
     {
         //====================================================================//
         // Setup Model Manager
@@ -87,7 +87,9 @@ abstract class AbstractAdmin extends BaseAdmin
         $this->objectType = $this->getRequest()->getSession()->get('ObjectType');
         //====================================================================//
         // Load Object Types from Connector
-        $objectTypes = $this->getModelManager()->getConnector()->getAvailableObjects();
+        /** @var ObjectsManager $modelManager */
+        $modelManager = $this->getModelManager();
+        $objectTypes = $modelManager->getConnector()->getAvailableObjects();
         //====================================================================//
         // No Object Type? Take First Available from Connector
         if (empty($this->objectType) || !in_array($this->objectType, $objectTypes, true)) {
@@ -110,7 +112,7 @@ abstract class AbstractAdmin extends BaseAdmin
     /**
      * Configure Splash Objects Manager
      */
-    protected function configureModelManager()
+    protected function configureModelManager(): void
     {
         //====================================================================//
         // Load Container
@@ -135,11 +137,11 @@ abstract class AbstractAdmin extends BaseAdmin
     //====================================================================//
 
     /**
-     * @abstract    Setup Splash Server Id
+     * Setup Splash Server Id
      *
      * @param string $serverId
      *
-     * @return $this
+     * @return self
      */
     protected function setServerId(string $serverId)
     {

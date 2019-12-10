@@ -25,19 +25,21 @@ use Symfony\Component\Form\Extension\Core\Type\PercentType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * @abstract    Splash Objects Fields Price Form Type
+ * Splash Objects Fields Price Form Type
  */
 class PriceType extends AbstractType
 {
     /**
-     * @abstract Build Price Form
+     * Build Price Form
      *
      * @param FormBuilderInterface $formBuilder
      * @param array                $options
      *
+     * @return void
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function buildForm(FormBuilderInterface $formBuilder, array $options)
+    public function buildForm(FormBuilderInterface $formBuilder, array $options): void
     {
         //==============================================================================
         //  Create Without Tax Price Widget

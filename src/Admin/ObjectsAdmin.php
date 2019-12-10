@@ -24,9 +24,10 @@ use Sonata\AdminBundle\Show\ShowMapper;
 use Splash\Admin\Fields\FormHelper;
 use Splash\Admin\Form\FieldsTransformer;
 use Splash\Admin\Form\Type\FieldsListType;
+use Splash\Admin\Model\ObjectsManager;
 
 /**
- * @abstract    Objects Admin Class for Splash Connectors Explorer
+ * Objects Admin Class for Splash Connectors Explorer
  */
 class ObjectsAdmin extends AbstractAdmin
 {
@@ -67,9 +68,9 @@ class ObjectsAdmin extends AbstractAdmin
     /**
      * Builde Splash Object List Field Form.
      *
-     * @param ShowMapper $mapper
-     * @param string     $name
-     * @param array      $objectFields
+     * @param FormMapper|ShowMapper $mapper
+     * @param string                $name
+     * @param array                 $objectFields
      *
      * @return $this
      */
@@ -106,7 +107,13 @@ class ObjectsAdmin extends AbstractAdmin
     {
         $newObject = new ArrayObject(array('id' => null), ArrayObject::ARRAY_AS_PROPS);
 
-        $objectFields = $this->getModelManager()->getObjectFields();
+        //====================================================================//
+        // Load Object Fields
+        /** @var ObjectsManager $modelManager */
+        $modelManager = $this->getModelManager();
+        $objectFields = $modelManager->getObjectFields();
+        //====================================================================//
+        // Walk on Object Fields
         foreach ($objectFields as $field) {
             //====================================================================//
             // Add Empty List Field to Object
@@ -127,7 +134,7 @@ class ObjectsAdmin extends AbstractAdmin
     /**
      * @param RouteCollection $collection
      */
-    protected function configureRoutes(RouteCollection $collection)
+    protected function configureRoutes(RouteCollection $collection): void
     {
         $collection->add('switch', 'switch');
         $collection->add('image', 'i/{Path}/{Md5}');
@@ -137,7 +144,7 @@ class ObjectsAdmin extends AbstractAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureShowFields(ShowMapper $showMapper)
+    protected function configureShowFields(ShowMapper $showMapper): void
     {
         $this->configureFields($showMapper);
     }
@@ -145,20 +152,24 @@ class ObjectsAdmin extends AbstractAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureFormFields(FormMapper $formMapper)
+    protected function configureFormFields(FormMapper $formMapper): void
     {
         $this->configureFields($formMapper);
     }
 
     /**
-     * {@inheritdoc}
+     * @param FormMapper|ShowMapper $mapper
+     *
+     * @return void
      */
     protected function configureFields($mapper)
     {
         $lists = array();
         //====================================================================//
         // Load Object Fields
-        $objectFields = $this->getModelManager()->getObjectFields();
+        /** @var ObjectsManager $modelManager */
+        $modelManager = $this->getModelManager();
+        $objectFields = $modelManager->getObjectFields();
         //====================================================================//
         // Walk on Object Fields
         /** @var ArrayObject $field */
@@ -178,6 +189,9 @@ class ObjectsAdmin extends AbstractAdmin
             //====================================================================//
             // Add List Field to Buffer
             $list = FormHelper::isListField($field->id);
+            if (!is_array($list)) {
+                continue;
+            }
             $lists = array_merge_recursive(
                 $lists,
                 array(

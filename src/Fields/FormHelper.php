@@ -35,7 +35,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 
 /**
- * @abstract Helper for Rendering Fields Symfony Forms
+ * Helper for Rendering Fields Symfony Forms
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
@@ -44,7 +44,7 @@ class FormHelper
     use FieldsManagerTrait;
 
     /**
-     * @abstract    Detect Form Group for a Field
+     * Detect Form Group for a Field
      *
      * @param ArrayObject $field
      *
@@ -114,11 +114,13 @@ class FormHelper
     }
 
     /**
-     * @abstract Get Form Options for Renderieng a Field Form
+     * Get Form Options for Renderieng a Field Form
      *
      * @param ArrayObject $field
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public static function formOptions(ArrayObject $field)
     {
@@ -144,11 +146,15 @@ class FormHelper
 
                 break;
             case SPL_T_ID:
-                $objectType = self::isIdField($field->type)["ObjectType"];
+                $idArray = self::isIdField($field->type);
+                $objectType = is_array($idArray) ? $idArray["ObjectType"] : "unknown";
                 //====================================================================//
                 // Detect Lists
-                if (self::isListField($objectType)) {
-                    $objectType = self::isListField($objectType)["fieldname"];
+                //====================================================================//
+                // Detect Lists
+                $objectTypeList = self::isListField($objectType);
+                if (is_array($objectTypeList)) {
+                    $objectType = $objectTypeList["fieldname"];
                 }
                 $options = array(
                     'object_type' => $objectType,
@@ -163,7 +169,7 @@ class FormHelper
 
         $extra = isset($field->options["language"]) ? " (".$field->options["language"].")" : null;
 
-        return array_replace_recursive($options, array(
+        return (array) array_replace_recursive($options, array(
             'label' => html_entity_decode($field->name).$extra,
             //====================================================================//
             // Manage Required Tag
@@ -195,11 +201,11 @@ class FormHelper
     }
 
     /**
-     * @abstract Transform Splash choices array to Symfony Choices
+     * Transform Splash choices array to Symfony Choices
      *
      * @param array $fieldChoices
      *
-     * @return array|ArrayObject
+     * @return array
      */
     private static function toFormChoice($fieldChoices)
     {

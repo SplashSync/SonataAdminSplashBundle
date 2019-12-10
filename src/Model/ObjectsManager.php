@@ -33,6 +33,7 @@ use Sonata\AdminBundle\Model\LockInterface;
 use Sonata\AdminBundle\Model\ModelManagerInterface;
 use Sonata\DoctrineORMAdminBundle\Admin\FieldDescription;
 use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
+use Sonata\Exporter\Source\ArraySourceIterator;
 use Sonata\Exporter\Source\SourceIteratorInterface;
 use Splash\Bundle\Events\ObjectsIdChangedEvent;
 use Splash\Bundle\Models\AbstractConnector;
@@ -279,17 +280,21 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $class
+     *
+     * @return ClassMetadata
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function getMetadata($class)
+    public function getMetadata($class): ClassMetadata
     {
         return new ClassMetadata('ArrayObject');
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $class
+     *
+     * @return boolean
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -324,7 +329,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      *
      * @return ArrayObject
      */
-    public function create($object)
+    public function create($object): ArrayObject
     {
         $object->id = null;
 
@@ -370,7 +375,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      *
      * @throws ModelManagerException
      */
-    public function update($object)
+    public function update($object): void
     {
         //====================================================================//
         // Safety Check - Verify Object has Id
@@ -413,7 +418,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      *
      * @throws ModelManagerException
      */
-    public function delete($object)
+    public function delete($object): void
     {
         try {
             //====================================================================//
@@ -453,12 +458,12 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
      * @param mixed $object
      * @param mixed $expectedVersion
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function lock($object, $expectedVersion)
+    public function lock($object, $expectedVersion): void
     {
     }
 
@@ -514,8 +519,8 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * @param string $class
-     * @param array  $instance
+     * @param string       $class
+     * @param array|object $instance
      *
      * @return ArrayObject
      *
@@ -553,7 +558,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function modelCompleteField(ArrayObject $field, &$instance)
+    public function modelCompleteField(ArrayObject $field, &$instance): void
     {
         //====================================================================//
         // Only for Writable Fields
@@ -581,9 +586,9 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     /**
      * {@inheritdoc}
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @return array
      */
-    public function modelReverseTransform($class, array $array = array())
+    public function modelReverseTransform($class, array $array = array()): array
     {
         unset($array['id']);
 
@@ -605,15 +610,18 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param array  $parentAssocMapping
+     * @param string $class
+     *
+     * @return mixed
      */
-    public function getParentFieldDescription($parentAssoMapping, $class)
+    public function getParentFieldDescription($parentAssocMapping, $class)
     {
-        $fieldName = $parentAssoMapping['fieldName'];
+        $fieldName = $parentAssocMapping['fieldName'];
         $metadata = $this->getMetadata($class);
         $associatingMapping = $metadata->associationMappings[$fieldName];
         $fieldDescription = $this->getNewFieldDescriptionInstance($class, $fieldName);
-        $fieldDescription->setName($parentAssoMapping);
+        $fieldDescription->setName($fieldName);
         $fieldDescription->setAssociationMapping($associatingMapping);
 
         return $fieldDescription;
@@ -630,7 +638,9 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed $query
+     *
+     * @return mixed
      */
     public function executeQuery($query)
     {
@@ -656,7 +666,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function getIdentifierValues($entity)
+    public function getIdentifierValues($model)
     {
         return array();
     }
@@ -672,13 +682,23 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param array|object $model
+     *
+     * @return string
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function getNormalizedIdentifier($entity)
+    public function getNormalizedIdentifier($model): string
     {
-        return $entity['id'];
+        if (is_array($model)) {
+            return $model['id'];
+        }
+
+        if (isset($model->id)) {
+            return $model->id;
+        }
+
+        return "";
     }
 
     /**
@@ -687,9 +707,9 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      * The ORM implementation does nothing special but you still should use
      * this method when using the id in a URL to allow for future improvements.
      */
-    public function getUrlsafeIdentifier($entity)
+    public function getUrlsafeIdentifier($model): string
     {
-        return $this->getNormalizedIdentifier($entity);
+        return $this->getNormalizedIdentifier($model);
     }
 
     /**
@@ -697,7 +717,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function addIdentifiersToQuery($class, ProxyQueryInterface $queryProxy, array $idx)
+    public function addIdentifiersToQuery($class, ProxyQueryInterface $queryProxy, array $idx): void
     {
     }
 
@@ -706,7 +726,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function batchDelete($class, ProxyQueryInterface $queryProxy)
+    public function batchDelete($class, ProxyQueryInterface $queryProxy): void
     {
     }
 
@@ -722,6 +742,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      */
     public function getDataSourceIterator(DatagridInterface $datagrid, array $fields, $firstResult = null, $maxResult = null)
     {
+        return new ArraySourceIterator(array());
     }
 
     /**
@@ -753,6 +774,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      */
     public function getSortParameters(FieldDescriptionInterface $fieldDescription, DatagridInterface $datagrid)
     {
+        return array();
     }
 
     /**
@@ -796,43 +818,63 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * @param ArrayCollection $collection
+     * @param array|ArrayCollection $collection
+     *
+     * @return void
      */
     public function collectionClear(&$collection)
     {
+        if (is_array($collection)) {
+            $collection = array();
+
+            return;
+        }
+
         $collection->clear();
     }
 
     /**
-     * @param ArrayCollection $collection
-     * @param mixed           $element
+     * @param array|ArrayCollection $collection
+     * @param object                $element
      *
      * @return bool
      */
     public function collectionHasElement(&$collection, &$element)
     {
+        if (is_array($collection)) {
+            return false;
+        }
+
         return $collection->contains($element);
     }
 
     /**
-     * @param ArrayCollection $collection
-     * @param mixed           $element
+     * @param array|ArrayCollection $collection
+     * @param object                $element
      *
      * @return bool
      */
     public function collectionAddElement(&$collection, &$element)
     {
+        if (is_array($collection)) {
+            return false;
+        }
+
         return $collection->add($element);
     }
 
     /**
-     * @param ArrayCollection $collection
-     * @param mixed           $element
+     * @param array|ArrayCollection $collection
+     * @param object                $element
      *
      * @return bool
      */
     public function collectionRemoveElement(&$collection, &$element)
     {
+        if (is_array($collection)) {
+            return false;
+        }
+
         return $collection->removeElement($element);
     }
 

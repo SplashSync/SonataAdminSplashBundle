@@ -23,17 +23,22 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * @abstract    Splash Objects Fields List Form Type
+ * Splash Objects Fields List Form Type
  */
 class FieldsListType extends AbstractType
 {
+    /**
+     * @var string
+     */
     private $listname;
 
     /**
      * @param FormBuilderInterface $builder
      * @param array                $options
+     *
+     * @return void
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         //==============================================================================
         // Generate Forms Data for Each Field in Collection
@@ -41,6 +46,9 @@ class FieldsListType extends AbstractType
             //====================================================================//
             // Detect List Fields
             $list = FormHelper::isListField($field->id);
+            if (!is_array($list)) {
+                continue;
+            }
             $this->listname = $list["listname"];
             //====================================================================//
             // Detect Edit or Show
@@ -62,7 +70,7 @@ class FieldsListType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
 
@@ -74,7 +82,7 @@ class FieldsListType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'Splash_Fields_List_Form';
     }

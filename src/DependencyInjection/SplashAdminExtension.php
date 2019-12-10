@@ -38,6 +38,7 @@ class SplashAdminExtension extends Extension implements PrependExtensionInterfac
      * @var array
      */
     protected $formTypeTemplates = array(
+        '@SplashAdmin/Forms/burgov.html.twig',
         '@SplashAdmin/Forms/price.html.twig',
         '@SplashAdmin/Forms/image.html.twig',
         '@SplashAdmin/Forms/objectid.html.twig',
@@ -51,7 +52,7 @@ class SplashAdminExtension extends Extension implements PrependExtensionInterfac
     /**
      * {@inheritdoc}
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         //====================================================================//
         // Store Container
@@ -78,17 +79,19 @@ class SplashAdminExtension extends Extension implements PrependExtensionInterfac
     /**
      * {@inheritDoc}
      */
-    public function prepend(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container): void
     {
         $this->configureTwigBundle($container);
     }
 
     /**
-     * @abstract    Add Form Fields to Twig Form Themes
+     * Add Form Fields to Twig Form Themes
      *
      * @param ContainerBuilder $container
+     *
+     * @return void
      */
-    private function configureTwigBundle(ContainerBuilder $container)
+    private function configureTwigBundle(ContainerBuilder $container): void
     {
         foreach (array_keys($container->getExtensions()) as $name) {
             switch ($name) {
@@ -104,13 +107,15 @@ class SplashAdminExtension extends Extension implements PrependExtensionInterfac
     }
 
     /**
-     * @abstract    Add Admin Service to Container
+     * Add Admin Service to Container
      *
      * @param string $type
      * @param string $tagId
      * @param string $name
+     *
+     * @return void
      */
-    private function addAdminService(string $type, string $tagId, string $name)
+    private function addAdminService(string $type, string $tagId, string $name): void
     {
         //====================================================================//
         // Build Service Tags Array
@@ -140,7 +145,6 @@ class SplashAdminExtension extends Extension implements PrependExtensionInterfac
         $this->container
             ->register('splash.admin.'.$tagId.'.'.$type, $adminClass)
             ->addTag("sonata.admin", $tags)
-            ->setArguments($args)
-                ;
+            ->setArguments($args);
     }
 }

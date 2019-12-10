@@ -25,14 +25,14 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * @abstract    Splash Multilang Fields Form Type
+ * Splash Multilang Fields Form Type
  */
 class MultilangType extends KeyValueType
 {
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->addModelTransformer(new HashToKeyValueArrayTransformer($options['use_container_object']));
 
@@ -65,7 +65,7 @@ class MultilangType extends KeyValueType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
 
@@ -82,7 +82,7 @@ class MultilangType extends KeyValueType
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'Splash_Multilang_Form';
     }
