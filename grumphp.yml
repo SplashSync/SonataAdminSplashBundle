@@ -16,6 +16,17 @@
 ################################################################################
 
 #############################################        
+#   Local Config 
+parameters:
+    
+    # For Building Splash Module
+    mod-enable:     false
+    # For Building Splash Documentation
+    doc-enable:     false
+    # For Building Splash Manifest
+    yml-enable:     false
+
+#############################################        
 # Import Config. from Generic Bundle
 imports:
     - { resource: "./vendor/splash/php-bundle/src/Resources/grumphp/grumphp.base.yml" }
