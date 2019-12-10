@@ -29,5 +29,5 @@ services:
         class: Splash\Admin\Services\WidgetFactoryService
         public: true
         arguments: 
-            -   "@Splash.Widgets.Factory"
+            -   "@splash.widgets.factory"
             -   "@splash.connectors.manager"
