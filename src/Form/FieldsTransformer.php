@@ -78,7 +78,7 @@ class FieldsTransformer implements DataTransformerInterface
      */
     public function reverseTransform($data)
     {
-        $fieldType = self::baseType($this->type);
+        $fieldType = (string) self::baseType($this->type);
         //====================================================================//
         // Get Form Type
         switch ($fieldType) {
