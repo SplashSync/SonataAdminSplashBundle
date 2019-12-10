@@ -40,6 +40,7 @@ class SplashAdminExtension extends Extension implements PrependExtensionInterfac
     protected $formTypeTemplates = array(
         '@SplashAdmin/Forms/burgov.html.twig',
         '@SplashAdmin/Forms/price.html.twig',
+        '@SplashAdmin/Forms/file.html.twig',
         '@SplashAdmin/Forms/image.html.twig',
         '@SplashAdmin/Forms/objectid.html.twig',
     );

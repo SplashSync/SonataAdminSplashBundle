@@ -18,6 +18,7 @@ namespace Splash\Admin\Form;
 use Splash\Core\SplashCore as Splash;
 use Splash\Models\Fields\FieldsManagerTrait;
 use Splash\Models\Objects\ImagesTrait;
+use Splash\Models\Objects\FilesTrait;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -28,6 +29,7 @@ class FieldsTransformer implements DataTransformerInterface
 {
     use FieldsManagerTrait;
     use ImagesTrait;
+    use FilesTrait;
 
     private $type;
 
@@ -57,6 +59,7 @@ class FieldsTransformer implements DataTransformerInterface
                 return (int) $data;
             case SPL_T_DOUBLE:
                 return (float) $data;
+            case SPL_T_FILE:
             case SPL_T_IMG:
                 if (empty($data)) {
                     return array();
@@ -79,29 +82,36 @@ class FieldsTransformer implements DataTransformerInterface
         // Get Form Type
         switch (self::baseType($this->type)) {
             case SPL_T_IMG:
+            case SPL_T_FILE:
                 //====================================================================//
                 // Check Uploaded File
+                if (!isset($data['upload']) && array_key_exists("upload", $data) && (count($data) == 1)) {
+                    return null;
+                }
                 if (!isset($data['upload']) || !($data['upload'] instanceof UploadedFile) || (!$data['upload']->isValid())) {
                     return $data;
                 }
                 //====================================================================//
-                // Convert Symfony File to Splash Image Array
-                $image = self::images()->encode(
-                    (string) $data['upload']->getClientOriginalName(),
-                    $data['upload']->getFilename(),
-                    $data['upload']->getPath().'/'
-                );
+                // Prepare data For Encoding
+                $originalName = (string) $data['upload']->getClientOriginalName();
+                $fileName = $data['upload']->getFilename();
+                $filePath = $data['upload']->getPath().'/';
+                //====================================================================//
+                // Convert Symfony File to Splash File|Image Array
+                $file = (self::baseType($this->type) == SPL_T_IMG) 
+                    ? self::images()->encode($originalName, $fileName, $filePath)
+                    : self::files()->encode($originalName, $fileName, $filePath);
                 //====================================================================//
                 // Safety Check
-                if (!$image) {
+                if (!$file) {
                     return $data;
                 }
                 //====================================================================//
                 // Copy Path to File (For Writing)
-                $image['file'] = $image['path'];
-                $image['filename'] = $data['upload']->getClientOriginalName();
+                $file['file'] = $file['path'];
+                $file['filename'] = $data['upload']->getClientOriginalName();
 
-                return $image;
+                return $file;
         }
 
         return $data;

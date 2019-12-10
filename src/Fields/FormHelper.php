@@ -16,6 +16,7 @@
 namespace Splash\Admin\Fields;
 
 use ArrayObject;
+use Splash\Admin\Form\Type\FileType;
 use Splash\Admin\Form\Type\ImageType;
 use Splash\Admin\Form\Type\MultilangType;
 use Splash\Admin\Form\Type\ObjectIdType;
@@ -100,6 +101,8 @@ class FormHelper
                 return PriceType::class;
             case SPL_T_ID:
                 return ObjectIdType::class;
+            case SPL_T_FILE:
+                return FileType::class;
             case SPL_T_IMG:
                 return ImageType::class;
             case SPL_T_MVARCHAR:
