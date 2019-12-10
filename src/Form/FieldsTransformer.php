@@ -17,8 +17,8 @@ namespace Splash\Admin\Form;
 
 use Splash\Core\SplashCore as Splash;
 use Splash\Models\Fields\FieldsManagerTrait;
-use Splash\Models\Objects\ImagesTrait;
 use Splash\Models\Objects\FilesTrait;
+use Splash\Models\Objects\ImagesTrait;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -85,7 +85,7 @@ class FieldsTransformer implements DataTransformerInterface
             case SPL_T_FILE:
                 //====================================================================//
                 // Check Uploaded File
-                if (!isset($data['upload']) && array_key_exists("upload", $data) && (count($data) == 1)) {
+                if (!isset($data['upload']) && array_key_exists("upload", $data) && (1 == count($data))) {
                     return null;
                 }
                 if (!isset($data['upload']) || !($data['upload'] instanceof UploadedFile) || (!$data['upload']->isValid())) {
@@ -98,7 +98,7 @@ class FieldsTransformer implements DataTransformerInterface
                 $filePath = $data['upload']->getPath().'/';
                 //====================================================================//
                 // Convert Symfony File to Splash File|Image Array
-                $file = (self::baseType($this->type) == SPL_T_IMG) 
+                $file = (SPL_T_IMG == self::baseType($this->type))
                     ? self::images()->encode($originalName, $fileName, $filePath)
                     : self::files()->encode($originalName, $fileName, $filePath);
                 //====================================================================//
