@@ -104,9 +104,7 @@ class WidgetFactoryService implements WidgetProviderInterface
         );
         //====================================================================//
         // Add Dates from Presets
-        $datedParameters = is_array($mergedParameters)
-                ? self::addDatesPresets($mergedParameters)
-                : array();
+        $datedParameters = self::addDatesPresets($mergedParameters);
         //====================================================================//
         // Load Widget Contents
         $this->addWidgetContents(
