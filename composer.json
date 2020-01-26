@@ -40,7 +40,7 @@
         "composer/composer":                            "^1.5",
         "j13k/yaml-lint":                               "^1.1",
         "jakub-onderka/php-parallel-lint":              "^1.0",
-        "phpmd/phpmd":                                  "~2.7.0",
+        "phpmd/phpmd":                                  "^2.7",
         "phpro/grumphp":                                "^0.16",
         "friendsofphp/php-cs-fixer":                    ">=2.10",  
         "sclable/xml-lint":                             "^0.2.4",
