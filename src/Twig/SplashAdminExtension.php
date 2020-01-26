@@ -16,16 +16,17 @@
 namespace Splash\Admin\Twig;
 
 use Splash\Components\FieldsManager;
+use Splash\Core\SplashCore as Splash;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
 /**
- * @abstract    Splash Admin Twig Admin Extension
+ * Splash Admin Twig Admin Extension
  */
 class SplashAdminExtension extends AbstractExtension
 {
     /**
-     * @abstract    Get Extention Available Filters
+     * Get Extention Available Filters
      *
      * @return array
      */
@@ -41,11 +42,12 @@ class SplashAdminExtension extends AbstractExtension
             new TwigFilter('filetype', array($this, "filetypeFilter")),
             new TwigFilter('base64_encode', array($this, "base64Encode")),
             new TwigFilter('base64_decode', array($this, "base64Decode")),
+            new TwigFilter('htmlLogs', array($this, "getHtmlLogs")),
         );
     }
 
     /**
-     * @abstract   Identify if a string is an Object Identifier Data
+     * Identify if a string is an Object Identifier Data
      *
      * @param string $input Id Field String
      *
@@ -57,7 +59,7 @@ class SplashAdminExtension extends AbstractExtension
     }
 
     /**
-     * @abstract   Decode a string to extract Object Identifier Data Type
+     * Decode a string to extract Object Identifier Data Type
      *
      * @param string $unput Id Field String
      *
@@ -69,7 +71,7 @@ class SplashAdminExtension extends AbstractExtension
     }
 
     /**
-     * @abstract   Decode a string to extract Object Identifier Data Type
+     * Decode a string to extract Object Identifier Data Type
      *
      * @param string $input Id Field String
      *
@@ -81,7 +83,7 @@ class SplashAdminExtension extends AbstractExtension
     }
 
     /**
-     * @abstract   Identify if a string is a List Field String
+     * Identify if a string is a List Field String
      *
      * @param string $input List Field String
      *
@@ -105,7 +107,7 @@ class SplashAdminExtension extends AbstractExtension
     }
 
     /**
-     * @abstract   Decode a list string to extract Field Identifier
+     * Decode a list string to extract Field Identifier
      *
      * @param string $input List Field String
      *
@@ -131,7 +133,7 @@ class SplashAdminExtension extends AbstractExtension
     }
 
     /**
-     * @abstract   Decode a string to extract List Name String
+     * Decode a string to extract List Name String
      *
      * @param string $input List Field String
      *
@@ -157,7 +159,7 @@ class SplashAdminExtension extends AbstractExtension
     }
 
     /**
-     * @abstract   Access PHP Core Function
+     * Access PHP Core Function
      *
      * @param string $input
      *
@@ -169,7 +171,7 @@ class SplashAdminExtension extends AbstractExtension
     }
 
     /**
-     * @abstract   Access PHP Core Function
+     * Access PHP Core Function
      *
      * @param string $input
      *
@@ -178,6 +180,18 @@ class SplashAdminExtension extends AbstractExtension
     public function base64Decode($input)
     {
         return base64_decode($input, true);
+    }
+
+    /**
+     * Read Raw Logs from Splash Module as Html List
+     *
+     * @param string $input
+     *
+     * @return string
+     */
+    public function getHtmlLogs()
+    {
+        return Splash::log()->GetHtmlLog(true);
     }
 
     /**

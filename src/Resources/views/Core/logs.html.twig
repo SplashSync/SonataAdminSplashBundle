@@ -13,6 +13,10 @@
 
 #}
 
+{% if log is not defined %}
+    {% set log = "" | htmlLogs %}
+{% endif %}
+    
 {% if log is defined and log is not empty %}
     <section class="content" style="min-height: 10px;">
         <div class="row">

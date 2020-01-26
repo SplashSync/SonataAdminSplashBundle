@@ -1,0 +1,6 @@
+{% extends '@SonataAdmin/CRUD/base_edit.html.twig' %}
+
+{% block notice %}
+    {% include "@SplashAdmin/Core/logs.html.twig" %}
+    {{ parent() }}
+{% endblock %}

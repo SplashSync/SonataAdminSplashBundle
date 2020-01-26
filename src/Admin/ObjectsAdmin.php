@@ -146,6 +146,12 @@ class ObjectsAdmin extends AbstractAdmin
      */
     protected function configureShowFields(ShowMapper $showMapper): void
     {
+        //====================================================================//
+        // Override Sonata Base View Template
+        $this
+            ->getTemplateRegistry()
+            ->setTemplate("show", "@SplashAdmin/CRUD/show_object.html.twig");
+
         $this->configureFields($showMapper);
     }
 
@@ -154,6 +160,12 @@ class ObjectsAdmin extends AbstractAdmin
      */
     protected function configureFormFields(FormMapper $formMapper): void
     {
+        //====================================================================//
+        // Override Sonata Base View Template
+        $this
+            ->getTemplateRegistry()
+            ->setTemplate("edit", "@SplashAdmin/CRUD/edit_object.html.twig");
+
         $this->configureFields($formMapper);
     }
 
