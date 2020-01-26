@@ -509,7 +509,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     {
         //====================================================================//
         // Load Objects List from Splash Connector
-        $list = $this->getConnector()->getObjectList($class);        
+        $list = $this->getConnector()->getObjectList($class);
         //====================================================================//
         // Catch Splash Logs
         $this->manager->pushLogToSession(true);
