@@ -185,8 +185,6 @@ class SplashAdminExtension extends AbstractExtension
     /**
      * Read Raw Logs from Splash Module as Html List
      *
-     * @param string $input
-     *
      * @return string
      */
     public function getHtmlLogs()
