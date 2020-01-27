@@ -83,8 +83,15 @@ abstract class AbstractAdmin extends BaseAdmin
             return $this->objectType;
         }
         //====================================================================//
-        // Detect Object Type from Request
-        $this->objectType = $this->getRequest()->getSession()->get('ObjectType');
+        // Detect Forced Object Type from Request
+        if ($this->getRequest()->get('ObjectType')) {
+            $this->objectType = $this->getRequest()->get('ObjectType');
+        }
+        //====================================================================//
+        // Detect Object Type from Session
+        if (empty($this->objectType)) {
+            $this->objectType = $this->getRequest()->getSession()->get('ObjectType');
+        }
         //====================================================================//
         // Load Object Types from Connector
         /** @var ObjectsManager $modelManager */

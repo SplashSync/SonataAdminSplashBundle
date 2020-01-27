@@ -33,6 +33,11 @@ class ObjectsController extends CRUDController
     use ObjectManagerAwareTrait;
 
     /**
+     * @var int
+     */
+    const LIST_MAX = 10;
+
+    /**
      * @var ObjectsAdmin
      */
     protected $admin;
@@ -81,20 +86,28 @@ class ObjectsController extends CRUDController
 
         $this->getObjectsManager()->setObjectType($objectType);
         //====================================================================//
+        // Prapare List Parameters
+        $listPage = (int) $this->getRequest()->get("page", 1);
+        $listParams = array(
+            "max" => self::LIST_MAX,
+            "offset" => (($listPage - 1) * self::LIST_MAX)
+        );
+        //====================================================================//
         // Read Object List
-        $objectsList = $this->getObjectsManager()->findBy($objectType);
-//        $Meta   =   isset($List["meta"]) ? $List["meta"] : array();
+        $objectsList = $this->getObjectsManager()->findBy($objectType, $listParams);
+        $objectsMeta = isset($objectsList["meta"]) ? $objectsList["meta"] : array();
         unset($objectsList['meta']);
         //====================================================================//
         // Render Connector Profile Page
         return $this->render('@SplashAdmin/Objects/list.html.twig', array(
             'action' => 'list',
             'admin' => $this->admin,
+            'log' => Splash::log()->GetHtmlLog(true),
             'ObjectType' => $objectType,
             'objects' => $this->getObjectsManager()->getObjectsDefinition(),
             'fields' => $this->getObjectsManager()->getObjectFields(),
             'list' => $objectsList,
-            'log' => Splash::log()->GetHtmlLog(true),
+            'meta' => $objectsMeta,
         ));
     }
 
