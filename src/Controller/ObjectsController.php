@@ -90,7 +90,7 @@ class ObjectsController extends CRUDController
         $listPage = (int) $this->getRequest()->get("page", 1);
         $listParams = array(
             "max" => self::LIST_MAX,
-            "offset" => (($listPage - 1) * self::LIST_MAX)
+            "offset" => (($listPage - 1) * self::LIST_MAX),
         );
         //====================================================================//
         // Read Object List
