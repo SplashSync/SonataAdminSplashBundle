@@ -137,8 +137,8 @@ class ObjectsAdmin extends AbstractAdmin
     protected function configureRoutes(RouteCollection $collection): void
     {
         $collection->add('switch', 'switch');
-        $collection->add('image', 'i/{Path}/{Md5}');
-        $collection->add('file', 'f/{Path}/{Md5}');
+        $collection->add('image', 'i/{path}/{md5}');
+        $collection->add('file', 'f/{path}/{md5}');
     }
 
     /**

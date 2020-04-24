@@ -15,6 +15,7 @@
 
 namespace Splash\Admin\Form;
 
+use ArrayObject;
 use Splash\Core\SplashCore as Splash;
 use Splash\Models\Fields\FieldsManagerTrait;
 use Splash\Models\Objects\FilesTrait;
@@ -84,7 +85,10 @@ class FieldsTransformer implements DataTransformerInterface
         switch ($fieldType) {
             case SPL_T_IMG:
             case SPL_T_FILE:
-                return $this->reverseFileTransform($fieldType, $data);
+                return $this->reverseFileTransform(
+                    $fieldType,
+                    ($data instanceof ArrayObject) ? $data->getArrayCopy(): $data
+                );
         }
 
         return $data;

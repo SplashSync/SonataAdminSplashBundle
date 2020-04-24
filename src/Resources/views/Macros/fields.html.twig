@@ -249,7 +249,7 @@
                     <img class="media-object img-responsive" src="{{ Data.url }}" style="max-width: 120px;max-height: 120px;">
                 </a>
             {% elseif Data.file is defined and Data.md5 is defined %}
-                {% set Url = Admin.generateUrl('image', {"Path": Data.path | base64_encode , "Md5": Data.md5} ) %}
+                {% set Url = Admin.generateUrl('image', {"path": Data.path | base64_encode , "md5": Data.md5} ) %}
                 <a href="{{ Url }}" target="_blank">
                     <img class="media-object img-responsive" src="{{ Url }}" style="max-width: 120px;max-height: 120px;">
                 </a>
@@ -258,10 +258,19 @@
             
             <div class="media-body">
             {% if Data.name is defined and Data.name is not empty %}
-                <h4 class="media-heading">{{ Data.name }}</h4>
+                <h4 class="media-heading">{{ Data.name }}
             {% elseif Data.filename is defined and Data.filename is not empty %}
-                <h4 class="media-heading">{{ Data.filename }}</h4>
+                <h4 class="media-heading">{{ Data.filename }}
             {% endif %}
+            {% if Data.path is defined and Data.md5 is defined %}
+                    {% set Url = Admin.generateUrl('image', {"path": Data.path | base64_encode , "md5": Data.md5} ) %}
+                    <a class="btn btn-xs btn-primary" href="{{ Url }}" target="_blank">
+                        <i class="fa fa-eye"></i>
+                        View
+                    </a>
+            {% endif %}
+                </h4>
+                
             <ul>
                 {% if Data.filename is defined %}
                     <li> {{ ('fields.file.file')|trans({}, 'AppExplorerBundle') }}&nbsp;:&nbsp;{{ Data.filename }}</li>
@@ -284,7 +293,7 @@
         <div class="media">
             
             {% if Data.file is defined and Data.md5 is defined %}
-                {% set Url = Admin.generateUrl('file', {"Path": Data.path | base64_encode , "Md5": Data.md5} ) %}
+                {% set Url = Admin.generateUrl('file', {"path": Data.path | base64_encode , "md5": Data.md5} ) %}
             {% elseif Data.url is defined and Data.url is not empty %}
                 {% set Url = Data.url %}
             {% endif %}
@@ -299,10 +308,19 @@
             
             <div class="media-body">
             {% if Data.name is defined and Data.name is not empty %}
-                <h4 class="media-heading">{{ Data.name }}</h4>
+                <h4 class="media-heading">{{ Data.name }}
             {% elseif Data.filename is defined and Data.filename is not empty %}
-                <h4 class="media-heading">{{ Data.filename }}</h4>
+                <h4 class="media-heading">{{ Data.filename }}
             {% endif %}
+            {% if Data.path is defined and Data.md5 is defined %}
+                    {% set Url = Admin.generateUrl('file', {"path": Data.path | base64_encode , "md5": Data.md5} ) %}
+                    <a class="btn btn-xs btn-primary" href="{{ Url }}" target="_blank">
+                        <i class="fa fa-eye"></i>
+                        View
+                    </a>
+            {% endif %}
+                </h4>            
+            
             <ul>
                 {% if Data.filename is defined %}
                     <li> {{ ('fields.file.file')|trans({}, 'AppExplorerBundle') }}&nbsp;:&nbsp;{{ Data.filename }}</li>

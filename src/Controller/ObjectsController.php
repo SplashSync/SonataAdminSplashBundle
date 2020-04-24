@@ -225,11 +225,16 @@ class ObjectsController extends CRUDController
         $this->getObjectsManager()->setObjectType($this->admin->getObjectType());
         //====================================================================//
         // Load File From Connnector
+        $filePath = (string) base64_decode($path, true);
         $fileArray = $this->getObjectsManager()
             ->getConnector()
-            ->getFile((string) base64_decode($path, true), $md5);
+            ->getFile($filePath, $md5);
         if (!$fileArray) {
-            throw $this->createNotFoundException(sprintf('unable to find the file with path: %s', $path));
+            print Splash::log()->getHtmlLog();
+
+            throw $this->createNotFoundException(
+                sprintf('unable to find the file with path: %s', $filePath)
+            );
         }
         //==============================================================================
         // Return Image Response
@@ -259,7 +264,11 @@ class ObjectsController extends CRUDController
             ->getConnector()
             ->getFile((string) base64_decode($path, true), $md5);
         if (!$fileArray) {
-            throw $this->createNotFoundException(sprintf('unable to find the file with path: %s', $path));
+            print Splash::log()->getHtmlLog();
+
+            throw $this->createNotFoundException(
+                sprintf('unable to find the file with path: %s', $path)
+            );
         }
         //==============================================================================
         // Return Image Response
