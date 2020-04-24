@@ -392,7 +392,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
             //====================================================================//
             // Write Object Data
             $this->getConnector()
-                ->setObject($this->objectType, $objectId, $objectData);
+                ->setObject($this->objectType, $objectId, $objectData->getArrayCopy());
         } catch (PDOException $e) {
             throw new ModelManagerException(
                 sprintf('Failed to update object: %s', ClassUtils::getClass($object)),
@@ -585,14 +585,12 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @return array
      */
-    public function modelReverseTransform($class, array $array = array()): array
+    public function modelReverseTransform($class, array $array = array()): ArrayObject
     {
         unset($array['id']);
 
-        return $array;
+        return new ArrayObject($array, ArrayObject::ARRAY_AS_PROPS);
     }
 
     //====================================================================//
@@ -702,10 +700,12 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
      * The ORM implementation does nothing special but you still should use
      * this method when using the id in a URL to allow for future improvements.
+     *
+     * @param array|object $model
+     *
+     * @return string
      */
     public function getUrlsafeIdentifier($model): string
     {
