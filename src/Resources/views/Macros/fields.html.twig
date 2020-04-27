@@ -248,7 +248,7 @@
                 <a href="{{ Data.url }}" target="_blank">
                     <img class="media-object img-responsive" src="{{ Data.url }}" style="max-width: 120px;max-height: 120px;">
                 </a>
-            {% elseif Data.file is defined and Data.md5 is defined %}
+            {% elseif Admin and Data.file is defined and Data.md5 is defined %}
                 {% set Url = Admin.generateUrl('image', {"path": Data.path | base64_encode , "md5": Data.md5|default("no-md5")} ) %}
                 <a href="{{ Url }}" target="_blank">
                     <img class="media-object img-responsive" src="{{ Url }}" style="max-width: 120px;max-height: 120px;">
@@ -262,7 +262,7 @@
             {% elseif Data.filename is defined and Data.filename is not empty %}
                 <h4 class="media-heading">{{ Data.filename }}
             {% endif %}
-            {% if Data.path is defined and Data.md5 is defined %}
+            {% if Admin and Data.path is defined and Data.md5 is defined %}
                     {% set Url = Admin.generateUrl('image', {"path": Data.path | base64_encode , "md5": Data.md5|default("no-md5")} ) %}
                     <a class="btn btn-xs btn-primary" href="{{ Url }}" target="_blank">
                         <i class="fa fa-eye"></i>

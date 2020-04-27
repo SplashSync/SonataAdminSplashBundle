@@ -66,6 +66,14 @@
         "psr-4": {
             "Splash\\Admin\\Tests\\": "tests/"
         }        
-    }
+    },
     
+    "scripts": {
+        "post-install-cmd": [
+            "php vendor/bin/grumphp git:deinit" 
+        ],
+        "post-update-cmd": [
+            "php vendor/bin/grumphp git:deinit" 
+        ]
+    }    
 }
