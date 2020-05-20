@@ -22,7 +22,7 @@
         {% set name = type | getListFieldName() %}
         {% set type = type | getListFieldData() %}
         {% if compact is empty %}
-            <span rel="popover-hover" data-original-title title data-placement="top" data-html="TRUE" data-content="{{ ('fields.lists.tooltip')|trans({}, 'AppExplorerBundle') }}">
+            <span data-placement="top" data-toggle="popover" data-html="TRUE" data-content="{{ ('fields.lists.tooltip')|trans({}, 'AppExplorerBundle') }}">
                 <span class="label label-success">
                     <i class="fa {{ ('fields.lists.ico')|trans({}, 'AppExplorerBundle')|raw }}"></i>
                 </span>
@@ -34,7 +34,7 @@
     <!-- Objects Identifier Fields Format Block -->
     {% if type | isIdField() == true %}
         {% set type = type | objectType() %}
-        <span rel="popover-hover" data-original-title title data-placement="top" data-html="TRUE" data-content="{{ ('fields.id.tooltip')|trans({}, 'AppExplorerBundle') }}">
+        <span data-placement="top" data-toggle="popover" data-html="TRUE" data-content="{{ ('fields.id.tooltip')|trans({}, 'AppExplorerBundle') }}">
             <span class="label label-primary">
                 <i class="fa {{ ('fields.id.ico')|trans({}, 'AppExplorerBundle')|raw }}">
                 {% if compact is empty %}
@@ -348,36 +348,40 @@
 {% macro flags(field) %}
     <!-- Objects Fields Flags Block -->
     {% if field.required == 1 %}
-        <span rel="popover-hover" data-original-title title data-placement="top" data-html="TRUE" data-content="{{ 'fields.required.tooltip'|trans({}, 'AppExplorerBundle') }}">
+        <span data-placement="top" data-toggle="popover" data-html="TRUE" data-content="{{ 'fields.required.tooltip'|trans({}, 'AppExplorerBundle') }}">
             <span class="label label-danger"><i class="fa {{ 'fields.required.ico'|trans({}, 'AppExplorerBundle')|raw }}"></i></span>
         </span>
     {% endif %}
     {% if field.itemtype is defined and field.itemtype is not empty  %}
-        <span rel="popover-hover" data-original-title title data-placement="top" data-html="TRUE" data-content="{{ 'fields.schema.tooltip'|trans({}, 'AppExplorerBundle') }}">
+        <span data-placement="top" data-toggle="popover" data-html="TRUE" data-content="{{ 'fields.schema.tooltip'|trans({}, 'AppExplorerBundle') }}">
             <span class="label label-success"><i class="fa {{ 'fields.schema.ico'|trans({}, 'AppExplorerBundle')|raw }}"></i></span>
         </span>
     {% endif %}
     {% if field.read == 0 %}
-        <span rel="popover-hover" data-original-title title data-placement="top" data-html="TRUE" data-content="{{ 'fields.writeonly.tooltip'|trans({}, 'AppExplorerBundle') }}">
+        <span data-placement="top" data-toggle="popover" data-html="TRUE" data-content="{{ 'fields.writeonly.tooltip'|trans({}, 'AppExplorerBundle') }}">
             <span class="label label-primary"><i class="fa {{ 'fields.writeonly.ico'|trans({}, 'AppExplorerBundle')|raw }}"></i></span>
         </span>
     {% endif %}
     {% if field.write == 0  %}
-        <span rel="popover-hover" data-original-title title data-placement="top" data-html="TRUE" data-content="{{ 'fields.readonly.tooltip'|trans({}, 'AppExplorerBundle') }}">
+        <span data-placement="top" data-toggle="popover" data-html="TRUE" data-content="{{ 'fields.readonly.tooltip'|trans({}, 'AppExplorerBundle') }}">
             <span class="label label-primary"><i class="fa {{ 'fields.readonly.ico'|trans({}, 'AppExplorerBundle')|raw }}"></i></span>
         </span>
     {% endif %}
     {% if field.tag is not empty  %}
-        <span rel="popover-hover" data-original-title title data-placement="top" data-html="TRUE" data-content="{{ 'fields.tag.tooltip'|trans({}, 'AppExplorerBundle') }}">
+        <span data-placement="top" data-toggle="popover" data-html="TRUE" data-content="{{ 'fields.tag.tooltip'|trans({}, 'AppExplorerBundle') }}">
             <span class="label label-warning"><i class="fa {{ 'fields.tag.ico'|trans({}, 'AppExplorerBundle')|raw }}"></i></span>
         </span>
     {% endif %}
     {% if field.inlist == 1  %}
-        <span rel="popover-hover" data-original-title title data-placement="top" data-html="TRUE" data-content="{{ 'fields.inlist.tooltip'|trans({}, 'AppExplorerBundle') }}">
+        <span data-placement="top" data-toggle="popover" data-html="TRUE" data-content="{{ 'fields.inlist.tooltip'|trans({}, 'AppExplorerBundle') }}">
             <span class="label label-primary"><i class="fa {{ 'fields.inlist.ico'|trans({}, 'AppExplorerBundle')|raw }}"></i></span>
         </span>
     {% endif %}
-    
+    {% if field.notest == 1  %}
+        <span data-placement="top" data-toggle="popover" data-html="TRUE" data-content="{{ 'fields.notest.tooltip'|trans({}, 'AppExplorerBundle') }}">
+            <span class="label label-warning"><i class="fa {{ 'fields.notest.ico'|trans({}, 'AppExplorerBundle')|raw }}"></i></span>
+        </span>
+    {% endif %}    
     {% if field.options.language is defined %}
         {% import   _self   as  Fields %}
         {{ Fields.lang(field.options.language) }}

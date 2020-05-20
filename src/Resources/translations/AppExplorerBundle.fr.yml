@@ -36,6 +36,11 @@ fields:
         desc:   Ce champ est présent dans les listes d'Objets. 
         ico:    fa-list
         tooltip: <h5>Listé</h5>Ce champ est présent dans les listes d'Objets. Il peu aussi être utilisé pour la fusion automatique d'Objets.
+    notest:
+        label:  Non Testé
+        desc:   Ce champ n'est pas couvert par les test automatiques. 
+        ico:    fa-exclamation
+        tooltip: <h5>Non Testé</h5>Ce champ n'est pas couvert par les test automatiques. Il peut aussi être testé dans une séquence spéciale, ou pas...        
     schema:
         label:  MicroData
         desc:   Ce champs est associé à un Schéma de MicroData.  

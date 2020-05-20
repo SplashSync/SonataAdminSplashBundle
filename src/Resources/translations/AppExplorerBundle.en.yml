@@ -36,6 +36,11 @@ fields:
         desc:   This field is returned in list requests. 
         ico:    fa-list
         tooltip: <h5>In List</h5>This field is returned in list requests. It may also be used for automated Objects linking.
+    notest:
+        label:  Not Tested
+        desc:   This field isn't covered by automated tests. 
+        ico:    fa-exclamation
+        tooltip: <h5>Not Tested</h5>This field isn't covered by automated tests. It may be tested on special sequences, or not...
     schema:
         label:  Has MicroData
         desc:   This field is associated to a MicroData Schema Definition. 
