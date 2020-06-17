@@ -333,8 +333,14 @@
                 {% endif %}
             </ul>    
           </div>
-        </div>            
-            
+        </div>
+
+    {% elseif Format == "inline" %}
+
+        {% for value in Data | inline_decode | default([])  %}
+            &nbsp;<span class="label label-primary"><i class="fa fa-circle"></i>&nbsp;{{ value }}</span>&nbsp;
+        {% endfor %}
+
     {% else %}
         
         <span class="txt-danger"><i class="fa fa-warning"></i>Unknown Field Format!</span>

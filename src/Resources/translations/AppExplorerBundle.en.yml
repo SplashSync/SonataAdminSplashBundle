@@ -174,5 +174,10 @@ fields:
         label:  PRICE
         desc:   Price Definition Structure
         ico:    fa-money
-        tooltip: <h5>Price Definition </h5> Define a product / service price. This is a structural information.    
+        tooltip: <h5>Price Definition </h5> Define a product / service price. This is a structural information.
+    inline:
+        label:  INLINE
+        desc:   Inline List as Json formated string
+        ico:    fa-list-ul
+        tooltip: <h5>Inline List</h5> Inline List as Json formated string. <i>I.e. ["tag1", "tag2", "tag3"]</i>
  

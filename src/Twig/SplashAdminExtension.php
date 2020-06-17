@@ -17,6 +17,7 @@ namespace Splash\Admin\Twig;
 
 use Splash\Components\FieldsManager;
 use Splash\Core\SplashCore as Splash;
+use Splash\Models\Helpers\InlineHelper;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
@@ -43,6 +44,7 @@ class SplashAdminExtension extends AbstractExtension
             new TwigFilter('base64_encode', array($this, "base64Encode")),
             new TwigFilter('base64_decode', array($this, "base64Decode")),
             new TwigFilter('htmlLogs', array($this, "getHtmlLogs")),
+            new TwigFilter('inline_decode', array(InlineHelper::class, "toArray")),
         );
     }
 
@@ -193,7 +195,7 @@ class SplashAdminExtension extends AbstractExtension
     }
 
     /**
-     * @abstract   Get File Path Extension Name
+     * Get File Path Extension Name
      *
      * @param string $input
      *

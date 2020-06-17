@@ -18,6 +18,7 @@ namespace Splash\Admin\Form;
 use ArrayObject;
 use Splash\Core\SplashCore as Splash;
 use Splash\Models\Fields\FieldsManagerTrait;
+use Splash\Models\Helpers\InlineHelper;
 use Splash\Models\Objects\FilesTrait;
 use Splash\Models\Objects\ImagesTrait;
 use Symfony\Component\Form\DataTransformerInterface;
@@ -67,6 +68,8 @@ class FieldsTransformer implements DataTransformerInterface
                 }
 
                 return $data;
+            case SPL_T_INLINE:
+                return InlineHelper::toArray($data);
         }
 
         return $data;
@@ -89,6 +92,8 @@ class FieldsTransformer implements DataTransformerInterface
                     $fieldType,
                     ($data instanceof ArrayObject) ? $data->getArrayCopy(): $data
                 );
+            case SPL_T_INLINE:
+                return InlineHelper::fromArray($data);
         }
 
         return $data;

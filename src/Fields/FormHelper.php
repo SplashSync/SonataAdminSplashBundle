@@ -110,6 +110,7 @@ class FormHelper
                 return MultilangType::class;
             case SPL_T_VARCHAR:
             case SPL_T_TEXT:
+            case SPL_T_INLINE:
                 return empty($field->choices) ? TextType::class : ChoiceType::class;
         }
 
@@ -127,9 +128,11 @@ class FormHelper
      */
     public static function formOptions(ArrayObject $field)
     {
-        switch (FormHelper::baseType($field->type)) {
+        $splashType = FormHelper::baseType($field->type);
+        switch ($splashType) {
             case SPL_T_VARCHAR:
             case SPL_T_TEXT:
+            case SPL_T_INLINE:
                 if (empty($field->choices)) {
                     $options = array();
 
@@ -137,6 +140,7 @@ class FormHelper
                 }
                 $options = array(
                     'choices' => self::toFormChoice($field->choices),
+                    'multiple' => (SPL_T_INLINE == $splashType),
                 );
 
                 break;

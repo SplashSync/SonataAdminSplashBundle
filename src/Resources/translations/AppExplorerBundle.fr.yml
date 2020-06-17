@@ -174,4 +174,9 @@ fields:
         label:  PRICE
         desc:   Structure de définit de prix.
         ico:    fa-money
-        tooltip: <h5>Définition de Prix</h5> Définit le prix d'un produit ou service. 
+        tooltip: <h5>Définition de Prix</h5> Définit le prix d'un produit ou service.
+    inline:
+        label:  INLINE
+        desc:   Liste simple au format Json
+        ico:    fa-list-ul
+        tooltip: <h5>Liste simple</h5> Liste simple au format Json. <i>Ex. ["tag1", "tag2", "tag3"]</i>
