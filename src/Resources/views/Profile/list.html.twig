@@ -11,18 +11,8 @@ file that was distributed with this source code.
 
 {% extends "@SonataAdmin/CRUD/base_list.html.twig" %}
 
-{%- block actions -%}
+{%- block actions -%}{%- endblock -%}
 
-{#    {% include '@SonataAdmin/CRUD/action_buttons.html.twig' %}#}
-{%- endblock -%}
-
-{#{%- block tab_menu -%}
-    {{ knp_menu_render(admin.sidemenu(action), {
-        'currentClass': 'active',
-        'template': get_global_template('tab_menu_template')
-    }, 'twig') }}
-{%- endblock -%}
-#}
 {% block title %}
     {{ profile.title | trans({}, profile.domain ) | default('No Connector Title Defined') }}
     {#
@@ -30,7 +20,7 @@ file that was distributed with this source code.
         so we define the title corresponding to the parent's admin.
     #}
     {% if admin.isChild and admin.parent.subject %}
-        {{ "title_edit"|trans({'%name%': admin.parent.toString(admin.parent.subject)|truncate(15) }, 'SonataAdminBundle') }}
+        {{ "title_edit"|trans({'%name%': admin.parent.toString(admin.parent.subject)|u.truncate(15) }, 'SonataAdminBundle') }}
     {% endif %}
 {% endblock %}
 
@@ -38,13 +28,9 @@ file that was distributed with this source code.
     {{ block('title') }}
 {% endblock %}
 
-{% block list_table %}
+{% block list_table %}{% endblock %}
 
-{% endblock %}
-
-{% block list_filters_actions %}
-
-{% endblock %}
+{% block list_filters_actions %}{% endblock %}
 
 {% block list_filters %}
     

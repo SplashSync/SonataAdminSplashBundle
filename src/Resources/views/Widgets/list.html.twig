@@ -1,8 +1,7 @@
 
 {% extends "@SonataAdmin/CRUD/base_list.html.twig" %}
 
-{%- block actions -%}
-{%- endblock -%}
+{%- block actions -%}{%- endblock -%}
 
 {% block title %}
     {{ profile.title | default('No Connector Title Defined') }}
@@ -11,7 +10,7 @@
         so we define the title corresponding to the parent's admin.
     #}
     {% if admin.isChild and admin.parent.subject %}
-        {{ "title_edit"|trans({'%name%': admin.parent.toString(admin.parent.subject)|truncate(15) }, 'SonataAdminBundle') }}
+        {{ "title_edit"|trans({'%name%': admin.parent.toString(admin.parent.subject)|u.truncate(15) }, 'SonataAdminBundle') }}
     {% endif %}
 {% endblock %}
 
@@ -19,13 +18,9 @@
     {{ block('title') }}
 {% endblock %}
 
-{% block list_table %}
+{% block list_table %}{% endblock %}
 
-{% endblock %}
-
-{% block list_filters_actions %}
-
-{% endblock %}
+{% block list_filters_actions %}{% endblock %}
 
 {% block list_filters %}
 

@@ -106,7 +106,7 @@
     {% elseif Format == "varchar" or Format == "text" %}
         
         {% if Data is not iterable %}
-            {{ Data | truncate(250) }} 
+            {{ Data | u.truncate(250) }}
         {% else %}
             <span class="text-danger"><i class="fa fa-envelope"></i>&nbsp; Wrong Field Format!</span>
         {% endif %}
@@ -135,7 +135,7 @@
             {% set flagUrl = "bundles/splashadmin/flags/1x1/" ~ (Data | lower) ~ ".svg" %}
                 
             <img src="{{ asset(flagUrl) }}" width="15px">
-            &nbsp;{{ Data | truncate(10) }}
+            &nbsp;{{ Data | u.truncate(10) }}
         {% endif %}        
         
     {% elseif Format == "currency" %}

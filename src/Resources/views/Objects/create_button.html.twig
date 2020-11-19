@@ -16,7 +16,7 @@
 {% if admin.hasAccess('create') and admin.hasRoute('create') %}
 {#    {% if objects[ObjectType].allow_push_updated is not empty and objects[ObjectType].allow_push_updated != "0"  %}#}
         <li>
-            <a class="sonata-action-element" href="{{ admin.generateUrl('create', {"ObjectType" : ObjectType | default(app.request.get('ObjectType'))}) }}">
+            <a class="sonata-action-element" href="{{ admin.generateUrl('create', {"ObjectType": ObjectType|default(app.request.get('ObjectType'))}) }}">
                 <i class="fa fa-plus-circle" aria-hidden="true"></i>
                 {{ 'link_action_create'|trans({}, 'SonataAdminBundle') }}
             </a>

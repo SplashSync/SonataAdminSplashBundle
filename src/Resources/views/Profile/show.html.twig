@@ -13,7 +13,7 @@ file that was distributed with this source code.
 {% import  "@SplashAdmin/Macros/fields.html.twig"   as  Fields %}
 
 {% block title %}
-    {{ "title_show"|trans({'%name%': object.name|truncate(25) }, 'SonataAdminBundle') }}
+    {{ "title_show"|trans({'%name%': object.name|u.truncate(25) }, 'SonataAdminBundle') }}
 {% endblock %}
 
 {% block navbar_title %}
