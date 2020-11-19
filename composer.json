@@ -1,23 +1,25 @@
 {
-    "name":     "splash/sonata-admin-splash-bundle",
-    "license":  "MIT",
-    "type":     "symfony-bundle",
-    
-    "description": "This Bundle is inspired from LexikMonologBrowserBundle, it provides a Doctrine DBAL handler for Monolog and Sonata Admin.",
-    "keywords": ["Symfony3", "Symfony4", "spalsh", "sync", "connectors", "synchronization", "sonata", "sonata-project", "admin", "explorer"],
-    
+    "name":                 "splash/sonata-admin-splash-bundle",
+    "license":              "MIT",
+    "type":                 "symfony-bundle",
+    "description":          "This Bundle provides a Object Manager for Splash Connectors and Sonata Admin.",
+    "keywords":             ["Symfony3", "Symfony4", "splalh", "sync", "connectors", "synchronization", "sonata", "sonata-project", "admin", "explorer"],
+    "minimum-stability":    "dev",
+    "prefer-stable":        true,
+
     "authors": [
         {
             "name":"Splash Sync",
             "email":"contact@splashsync.com"
+        },
+        {
+            "name": "Bernard Paquier",
+            "email": "eshop.bpaquier@gmail.com"
         }
     ],
-    
-    "minimum-stability": "dev",
-    "prefer-stable": true,
 
     "require": {
-        "php":                          "^7.1",
+        "php":                          "^7.2",
         
         "symfony/cache":                "^4.0",
         
@@ -35,25 +37,8 @@
     },
     
     "require-dev": {
-        "psr/simple-cache":                             "^1.0",
-        "phpunit/phpunit":                              ">7",
-        "composer/composer":                            "^1.5",
-        "j13k/yaml-lint":                               "^1.1",
-        "jakub-onderka/php-parallel-lint":              "^1.0",
-        "phpmd/phpmd":                                  "^2.7",
-        "phpro/grumphp":                                "^0.16",
-        "friendsofphp/php-cs-fixer":                    ">=2.10",  
-        "sclable/xml-lint":                             "^0.2.4",
-        "sebastian/phpcpd":                             ">3.0",
-        "seld/jsonlint":                                "^1.7",
-        "sensiolabs/security-checker":                  "^4.1",
-        "squizlabs/php_codesniffer":                    "^3.2",
-        "escapestudios/symfony2-coding-standard":       ">=3.4",        
-        
-        "phpstan/phpstan":                              "^0.12",        
-        "phpstan/phpstan-symfony":                      "^0.12",
-        "phpstan/phpstan-doctrine":                     "^0.12",
-        "phpstan/phpstan-phpunit":                      "^0.12"
+        "psr/simple-cache":             "^1.0",
+        "badpixxel/php-sdk":            "dev-main"
     },
     
     "autoload": {
@@ -66,14 +51,5 @@
         "psr-4": {
             "Splash\\Admin\\Tests\\": "tests/"
         }        
-    },
-    
-    "scripts": {
-        "post-install-cmd": [
-            "php vendor/bin/grumphp git:deinit" 
-        ],
-        "post-update-cmd": [
-            "php vendor/bin/grumphp git:deinit" 
-        ]
-    }    
+    }
 }

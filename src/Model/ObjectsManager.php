@@ -450,7 +450,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     {
         $metadata = $this->getMetadata(ClassUtils::getClass($object));
 
-        if (!$metadata->isVersioned) {
+        if (!$metadata->isVersioned || is_null($metadata->reflFields[$metadata->versionField])) {
             return;
         }
 
@@ -740,8 +740,12 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function getDataSourceIterator(DatagridInterface $datagrid, array $fields, $firstResult = null, $maxResult = null)
-    {
+    public function getDataSourceIterator(
+        DatagridInterface $datagrid,
+        array $fields,
+        $firstResult = null,
+        $maxResult = null
+    ) {
         return new ArraySourceIterator(array());
     }
 
