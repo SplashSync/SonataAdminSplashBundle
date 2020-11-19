@@ -42,10 +42,6 @@ stages:
       ################################################################
       # Execute Code Quality Analyze
       - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/grumphp.sh | sh
-#      - php splash/vendor/bin/grumphp run
-#      - php splash/vendor/bin/grumphp run --testsuite=travis
-#      - php splash/vendor/bin/grumphp run --testsuite=csfixer
-#      - php splash/vendor/bin/grumphp run --testsuite=phpstan
     ################################################################################
     # Run After Script
     after_script:
@@ -57,8 +53,4 @@ tests:php-7.4:
 
 tests:php-7.3:
   image: registry.gitlab.com/badpixxel-projects/php-sdk:php-7.3
-  <<: *quality_tests
-
-tests:php-7.2:
-  image: registry.gitlab.com/badpixxel-projects/php-sdk:php-7.2
   <<: *quality_tests
