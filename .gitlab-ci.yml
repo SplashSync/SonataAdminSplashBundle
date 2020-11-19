@@ -41,7 +41,7 @@ stages:
       - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/composer.sh | bash
       ################################################################
       # Execute Code Quality Analyze
-      - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/grumphp.sh | bash
+      - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/grumphp.sh | sh
 #      - php splash/vendor/bin/grumphp run
 #      - php splash/vendor/bin/grumphp run --testsuite=travis
 #      - php splash/vendor/bin/grumphp run --testsuite=csfixer
