@@ -62,13 +62,12 @@ class SplashAdminExtension extends Extension implements PrependExtensionInterfac
         // Load Bundle Services
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
-
         //====================================================================//
         // Load Splash Core Bundle Configuration
+        /** @var array $config */
         $config = $container->getParameter('splash');
-
         //====================================================================//
-        // Add Availables Connections to Sonata Admin
+        // Add Available Connections to Sonata Admin
         foreach ($config["connections"] as $tagId => $connection) {
             $this->addAdminService(self::TYPE_PROFILE, $tagId, $connection["name"]);
             $this->addAdminService(self::TYPE_CONFIG, $tagId, $connection["name"]);
