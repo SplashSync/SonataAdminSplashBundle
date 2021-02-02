@@ -336,8 +336,11 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
         try {
             //====================================================================//
             // Write Object Data
-            $object->id = $this->getConnector()
-                ->setObject($this->objectType, null, $object->getArrayCopy());
+            $object->id = $this->getConnector()->setObject(
+                $this->objectType,
+                null,
+                $this->modelReverseTransform("", $object->getArrayCopy())->getArrayCopy()
+            );
         } catch (PDOException $e) {
             throw new ModelManagerException(
                 sprintf('Failed to create object: %s', ClassUtils::getClass($object)),
