@@ -682,21 +682,21 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     /**
      * @param array|object $model
      *
-     * @return string
+     * @return null|string
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function getNormalizedIdentifier($model): string
+    public function getNormalizedIdentifier($model): ?string
     {
         if (is_array($model)) {
-            return $model['id'];
+            return (string) $model['id'];
         }
 
         if (isset($model->id)) {
-            return $model->id;
+            return (string) $model->id;
         }
 
-        return "";
+        return null;
     }
 
     /**
@@ -709,7 +709,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      */
     public function getUrlsafeIdentifier($model): string
     {
-        return $this->getNormalizedIdentifier($model);
+        return (string) $this->getNormalizedIdentifier($model);
     }
 
     /**
