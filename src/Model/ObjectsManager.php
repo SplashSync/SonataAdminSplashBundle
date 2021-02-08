@@ -333,14 +333,23 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     {
         $object->id = null;
 
+        //====================================================================//
+        // Execute Reverse Transform
+        $objectData = $this
+            ->modelReverseTransform('ArrayObject', $object->getArrayCopy())
+            ->getArrayCopy();
+        //====================================================================//
+        // Remove Null Values
+        foreach (array_keys($objectData) as $fieldId) {
+            if (is_null($objectData[$fieldId])) {
+                unset($objectData[$fieldId]);
+            }
+        }
+        //====================================================================//
+        // Write Object Data
         try {
-            //====================================================================//
-            // Write Object Data
-            $object->id = $this->getConnector()->setObject(
-                $this->objectType,
-                null,
-                $this->modelReverseTransform("", $object->getArrayCopy())->getArrayCopy()
-            );
+            $object->id = $this->getConnector()
+                ->setObject($this->objectType, null, $objectData);
         } catch (PDOException $e) {
             throw new ModelManagerException(
                 sprintf('Failed to create object: %s', ClassUtils::getClass($object)),
