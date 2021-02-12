@@ -59,7 +59,9 @@ class ObjectsAdmin extends AbstractAdmin
         $mapper->end();
 
         if ($mapper instanceof FormMapper) {
-            $mapper->get($field->id)->addModelTransformer(new FieldsTransformer($field->type));
+            $mapper->get($field->id)->addModelTransformer(
+                new FieldsTransformer($field->type, $field->choices)
+            );
         }
 
         return $this;

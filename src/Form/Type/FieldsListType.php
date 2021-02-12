@@ -63,7 +63,9 @@ class FieldsListType extends AbstractType
                 $options
             );
 
-            $builder->get($list["fieldname"])->addModelTransformer(new FieldsTransformer($field->type));
+            $builder->get($list["fieldname"])->addModelTransformer(
+                new FieldsTransformer($field->type, $field->choices)
+            );
         }
     }
 

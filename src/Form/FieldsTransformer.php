@@ -33,16 +33,25 @@ class FieldsTransformer implements DataTransformerInterface
     use ImagesTrait;
     use FilesTrait;
 
+    /**
+     * @var string
+     */
     private $type;
+
+    /**
+     * @var null|array
+     */
+    private $choices;
 
     /**
      * Class Constructor
      *
      * @param string $objectType
      */
-    public function __construct(string $objectType)
+    public function __construct(string $objectType, ?array $choices)
     {
         $this->type = $objectType;
+        $this->choices = $choices;
     }
 
     /**
@@ -69,7 +78,7 @@ class FieldsTransformer implements DataTransformerInterface
 
                 return $data;
             case SPL_T_INLINE:
-                return InlineHelper::toArray($data);
+                return empty($this->choices) ? $data : InlineHelper::toArray($data);
         }
 
         return $data;
@@ -93,7 +102,7 @@ class FieldsTransformer implements DataTransformerInterface
                     ($data instanceof ArrayObject) ? $data->getArrayCopy(): $data
                 );
             case SPL_T_INLINE:
-                return InlineHelper::fromArray($data);
+                return empty($this->choices) ? $data : InlineHelper::fromArray($data);
         }
 
         return $data;
