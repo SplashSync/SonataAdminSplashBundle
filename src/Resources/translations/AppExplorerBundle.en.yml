@@ -134,6 +134,17 @@ fields:
         file:   Filename
         size:   File Size
         md5:    Md5
+    stream:
+        label:  STREAM
+        desc:   Temporary File structure.
+        ico:    fas fa-file
+        tooltip: "<h3>Streamed File</h3>
+                Temporary File structure. Share all information for temporary files synchronisation.
+                File will be stored for a given period (TTL) on Splash Server, then deleted.
+                File is not attached, but address & checksum informations are used for versioning."
+        ttl:    Time to Live
+        ttl-s:  "%ttlCount% Days"
+        expire: "Stored until: %expireAt%"
     url:
         label:  URL
         desc:   Absolute external link

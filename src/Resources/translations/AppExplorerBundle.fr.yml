@@ -134,6 +134,17 @@ fields:
         file:   Nom du Fichier
         size:   Taille
         md5:    Md5
+    stream:
+        label:  STREAM
+        desc:   Structure de Fichier Temporaire.
+        ico:    fas fa-file
+        tooltip: "<h3>Fichier Temporaire</h3> Structure de Fichier Temporaire.
+                Partage toutes les informations pour la synchronisation des fichiers.
+                Le Fichier sera stocké sur nos serveurs pour une durée prédéfinie (TTL), puis supprimé.
+                Le fichier n'est pas joint, mais les informations d'adresse et de checksum sont utilisées pour le contrôle de version."
+        ttl:    Durée de vie
+        ttl-s:  "%ttlCount% Jours"
+        expire: "Stocké jusqu'au: %expireAt%"
     url:
         label:  URL
         desc:   Lien Externe (URL).

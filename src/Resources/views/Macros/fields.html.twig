@@ -288,7 +288,7 @@
           </div>
         </div>            
             
-    {% elseif Format == "file" %}
+    {% elseif Format == "file" or Format == "stream" %}
         
         <div class="media">
             
@@ -307,32 +307,41 @@
             </div>
             
             <div class="media-body">
-            {% if Data.name is defined and Data.name is not empty %}
-                <h4 class="media-heading">{{ Data.name }}
-            {% elseif Data.filename is defined and Data.filename is not empty %}
-                <h4 class="media-heading">{{ Data.filename }}
-            {% endif %}
-            {% if Data.path is defined and Data.md5 is defined %}
-                    {% set Url = Admin.generateUrl('file', {"path": Data.path | base64_encode , "md5": Data.md5|default("no-md5")} ) %}
-                    <a class="btn btn-xs btn-primary" href="{{ Url }}" target="_blank">
-                        <i class="fa fa-eye"></i>
-                        View
-                    </a>
-            {% endif %}
-                </h4>            
-            
-            <ul>
-                {% if Data.filename is defined %}
-                    <li> {{ ('fields.file.file')|trans({}, 'AppExplorerBundle') }}&nbsp;:&nbsp;{{ Data.filename }}</li>
+                {% if Data.name is defined and Data.name is not empty %}
+                    <h4 class="media-heading">{{ Data.name }}
+                {% elseif Data.filename is defined and Data.filename is not empty %}
+                    <h4 class="media-heading">{{ Data.filename }}
                 {% endif %}
-                {% if Data.md5 is defined %}
-                    <li> {{ ('fields.file.md5')|trans({}, 'AppExplorerBundle') }}&nbsp;:&nbsp;{{ Data.md5 }}</li>
+                {% if Data.path is defined and Data.md5 is defined %}
+                        {% set Url = Admin.generateUrl('file', {"path": Data.path | base64_encode , "md5": Data.md5|default("no-md5")} ) %}
+                        <a class="btn btn-xs btn-primary" href="{{ Url }}" target="_blank">
+                            <i class="fa fa-eye"></i>
+                            View
+                        </a>
                 {% endif %}
-                {% if Data.size is defined %}
-                    <li> {{ ('fields.file.size')|trans({}, 'AppExplorerBundle') }}&nbsp;:&nbsp;{{ Data.size }}</li>
-                {% endif %}
-            </ul>    
-          </div>
+                    </h4>
+
+                <ul>
+                    {% if Data.filename is defined %}
+                        <li> {{ ('fields.file.file')|trans({}, 'AppExplorerBundle') }}&nbsp;:&nbsp;{{ Data.filename }}</li>
+                    {% endif %}
+                    {% if Data.md5 is defined %}
+                        <li> {{ ('fields.file.md5')|trans({}, 'AppExplorerBundle') }}&nbsp;:&nbsp;{{ Data.md5 }}</li>
+                    {% endif %}
+                    {% if Data.size is defined %}
+                        <li> {{ ('fields.file.size')|trans({}, 'AppExplorerBundle') }}&nbsp;:&nbsp;{{ Data.size }}</li>
+                    {% endif %}
+                    {% if Data.ttl is defined %}
+                        <li>
+                            <i class="far fa-clock"></i>
+                            {{ ('fields.stream.ttl')|trans({}, 'OpenObjectCoreBundle') }}
+                            &nbsp;:&nbsp;
+                            {{ ('fields.stream.ttl-s')|trans({"%ttlCount%": Data.ttl}, 'OpenObjectCoreBundle') }}
+                        </li>
+                    {% endif %}
+
+                </ul>
+            </div>
         </div>
 
     {% elseif Format == "inline" %}
