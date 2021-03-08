@@ -72,6 +72,7 @@ class FieldsTransformer implements DataTransformerInterface
                 return (float) $data;
             case SPL_T_FILE:
             case SPL_T_IMG:
+            case SPL_T_STREAM:
                 if (empty($data)) {
                     return array();
                 }
@@ -97,6 +98,7 @@ class FieldsTransformer implements DataTransformerInterface
         switch ($fieldType) {
             case SPL_T_IMG:
             case SPL_T_FILE:
+            case SPL_T_STREAM:
                 return $this->reverseFileTransform(
                     $fieldType,
                     ($data instanceof ArrayObject) ? $data->getArrayCopy(): $data

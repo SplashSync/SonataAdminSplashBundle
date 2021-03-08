@@ -102,6 +102,7 @@ class FormHelper
             case SPL_T_ID:
                 return ObjectIdType::class;
             case SPL_T_FILE:
+            case SPL_T_STREAM:
                 return FileType::class;
             case SPL_T_IMG:
                 return ImageType::class;
