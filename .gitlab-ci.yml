@@ -24,6 +24,7 @@ variables:
 # Defined Pipeline Stages
 stages:
   - quality
+  - deploy
 
 ################################################################
 # Code Quality Checks
@@ -54,3 +55,12 @@ tests:php-7.4:
 tests:php-7.3:
   image: registry.gitlab.com/badpixxel-projects/php-sdk:php-7.3
   <<: *quality_tests
+
+#################################################################
+## Trigger Toolkit Docker Build
+#################################################################
+toolkit:
+  stage:      deploy
+  trigger:
+    project:  SplashSync/Toolkit
+    strategy: depend
