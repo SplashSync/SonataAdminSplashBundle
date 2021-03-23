@@ -16,7 +16,6 @@
 namespace Splash\Admin\Form;
 
 use ArrayObject;
-use Splash\Core\SplashCore as Splash;
 use Splash\Models\Fields\FieldsManagerTrait;
 use Splash\Models\Helpers\InlineHelper;
 use Splash\Models\Objects\FilesTrait;
@@ -58,6 +57,8 @@ class FieldsTransformer implements DataTransformerInterface
      * @param mixed $data
      *
      * @return mixed
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function transform($data)
     {
