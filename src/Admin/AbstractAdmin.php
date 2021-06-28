@@ -38,11 +38,11 @@ abstract class AbstractAdmin extends BaseAdmin
     private $objectType;
 
     /**
-     * @param string $code
-     * @param string $class
-     * @param string $baseControllerName
-     * @param string $serverId
-     * @param string $type
+     * @param string       $code
+     * @param class-string $class
+     * @param string       $baseControllerName
+     * @param string       $serverId
+     * @param string       $type
      */
     public function __construct($code, $class, $baseControllerName, $serverId, $type)
     {

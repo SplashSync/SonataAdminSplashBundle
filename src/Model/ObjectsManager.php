@@ -480,8 +480,8 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * @param mixed $class
-     * @param mixed $objectId
+     * @param class-string $class
+     * @param mixed        $objectId
      *
      * @return ArrayObject|false
      *
@@ -620,8 +620,8 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * @param array  $parentAssocMapping
-     * @param string $class
+     * @param array        $parentAssocMapping
+     * @param class-string $class
      *
      * @return mixed
      */
@@ -638,8 +638,10 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param class-string $class
+     * @param string       $alias
      *
+     * @return ProxyQuery
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function createQuery($class, $alias = 'o')
@@ -810,6 +812,8 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @param class-string $class
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */

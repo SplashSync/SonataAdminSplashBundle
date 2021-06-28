@@ -38,18 +38,20 @@ class FieldsTransformer implements DataTransformerInterface
     private $type;
 
     /**
-     * @var null|array
+     * @var null|array|ArrayObject
      */
     private $choices;
 
     /**
      * Class Constructor
      *
-     * @param string $objectType
+     * @param string                 $objectType
+     * @param null|array|ArrayObject $choices
      */
-    public function __construct(string $objectType, ?array $choices)
+    public function __construct(string $objectType, ?iterable $choices)
     {
         $this->type = $objectType;
+        /** @var null|array|ArrayObject  $choices */
         $this->choices = $choices;
     }
 

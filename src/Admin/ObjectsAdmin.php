@@ -60,7 +60,7 @@ class ObjectsAdmin extends AbstractAdmin
 
         if ($mapper instanceof FormMapper) {
             $mapper->get($field->id)->addModelTransformer(
-                new FieldsTransformer($field->type, is_array($field->choices) ? $field->choices : null)
+                new FieldsTransformer($field->type, !empty($field->choices) ? $field->choices : null)
             );
         }
 
@@ -150,6 +150,7 @@ class ObjectsAdmin extends AbstractAdmin
     {
         //====================================================================//
         // Override Sonata Base View Template
+        // @phpstan-ignore-next-line
         $this
             ->getTemplateRegistry()
             ->setTemplate("show", "@SplashAdmin/CRUD/show_object.html.twig");
@@ -164,6 +165,7 @@ class ObjectsAdmin extends AbstractAdmin
     {
         //====================================================================//
         // Override Sonata Base View Template
+        // @phpstan-ignore-next-line
         $this
             ->getTemplateRegistry()
             ->setTemplate("edit", "@SplashAdmin/CRUD/edit_object.html.twig");

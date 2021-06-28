@@ -52,3 +52,4 @@
 /src/.php_cs.cache
 /.gh-pages/
 /.idea/
+/.php-cs-fixer.cache

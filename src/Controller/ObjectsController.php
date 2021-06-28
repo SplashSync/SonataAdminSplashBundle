@@ -70,10 +70,11 @@ class ObjectsController extends CRUDController
     {
         //====================================================================//
         // Detect Current Object Type
+        /** @var class-string $objectType */
         $objectType = $this->admin->getObjectType();
         if (empty($objectType)) {
             //====================================================================//
-            // Add Error To Splahs Log
+            // Add Error To Splash Log
             Splash::log()->err("No Object Type found on this Server.");
             //====================================================================//
             // Render Connector Profile Page
@@ -86,7 +87,7 @@ class ObjectsController extends CRUDController
 
         $this->getObjectsManager()->setObjectType($objectType);
         //====================================================================//
-        // Prapare List Parameters
+        // Prepare List Parameters
         $listPage = (int) $this->getRequest()->get("page", 1);
         $listParams = array(
             "max" => self::LIST_MAX,
