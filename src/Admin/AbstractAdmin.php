@@ -16,6 +16,7 @@
 namespace Splash\Admin\Admin;
 
 use Sonata\AdminBundle\Admin\AbstractAdmin as BaseAdmin;
+use Sonata\AdminBundle\FieldDescription\FieldDescriptionFactoryInterface;
 use Splash\Admin\Model\ObjectsManager;
 
 /**
@@ -64,6 +65,14 @@ abstract class AbstractAdmin extends BaseAdmin
         //====================================================================//
         // Setup Model Manager
         $this->configureModelManager();
+    }
+
+    /**
+     *  Disable Usage of Field Description Factory
+     */
+    public function getFieldDescriptionFactory(): ?FieldDescriptionFactoryInterface
+    {
+        return null;
     }
 
     //====================================================================//
