@@ -35,11 +35,11 @@ class ObjectsAdmin extends AbstractAdmin
      * Build Splash Objects Single Field Form.
      *
      * @param BaseGroupedMapper $mapper
-     * @param ArrayObject       $field
+     * @param array             $field
      *
      * @return $this
      */
-    public function buildFieldForm($mapper, ArrayObject $field)
+    public function buildFieldForm($mapper, array $field)
     {
         // This Should never happen, but required for PhpStan
         if (!($mapper instanceof FormMapper) && !($mapper instanceof ShowMapper)) {
@@ -52,15 +52,15 @@ class ObjectsAdmin extends AbstractAdmin
 
         $mapper->with(FormHelper::formGroup($field), array('class' => 'col-md-6'));
         $mapper->add(
-            $field->id,
+            $field["id"],
             FormHelper::formType($field),
             $options
         );
         $mapper->end();
 
         if ($mapper instanceof FormMapper) {
-            $mapper->get($field->id)->addModelTransformer(
-                new FieldsTransformer($field->type, !empty($field->choices) ? $field->choices : null)
+            $mapper->get($field["id"])->addModelTransformer(
+                new FieldsTransformer($field["type"], !empty($field["choices"]) ? $field["choices"] : null)
             );
         }
 
@@ -119,7 +119,7 @@ class ObjectsAdmin extends AbstractAdmin
         foreach ($objectFields as $field) {
             //====================================================================//
             // Add Empty List Field to Object
-            $list = FormHelper::isListField($field->id);
+            $list = FormHelper::isListField($field["id"]);
             if ($list) {
                 $newObject[$list['listname']] = null;
 
@@ -127,7 +127,7 @@ class ObjectsAdmin extends AbstractAdmin
             }
             //====================================================================//
             // Add Empty Single Field to Object
-            $newObject[$field->id] = null;
+            $newObject[$field["id"]] = null;
         }
 
         return $newObject;
@@ -188,23 +188,22 @@ class ObjectsAdmin extends AbstractAdmin
         $objectFields = $modelManager->getObjectFields();
         //====================================================================//
         // Walk on Object Fields
-        /** @var ArrayObject $field */
         foreach ($objectFields as $field) {
             //====================================================================//
             // Filter ReadOnly Fields
-            if (!($mapper instanceof ShowMapper) && empty($field->write)) {
+            if (!($mapper instanceof ShowMapper) && empty($field["write"])) {
                 continue;
             }
             //====================================================================//
             // Add Single Fields to Mapper
-            if (!FormHelper::isListField($field->type)) {
+            if (!FormHelper::isListField($field["type"])) {
                 $this->buildFieldForm($mapper, $field);
 
                 continue;
             }
             //====================================================================//
             // Add List Field to Buffer
-            $list = FormHelper::isListField($field->id);
+            $list = FormHelper::isListField($field["id"]);
             if (!is_array($list)) {
                 continue;
             }

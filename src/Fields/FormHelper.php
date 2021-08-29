@@ -15,7 +15,6 @@
 
 namespace Splash\Admin\Fields;
 
-use ArrayObject;
 use Splash\Admin\Form\Type\FileType;
 use Splash\Admin\Form\Type\ImageType;
 use Splash\Admin\Form\Type\MultilangType;
@@ -47,36 +46,36 @@ class FormHelper
     /**
      * Detect Form Group for a Field
      *
-     * @param ArrayObject $field
+     * @param array $field
      *
      * @return string
      */
-    public static function formGroup(ArrayObject $field)
+    public static function formGroup(array $field): string
     {
-        if (self::isListField($field->id)) {
-            return   (string) self::listName($field->id);
+        if (self::isListField($field["id"])) {
+            return   (string) self::listName($field["id"]);
         }
-        if (!empty($field->group) && is_scalar($field->group)) {
-            return   (string) $field->group;
+        if (!empty($field["group"]) && is_scalar($field["group"])) {
+            return   (string) $field["group"];
         }
 
         return "default";
     }
 
     /**
-     * @abstract    Detect form type to Use for Editing a Field
+     * Detect form type to Use for Editing a Field
      *
-     * @param ArrayObject $field
+     * @param array $field
      *
      * @return string
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public static function formType(ArrayObject $field)
+    public static function formType(array $field): string
     {
         //====================================================================//
         // Get Form Type
-        switch (self::baseType($field->type)) {
+        switch (self::baseType($field["type"])) {
             case SPL_T_BOOL:
                 return CheckboxType::class;
             case SPL_T_INT:
@@ -119,28 +118,28 @@ class FormHelper
     }
 
     /**
-     * Get Form Options for Renderieng a Field Form
+     * Get Form Options for Rendering a Field Form
      *
-     * @param ArrayObject $field
+     * @param array $field
      *
      * @return array
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public static function formOptions(ArrayObject $field)
+    public static function formOptions(array $field): array
     {
-        $splashType = FormHelper::baseType($field->type);
+        $splashType = FormHelper::baseType($field["type"]);
         switch ($splashType) {
             case SPL_T_VARCHAR:
             case SPL_T_TEXT:
             case SPL_T_INLINE:
-                if (empty($field->choices)) {
+                if (empty($field["choices"])) {
                     $options = array();
 
                     break;
                 }
                 $options = array(
-                    'choices' => self::toFormChoice($field->choices),
+                    'choices' => self::toFormChoice($field["choices"]),
                     'multiple' => (SPL_T_INLINE == $splashType),
                 );
 
@@ -154,7 +153,7 @@ class FormHelper
 
                 break;
             case SPL_T_ID:
-                $idArray = self::isIdField($field->type);
+                $idArray = self::isIdField($field["type"]);
                 $objectType = is_array($idArray) ? $idArray["ObjectType"] : "unknown";
                 //====================================================================//
                 // Detect Lists
@@ -175,32 +174,32 @@ class FormHelper
                 break;
         }
 
-        $extra = isset($field->options["language"]) ? " (".$field->options["language"].")" : null;
+        $extra = isset($field["options"]["language"]) ? " (".$field["options"]["language"].")" : null;
 
         return (array) array_replace_recursive($options, array(
-            'label' => html_entity_decode($field->name).$extra,
+            'label' => html_entity_decode($field["name"]).$extra,
             //====================================================================//
             // Manage Required Tag
-            "required" => !empty($field->required),
+            "required" => !empty($field["required"]),
         ));
     }
 
     /**
      * @abstract Build Field Show Options
      *
-     * @param array|ArrayObject $field
-     * @param bool              $isList
+     * @param array $field
+     * @param bool  $isList
      *
      * @return array
      */
-    public static function showOptions($field, bool $isList = null)
+    public static function showOptions(array $field, bool $isList = null): array
     {
         return array(
             //====================================================================//
             // Add List Flag
             "splash_is_list" => !empty($isList),
             //====================================================================//
-            // Add Fields Informations
+            // Add Fields Information
             "splash_field" => $field,
             //====================================================================//
             // Specify Sonata to Render Splash Specific Template
@@ -215,7 +214,7 @@ class FormHelper
      *
      * @return array
      */
-    private static function toFormChoice($fieldChoices)
+    private static function toFormChoice(array $fieldChoices): array
     {
         $response = array();
         foreach ($fieldChoices as $choice) {

@@ -268,7 +268,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     /**
      * Get Object Fields Array
      *
-     * @return array[ArrayObject]
+     * @return array[]
      */
     public function getObjectFields()
     {
@@ -542,7 +542,6 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     {
         //====================================================================//
         // Detect Empty Lists
-        /** @var ArrayObject $field */
         foreach ($this->getObjectFields() as $field) {
             $this->modelCompleteField($field, $instance);
         }
@@ -565,23 +564,23 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * @param ArrayObject $field
-     * @param array       $instance
+     * @param array $field
+     * @param array $instance
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function modelCompleteField(ArrayObject $field, &$instance): void
+    public function modelCompleteField(array $field, &$instance): void
     {
         //====================================================================//
         // Only for Writable Fields
-        if (!$this->isShowMode && empty($field->write)) {
+        if (!$this->isShowMode && empty($field["write"])) {
             return;
         }
         //====================================================================//
         // If List Fields
-        if (FieldsManager::isListField($field->type)) {
+        if (FieldsManager::isListField($field["type"])) {
             // Get List Name
-            $listName = FieldsManager::listName($field->id);
+            $listName = FieldsManager::listName($field["id"]);
             if (empty($instance[$listName])) {
                 $instance[$listName] = array();
             }
@@ -590,8 +589,8 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
         }
         //====================================================================//
         // If Simple Fields
-        if (!isset($instance[$field->id])) {
-            $instance[$field->id] = null;
+        if (!isset($instance[$field["id"]])) {
+            $instance[$field["id"]] = null;
         }
     }
 
