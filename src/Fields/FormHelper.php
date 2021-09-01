@@ -111,7 +111,7 @@ class FormHelper
             case SPL_T_VARCHAR:
             case SPL_T_TEXT:
             case SPL_T_INLINE:
-                return empty($field->choices) ? TextType::class : ChoiceType::class;
+                return empty($field["choices"]) ? TextType::class : ChoiceType::class;
         }
 
         return TextType::class;
@@ -139,7 +139,11 @@ class FormHelper
                     break;
                 }
                 $options = array(
-                    'choices' => self::toFormChoice($field["choices"]),
+                    'choices' => self::toFormChoice(
+                        ($field["choices"] instanceof \ArrayObject)
+                            ? $field["choices"]->getArrayCopy()
+                            : $field["choices"]
+                    ),
                     'multiple' => (SPL_T_INLINE == $splashType),
                 );
 
