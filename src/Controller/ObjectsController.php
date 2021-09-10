@@ -243,7 +243,7 @@ class ObjectsController extends CRUDController
             'Content-Type' => 'image/png',
             'Content-Disposition' => 'inline; filename="'.$fileArray['filename'].'"', );
 
-        return new Response(base64_decode($fileArray['raw'], true), 200, $headers);
+        return new Response((string) base64_decode($fileArray['raw'], true), 200, $headers);
     }
 
     /**
@@ -277,6 +277,6 @@ class ObjectsController extends CRUDController
             'Content-Type' => 'application/force-download',
             'Content-Disposition' => 'inline; filename="'.$fileArray['filename'].'"', );
 
-        return new Response(base64_decode($fileArray['raw'], true), 200, $headers);
+        return new Response((string) base64_decode($fileArray['raw'], true), 200, $headers);
     }
 }
