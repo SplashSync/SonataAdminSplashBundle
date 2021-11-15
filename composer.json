@@ -31,12 +31,11 @@
         "sonata-project/doctrine-orm-admin-bundle": ">=3.0",
 
         "twig/twig":                    "^2.0",
-        "twig/extensions":              "^1.5",
-        
+
         "burgov/key-value-form-bundle": "@stable",
         
         "splash/php-bundle":            "dev-master",
-        "splash/widgets-bundle":        "dev-master",
+        "badpixxel/widgets-bundle":     "dev-master",
         "splash/console":               "dev-master"
     },
     
