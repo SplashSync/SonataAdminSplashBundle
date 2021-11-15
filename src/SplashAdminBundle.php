@@ -22,4 +22,13 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class SplashAdminBundle extends Bundle
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function boot(): void
+    {
+        if (!defined('SPLASH_DEBUG')) {
+            define('SPLASH_DEBUG', '1');
+        }
+    }
 }
