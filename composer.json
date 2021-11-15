@@ -31,6 +31,8 @@
         "sonata-project/doctrine-orm-admin-bundle": ">=3.0",
 
         "twig/twig":                    "^2.0",
+        "twig/extra-bundle":            "~v2.12",
+        "twig/intl-extra":              "~v2.12",
 
         "burgov/key-value-form-bundle": "@stable",
         

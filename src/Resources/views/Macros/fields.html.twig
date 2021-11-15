@@ -199,7 +199,7 @@
             
             {% if Data.ttc is defined %}
                 {% if Data.ttc matches '/^[-+]?[0-9]*\\.?[0-9]+$/' %}
-                    {{ Data.ttc|localizedcurrency(Data.code) }}
+                    {{ Data.ttc|format_currency(Data.code) }}
                 {% else %}            
                     {{ Data.ttc }}
                 {% endif %}            
@@ -207,7 +207,7 @@
             &nbsp;(
             {% if Data.ht is defined %}
                 {% if Data.ht matches '/^[-+]?[0-9]*\\.?[0-9]+$/' %}
-                    {{ Data.ht|localizedcurrency(Data.code) }}
+                    {{ Data.ht|format_currency(Data.code) }}
                 {% else %}            
                     {{ Data.ht }}
                 {% endif %}            
