@@ -15,6 +15,7 @@
 
 namespace Splash\Admin\Controller;
 
+use Exception;
 use Sonata\AdminBundle\Controller\CRUDController;
 use Splash\Admin\Admin\ObjectsAdmin;
 use Splash\Admin\Model\ObjectManagerAwareTrait;
@@ -25,8 +26,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Description of ObjectCRUDController.
- *
- * @author nanard33
  */
 class ObjectsController extends CRUDController
 {
@@ -47,9 +46,11 @@ class ObjectsController extends CRUDController
      *
      * @param Request $request
      *
+     * @throws Exception
+     *
      * @return Response
      */
-    public function switchAction(Request $request)
+    public function switchAction(Request $request): Response
     {
         $objectType = $request->get('ObjectType');
         $objectTypes = $this->getObjectsManager()->getObjects();
@@ -64,9 +65,11 @@ class ObjectsController extends CRUDController
     /**
      * List action.
      *
+     * @throws Exception
+     *
      * @return Response
      */
-    public function listAction()
+    public function listAction(): Response
     {
         //====================================================================//
         // Detect Current Object Type
@@ -96,7 +99,7 @@ class ObjectsController extends CRUDController
         //====================================================================//
         // Read Object List
         $objectsList = $this->getObjectsManager()->findBy($objectType, $listParams);
-        $objectsMeta = isset($objectsList["meta"]) ? $objectsList["meta"] : array();
+        $objectsMeta = $objectsList["meta"] ?? array();
         unset($objectsList['meta']);
         //====================================================================//
         // Render Connector Profile Page
@@ -115,11 +118,13 @@ class ObjectsController extends CRUDController
     /**
      * Show action.
      *
-     * @param string $objectId
+     * @param int|string $objectId
+     *
+     * @throws Exception
      *
      * @return Response
      */
-    public function showAction($objectId = null)
+    public function showAction($objectId = null): Response
     {
         //====================================================================//
         // Detect Current Object Type
@@ -142,11 +147,13 @@ class ObjectsController extends CRUDController
     /**
      * Edit action.
      *
-     * @param string $objectId
+     * @param int|string $objectId
+     *
+     * @throws Exception
      *
      * @return Response
      */
-    public function editAction($objectId = null)
+    public function editAction($objectId = null): Response
     {
         //====================================================================//
         // Detect Current Object Type
@@ -182,9 +189,11 @@ class ObjectsController extends CRUDController
     /**
      * Create action.
      *
+     * @throws Exception
+     *
      * @return Response
      */
-    public function createAction()
+    public function createAction(): Response
     {
         //====================================================================//
         // Detect Current Object Type
@@ -197,11 +206,13 @@ class ObjectsController extends CRUDController
     /**
      * Delete action.
      *
-     * @param string $objectId
+     * @param int|string $objectId
+     *
+     * @throws Exception
      *
      * @return Response
      */
-    public function deleteAction($objectId = null)
+    public function deleteAction($objectId = null): Response
     {
         //====================================================================//
         // Detect Current Object Type
@@ -217,16 +228,18 @@ class ObjectsController extends CRUDController
      * @param string $path
      * @param string $md5
      *
+     * @throws Exception
+     *
      * @return Response
      */
-    public function imageAction(string $path, string $md5)
+    public function imageAction(string $path, string $md5): Response
     {
         //====================================================================//
         // Detect Current Object Type
         $this->getObjectsManager()->setObjectType($this->admin->getObjectType());
         //====================================================================//
-        // Load File From Connnector
-        $filePath = (string) base64_decode($path, true);
+        // Load File From Connector
+        $filePath = (string) base64_decode(html_entity_decode($path), true);
         $fileArray = $this->getObjectsManager()
             ->getConnector()
             ->getFile($filePath, $md5);
@@ -252,18 +265,20 @@ class ObjectsController extends CRUDController
      * @param string $path
      * @param string $md5
      *
+     * @throws Exception
+     *
      * @return Response
      */
-    public function fileAction(string $path, string $md5)
+    public function fileAction(string $path, string $md5): Response
     {
         //====================================================================//
         // Detect Current Object Type
         $this->getObjectsManager()->setObjectType($this->admin->getObjectType());
         //====================================================================//
-        // Load File From Connnector
+        // Load File From Connector
         $fileArray = $this->getObjectsManager()
             ->getConnector()
-            ->getFile((string) base64_decode($path, true), $md5);
+            ->getFile((string) base64_decode(html_entity_decode($path), true), $md5);
         if (!$fileArray) {
             print Splash::log()->getHtmlLog();
 
