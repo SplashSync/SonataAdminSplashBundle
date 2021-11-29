@@ -18,7 +18,7 @@
 ################################################################
 # Set any variables we need
 variables:
-  COMPOSER_MEMORY_LIMIT:  -1
+    COMPOSER_MEMORY_LIMIT:  -1
 
 ################################################################
 # Defined Pipeline Stages
