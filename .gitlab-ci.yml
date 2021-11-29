@@ -48,15 +48,23 @@ stages:
     after_script:
       - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/after.sh | sh
 
+################################################################################
+# PHP 8.0
+tests:php-8.0:
+    image: registry.gitlab.com/badpixxel-projects/php-sdk:php-8.0
+    <<: *quality_tests
+
+################################################################################
+# PHP 7.4
 tests:php-7.4:
-  image: registry.gitlab.com/badpixxel-projects/php-sdk:php-7.4
-  <<: *quality_tests
+    image: registry.gitlab.com/badpixxel-projects/php-sdk:php-7.4
+    <<: *quality_tests
 
 #################################################################
 ## Trigger Toolkit Docker Build
 #################################################################
 toolkit:
-  stage:      deploy
-  trigger:
-    project:  SplashSync/Toolkit
-    strategy: depend
+    stage:      deploy
+    trigger:
+        project:  SplashSync/Toolkit
+        strategy: depend
