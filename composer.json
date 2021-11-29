@@ -49,11 +49,5 @@
         "psr-4": {
             "Splash\\Admin\\": "src/"
         }
-    },
-    
-    "autoload-dev": {
-        "psr-4": {
-            "Splash\\Admin\\Tests\\": "tests/"
-        }        
     }
 }
