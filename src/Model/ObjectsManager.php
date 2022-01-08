@@ -18,11 +18,10 @@ namespace Splash\Admin\Model;
 use ArrayObject;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Util\ClassUtils;
-use Doctrine\DBAL\DBALException;
-use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\QueryBuilder;
+use Exception;
 use PDOException;
 use RuntimeException;
 use Sonata\AdminBundle\Admin\FieldDescriptionInterface;
@@ -356,7 +355,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
                 $e->getCode(),
                 $e
             );
-        } catch (DBALException $e) {
+        } catch (Exception $e) {
             throw new ModelManagerException(
                 sprintf('Failed to create object: %s', ClassUtils::getClass($object)),
                 $e->getCode(),
@@ -411,7 +410,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
                 $e->getCode(),
                 $e
             );
-        } catch (DBALException $e) {
+        } catch (Exception $e) {
             throw new ModelManagerException(
                 sprintf('Failed to update object: %s', ClassUtils::getClass($object)),
                 $e->getCode(),
@@ -443,7 +442,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
                 $e->getCode(),
                 $e
             );
-        } catch (DBALException $e) {
+        } catch (Exception $e) {
             throw new ModelManagerException(
                 sprintf('Failed to delete object: %s', ClassUtils::getClass($object)),
                 $e->getCode(),
