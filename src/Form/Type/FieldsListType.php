@@ -58,7 +58,7 @@ class FieldsListType extends AbstractType
             );
 
             $builder->get($list["fieldname"])->addModelTransformer(
-                new FieldsTransformer($field["type"], is_array($field["choices"]) ? $field["choices"] : null)
+                new FieldsTransformer($field["type"], !empty($field["choices"]) ? $field["choices"] : null)
             );
         }
     }

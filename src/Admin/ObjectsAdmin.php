@@ -68,7 +68,7 @@ class ObjectsAdmin extends AbstractAdmin
     }
 
     /**
-     * Builde Splash Object List Field Form.
+     * Builder Splash Object List Field Form.
      *
      * @param FormMapper|ShowMapper $mapper
      * @param string                $name
