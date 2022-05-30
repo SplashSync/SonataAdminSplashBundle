@@ -36,13 +36,13 @@
 
         "burgov/key-value-form-bundle": "@stable",
         
-        "splash/php-bundle":            "dev-master",
+        "splash/php-bundle":            "~1.0",
         "badpixxel/widgets-bundle":     "dev-master",
         "splash/console":               "dev-master"
     },
     
     "require-dev": {
-        "badpixxel/php-sdk":            "dev-main"
+        "badpixxel/php-sdk":            "~1.0"
     },
     
     "autoload": {
