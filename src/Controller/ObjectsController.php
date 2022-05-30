@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -91,10 +91,11 @@ class ObjectsController extends CRUDController
         $this->getObjectsManager()->setObjectType($objectType);
         //====================================================================//
         // Prepare List Parameters
-        $listPage = (int) $this->getRequest()->get("page", 1);
+        /** @var null|scalar $listPage */
+        $listPage = $this->getRequest()->get("page", 1);
         $listParams = array(
             "max" => self::LIST_MAX,
-            "offset" => (($listPage - 1) * self::LIST_MAX),
+            "offset" => (((int) $listPage - 1) * self::LIST_MAX),
         );
         //====================================================================//
         // Read Object List

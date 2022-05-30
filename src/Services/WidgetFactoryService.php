@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -15,6 +15,7 @@
 
 namespace Splash\Admin\Services;
 
+use Psr\Cache\InvalidArgumentException;
 use Splash\Admin\Fields\FormHelper;
 use Splash\Bundle\Models\AbstractConnector;
 use Splash\Bundle\Services\ConnectorsManager;
@@ -22,7 +23,7 @@ use Splash\Widgets\Entity\Widget;
 use Splash\Widgets\Models\Interfaces\WidgetProviderInterface;
 use Splash\Widgets\Models\Traits\ParametersTrait;
 use Splash\Widgets\Services\FactoryService;
-use Symfony\Component\Cache\Simple\FilesystemCache;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
@@ -44,21 +45,21 @@ class WidgetFactoryService implements WidgetProviderInterface
      *
      * @var FactoryService
      */
-    private $factory;
+    private FactoryService $factory;
 
     /**
      * Connectors Manager Service.
      *
      * @var ConnectorsManager
      */
-    private $manager;
+    private ConnectorsManager $manager;
 
     /**
      * Symfony cache.
      *
-     * @var FilesystemCache
+     * @var FilesystemAdapter
      */
-    private $cache;
+    private FilesystemAdapter $cache;
 
     //====================================================================//
     //  CONSTRUCTOR
@@ -80,26 +81,28 @@ class WidgetFactoryService implements WidgetProviderInterface
         $this->manager = $connectorsManager;
         //====================================================================//
         // Link to Sf Cache
-        $this->cache = new FilesystemCache();
+        $this->cache = new FilesystemAdapter();
     }
 
     /**
      * Read Widget Contents
      *
-     * @param string     $connectorWidgetType Widgets Type Identifier
-     * @param null|array $parameters          Widget Parameters
+     * @param string     $type       Widgets Type Identifier
+     * @param null|array $parameters Widget Parameters
+     *
+     * @throws InvalidArgumentException
      *
      * @return null|Widget
      */
-    public function getWidget(string $connectorWidgetType, ?array $parameters = array()): ?Widget
+    public function getWidget(string $type, ?array $parameters = array()): ?Widget
     {
         //====================================================================//
         // Build Widget Definition
-        $this->buildWidgetDefinition($connectorWidgetType);
+        $this->buildWidgetDefinition($type);
         //====================================================================//
         // Merge Input Parameter with Cached
         $mergedParameters = array_replace_recursive(
-            $this->getWidgetParameters($connectorWidgetType),
+            $this->getWidgetParameters($type),
             is_null($parameters) ? array() : $parameters
         );
         //====================================================================//
@@ -108,7 +111,7 @@ class WidgetFactoryService implements WidgetProviderInterface
         //====================================================================//
         // Load Widget Contents
         $this->addWidgetContents(
-            $connectorWidgetType,
+            $type,
             $datedParameters
         );
         //====================================================================//
@@ -119,16 +122,20 @@ class WidgetFactoryService implements WidgetProviderInterface
     /**
      * Return Widget Options Array
      *
-     * @param string $connectorWidgetType Widgets Type Identifier
+     * @param string $type Widgets Type Identifier
+     *
+     * @throws InvalidArgumentException
      *
      * @return array
      */
-    public function getWidgetOptions(string $connectorWidgetType): array
+    public function getWidgetOptions(string $type): array
     {
         //====================================================================//
         // If Widget Options are in Cache
-        if ($this->cache->has(self::OPTIONS_CACHE_KEY.base64_encode($connectorWidgetType))) {
-            $options = $this->cache->get(self::OPTIONS_CACHE_KEY.base64_encode($connectorWidgetType));
+        $cacheItem = $this->cache->getItem(self::OPTIONS_CACHE_KEY.base64_encode($type));
+        if ($cacheItem->isHit()) {
+            /** @var array $options */
+            $options = $cacheItem->get();
             //====================================================================//
             // Force Widget Footer Rendering
             $options['Footer'] = true;
@@ -147,14 +154,18 @@ class WidgetFactoryService implements WidgetProviderInterface
     /**
      * Update Widget Options Array
      *
-     * @param string $connectorWidgetType Widgets Type Identifier
-     * @param array  $options             Updated Options
+     * @param string $type    Widgets Type Identifier
+     * @param array  $options Updated Options
+     *
+     * @throws InvalidArgumentException
      *
      * @return true
      */
-    public function setWidgetOptions(string $connectorWidgetType, array $options): bool
+    public function setWidgetOptions(string $type, array $options): bool
     {
-        $this->cache->set(self::OPTIONS_CACHE_KEY.base64_encode($connectorWidgetType), $options);
+        $cacheItem = $this->cache->getItem(self::OPTIONS_CACHE_KEY.base64_encode($type));
+        $cacheItem->set($options);
+        $this->cache->save($cacheItem);
 
         return true;
     }
@@ -162,16 +173,22 @@ class WidgetFactoryService implements WidgetProviderInterface
     /**
      * Return Widget Parameters Array
      *
-     * @param string $connectorWidgetType Widgets Type Identifier
+     * @param string $type Widgets Type Identifier
+     *
+     * @throws InvalidArgumentException
      *
      * @return array
      */
-    public function getWidgetParameters(string $connectorWidgetType): array
+    public function getWidgetParameters(string $type): array
     {
         //====================================================================//
-        // If Widget Parameters are in Cache
-        if ($this->cache->has(self::PARAMS_CACHE_KEY.base64_encode($connectorWidgetType))) {
-            return $this->cache->get(self::PARAMS_CACHE_KEY.base64_encode($connectorWidgetType));
+        // If Widget Options are in Cache
+        $cacheItem = $this->cache->getItem(self::PARAMS_CACHE_KEY.base64_encode($type));
+        if ($cacheItem->isHit()) {
+            /** @var null|array $parameters */
+            $parameters = $cacheItem->get();
+
+            return is_array($parameters) ? $parameters : array();
         }
         //====================================================================//
         // Default Widget Options
@@ -181,14 +198,18 @@ class WidgetFactoryService implements WidgetProviderInterface
     /**
      * Update Widget Parameters Array
      *
-     * @param string $connectorWidgetType Widgets Type Identifier
-     * @param array  $parameters          Updated Parameters
+     * @param string $type       Widgets Type Identifier
+     * @param array  $parameters Updated Parameters
+     *
+     * @throws InvalidArgumentException
      *
      * @return true
      */
-    public function setWidgetParameters(string $connectorWidgetType, array $parameters): bool
+    public function setWidgetParameters(string $type, array $parameters): bool
     {
-        $this->cache->set(self::PARAMS_CACHE_KEY.base64_encode($connectorWidgetType), $parameters);
+        $cacheItem = $this->cache->getItem(self::PARAMS_CACHE_KEY.base64_encode($type));
+        $cacheItem->set($parameters);
+        $this->cache->save($cacheItem);
 
         return true;
     }
@@ -197,14 +218,14 @@ class WidgetFactoryService implements WidgetProviderInterface
      * Return Widget Parameters Fields Array
      *
      * @param FormBuilderInterface $builder
-     * @param string               $connectorWidgetType Widgets Type Identifier
+     * @param string               $type    Widgets Type Identifier
      */
-    public function populateWidgetForm(FormBuilderInterface $builder, string $connectorWidgetType): void
+    public function populateWidgetForm(FormBuilderInterface $builder, string $type): void
     {
         //==============================================================================
         // Verify Parameter Fields are Available
-        $fields = $this->getWidgetDefinition($connectorWidgetType);
-        if (!isset($fields['parameters']) || empty($fields['parameters'])) {
+        $fields = $this->getWidgetDefinition($type);
+        if (empty($fields['parameters'])) {
             return;
         }
         //==============================================================================
@@ -223,15 +244,15 @@ class WidgetFactoryService implements WidgetProviderInterface
     /**
      * Get Widget Connector Service
      *
-     * @param string $connectorWidgetType
+     * @param string $type
      *
      * @return null|AbstractConnector
      */
-    private function getWidgetConnector(string $connectorWidgetType)
+    private function getWidgetConnector(string $type): ?AbstractConnector
     {
         //====================================================================//
         // Decode Widget Type
-        list($widgetType, $webserviceId) = explode('@', $connectorWidgetType);
+        list($widgetType, $webserviceId) = explode('@', $type);
         if (empty($widgetType) || empty($webserviceId)) {
             return null;
         }
@@ -257,15 +278,15 @@ class WidgetFactoryService implements WidgetProviderInterface
     /**
      * Read Widgets Definition from Connector
      *
-     * @param string $connectorWidgetType
+     * @param string $type
      *
      * @return null|array
      */
-    private function getWidgetDefinition(string $connectorWidgetType)
+    private function getWidgetDefinition(string $type): ?array
     {
         //==============================================================================
         // Get Target Connector
-        $connector = $this->getWidgetConnector($connectorWidgetType);
+        $connector = $this->getWidgetConnector($type);
         //==============================================================================
         // Check Widget Exist
         if (is_null($connector)) {
@@ -273,7 +294,7 @@ class WidgetFactoryService implements WidgetProviderInterface
         }
         //====================================================================//
         // Decode Widget Type
-        list($widgetType) = explode('@', $connectorWidgetType);
+        list($widgetType) = explode('@', $type);
         //==============================================================================
         // Get Target Widget Description
         return $connector->getWidgetDescription($widgetType);
@@ -282,15 +303,17 @@ class WidgetFactoryService implements WidgetProviderInterface
     /**
      * Widgets Listing
      *
-     * @param string $connectorWidgetType
+     * @param string $type
+     *
+     * @throws InvalidArgumentException
      *
      * @return FactoryService
      */
-    private function buildWidgetDefinition(string $connectorWidgetType)
+    private function buildWidgetDefinition(string $type): FactoryService
     {
         //==============================================================================
         // Get Target Connector
-        $connector = $this->getWidgetConnector($connectorWidgetType);
+        $connector = $this->getWidgetConnector($type);
         //==============================================================================
         // Check Widget Exist
         if (is_null($connector)) {
@@ -298,7 +321,7 @@ class WidgetFactoryService implements WidgetProviderInterface
         }
         //====================================================================//
         // Decode Widget Type
-        list($widgetType, $webserviceId) = explode('@', $connectorWidgetType);
+        list($widgetType, $webserviceId) = explode('@', $type);
         //==============================================================================
         // Get Target Widget Description
         $description = $connector->getWidgetDescription($widgetType);
@@ -307,11 +330,11 @@ class WidgetFactoryService implements WidgetProviderInterface
         /** @var Widget $widget */
         $widget = $this->factory->Create();
         $widget->setService(WidgetFactoryService::SERVICE);
-        $widget->setType($connectorWidgetType);
+        $widget->setType($type);
         $widget->setName($description['name']);
         $widget->setDescription($description['description']);
         $widget->setOrigin(self::ORIGIN.$connector->getSplashType());
-        $widget->setOptions($this->getWidgetOptions($connectorWidgetType));
+        $widget->setOptions($this->getWidgetOptions($type));
         $widget->setExtras(array(
             'WidgetType' => $widgetType,
             'WebserviceId' => $webserviceId,
@@ -324,16 +347,16 @@ class WidgetFactoryService implements WidgetProviderInterface
     /**
      * Get & Add Contents to Current Widget
      *
-     * @param string $connectorWidgetType
+     * @param string $type
      * @param array  $parameters
      *
      * @return FactoryService
      */
-    private function addWidgetContents(string $connectorWidgetType, $parameters = array())
+    private function addWidgetContents(string $type, array $parameters = array()): FactoryService
     {
         //==============================================================================
         // Get Target Connector
-        $connector = $this->getWidgetConnector($connectorWidgetType);
+        $connector = $this->getWidgetConnector($type);
         //==============================================================================
         // Check Widget Exist
         if (is_null($connector)) {
@@ -341,14 +364,14 @@ class WidgetFactoryService implements WidgetProviderInterface
         }
         //====================================================================//
         // Decode Widget Type
-        list($widgetType) = explode('@', $connectorWidgetType);
+        list($widgetType) = explode('@', $type);
         //==============================================================================
         // Get Target Widget Contents
         $widgetContents = $connector->getWidgetContents($widgetType, $parameters);
         //==============================================================================
         // No Contents => Show Error Message
         if (empty($widgetContents)) {
-            $this->factory->buildErrorWidget(self::SERVICE, $connectorWidgetType, 'Server Returned Empty Contents.');
+            $this->factory->buildErrorWidget(self::SERVICE, $type, 'Server Returned Empty Contents.');
 
             return $this->factory;
         }

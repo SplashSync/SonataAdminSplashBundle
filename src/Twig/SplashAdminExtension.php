@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,7 +27,7 @@ use Twig\TwigFilter;
 class SplashAdminExtension extends AbstractExtension
 {
     /**
-     * Get Extention Available Filters
+     * Get Extension Available Filters
      *
      * @return array
      */
@@ -53,9 +53,9 @@ class SplashAdminExtension extends AbstractExtension
      *
      * @param string $input Id Field String
      *
-     * @return array|false
+     * @return null|array
      */
-    public function isIdField($input)
+    public function isIdField(string $input): ?array
     {
         return FieldsManager::isIdField($input);
     }
@@ -63,13 +63,13 @@ class SplashAdminExtension extends AbstractExtension
     /**
      * Decode a string to extract Object Identifier Data Type
      *
-     * @param string $unput Id Field String
+     * @param string $input Id Field String
      *
-     * @return bool|string
+     * @return null|string
      */
-    public function objectType($unput)
+    public function objectType(string $input): ?string
     {
-        return FieldsManager::objectType($unput);
+        return FieldsManager::objectType($input);
     }
 
     /**
@@ -77,9 +77,9 @@ class SplashAdminExtension extends AbstractExtension
      *
      * @param string $input Id Field String
      *
-     * @return bool|string
+     * @return null|string
      */
-    public function objectId($input)
+    public function objectId(string $input): ?string
     {
         return FieldsManager::objectId($input);
     }
@@ -91,7 +91,7 @@ class SplashAdminExtension extends AbstractExtension
      *
      * @return bool
      */
-    public function isListField($input)
+    public function isListField(string $input): bool
     {
         //====================================================================//
         // Safety Check
@@ -113,14 +113,14 @@ class SplashAdminExtension extends AbstractExtension
      *
      * @param string $input List Field String
      *
-     * @return bool|string
+     * @return null|string
      */
-    public function getListFieldData($input)
+    public function getListFieldData(string $input): ?string
     {
         //====================================================================//
         // Safety Check
         if (empty($input)) {
-            return false;
+            return null;
         }
         //====================================================================//
         // Detects Lists
@@ -131,7 +131,7 @@ class SplashAdminExtension extends AbstractExtension
             return $list[0];
         }
 
-        return false;
+        return null;
     }
 
     /**
@@ -139,14 +139,14 @@ class SplashAdminExtension extends AbstractExtension
      *
      * @param string $input List Field String
      *
-     * @return bool|string
+     * @return null|string
      */
-    public function getListFieldName($input)
+    public function getListFieldName(string $input): ?string
     {
         //====================================================================//
         // Safety Check
         if (empty($input)) {
-            return false;
+            return null;
         }
         //====================================================================//
         // Detects Lists
@@ -157,7 +157,7 @@ class SplashAdminExtension extends AbstractExtension
             return $list[1];
         }
 
-        return false;
+        return null;
     }
 
     /**
@@ -165,9 +165,9 @@ class SplashAdminExtension extends AbstractExtension
      *
      * @param string $input
      *
-     * @return bool|string
+     * @return string
      */
-    public function base64Encode($input)
+    public function base64Encode(string $input): string
     {
         return base64_encode($input);
     }
@@ -177,11 +177,11 @@ class SplashAdminExtension extends AbstractExtension
      *
      * @param string $input
      *
-     * @return bool|string
+     * @return null|string
      */
-    public function base64Decode($input)
+    public function base64Decode(string $input): ?string
     {
-        return base64_decode($input, true);
+        return base64_decode($input, true) ?: null;
     }
 
     /**
@@ -189,9 +189,9 @@ class SplashAdminExtension extends AbstractExtension
      *
      * @return string
      */
-    public function getHtmlLogs()
+    public function getHtmlLogs(): string
     {
-        return Splash::log()->GetHtmlLog(true);
+        return Splash::log()->getHtmlLog(true);
     }
 
     /**
@@ -199,17 +199,17 @@ class SplashAdminExtension extends AbstractExtension
      *
      * @param string $input
      *
-     * @return bool|string
+     * @return null|string
      */
-    public function filetypeFilter($input)
+    public function filetypeFilter(string $input): ?string
     {
-        return pathinfo($input, PATHINFO_EXTENSION);
+        return pathinfo($input, PATHINFO_EXTENSION) ?: null;
     }
 
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return 'App_Explorer_Twig_Extension';
     }

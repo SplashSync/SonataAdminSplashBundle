@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -20,14 +20,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Exception;
 use PDOException;
 use RuntimeException;
-use Sonata\AdminBundle\Admin\FieldDescriptionInterface;
 use Sonata\AdminBundle\Datagrid\DatagridInterface;
 use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 use Sonata\AdminBundle\Exception\ModelManagerException;
+use Sonata\AdminBundle\FieldDescription\FieldDescriptionInterface;
 use Sonata\AdminBundle\Model\LockInterface;
 use Sonata\AdminBundle\Model\ModelManagerInterface;
 use Sonata\DoctrineORMAdminBundle\Admin\FieldDescription;
@@ -84,13 +85,6 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     private $isShowMode = false;
 
     /**
-     * Current Splash Connector Service.
-     *
-     * @var AbstractConnector
-     */
-    private $connector;
-
-    /**
      * @var string
      */
     private $objectType;
@@ -100,14 +94,14 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      *
      * @var array
      */
-    private $fields = array();
+    private array $fields = array();
 
     /**
-     * Store New Object Id when Changed during Edit
+     * Store New Object ID when Changed during Edit
      *
-     * @var string
+     * @var null|string
      */
-    private $newObjectId;
+    private ?string $newObjectId;
 
     /**
      * Class Constructor
@@ -176,7 +170,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * Get Current Splash Connetor
+     * Get Current Splash Connector
      *
      * @return AbstractConnector
      */
@@ -195,7 +189,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
             throw new RuntimeException('Unable to Identify linked Connector');
         }
 
-        return $this->connector = $connector;
+        return $connector;
     }
 
     /**
@@ -213,7 +207,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      *
      * @return array
      */
-    public function getObjects()
+    public function getObjects(): array
     {
         //====================================================================//
         // Read Objects Type List
@@ -221,7 +215,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * Detect Object Id was Changed so that we could redirect to New Id Page
+     * Detect Object ID was Changed so that we could redirect to New Id Page
      *
      * @param ObjectsIdChangedEvent $event
      */
@@ -233,13 +227,13 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * If Object Id was Changed, Return New Object Id so that we could redirect to New Id Page
+     * If Object ID was Changed, Return New Object ID so that we could redirect to New ID Page
      *
      * @return null|string
      */
     public function getNewObjectId()
     {
-        return isset($this->newObjectId) ? $this->newObjectId : null;
+        return $this->newObjectId ?? null;
     }
 
     /**
@@ -479,8 +473,8 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * @param class-string $class
-     * @param mixed        $objectId
+     * @param class-string    $class
+     * @param null|int|string $objectId
      *
      * @return ArrayObject|false
      *
@@ -499,7 +493,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
         );
         //====================================================================//
         // Read Object Data
-        $object = $this->getConnector()->getObject($this->objectType, $objectId, $fields);
+        $object = $this->getConnector()->getObject($this->objectType, (string) $objectId, $fields);
         //====================================================================//
         // Catch Splash Logs
         $this->manager->pushLogToSession(true);
@@ -648,7 +642,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * @param mixed $query
+     * @param Query|QueryBuilder $query
      *
      * @return mixed
      */
@@ -784,11 +778,13 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param FieldDescriptionInterface $fieldDescription
+     * @param DatagridInterface         $datagrid
      *
+     * @return array
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function getSortParameters(FieldDescriptionInterface $fieldDescription, DatagridInterface $datagrid)
+    public function getSortParameters(FieldDescriptionInterface $fieldDescription, DatagridInterface $datagrid): array
     {
         return array();
     }

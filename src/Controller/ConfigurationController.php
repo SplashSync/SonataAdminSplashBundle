@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -16,6 +16,7 @@
 namespace Splash\Admin\Controller;
 
 use ArrayObject;
+use Exception;
 use Sonata\AdminBundle\Controller\CRUDController;
 use Splash\Admin\Model\ObjectManagerAwareTrait;
 use Splash\Core\SplashCore as Splash;
@@ -36,6 +37,8 @@ class ConfigurationController extends CRUDController
      * List action.
      *
      * @param Request $request
+     *
+     * @throws Exception
      *
      * @return Response
      */
@@ -65,7 +68,9 @@ class ConfigurationController extends CRUDController
         // Update Connector Configuration
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $connector->configure($connector->getSplashType(), $connector->getWebserviceId(), $form->getData());
+            /** @var array $data */
+            $data = $form->getData();
+            $connector->configure($connector->getSplashType(), $connector->getWebserviceId(), $data);
             $connector->updateConfiguration();
         }
         //==============================================================================

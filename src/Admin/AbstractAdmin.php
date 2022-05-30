@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -15,6 +15,7 @@
 
 namespace Splash\Admin\Admin;
 
+use Exception;
 use Sonata\AdminBundle\Admin\AbstractAdmin as BaseAdmin;
 use Sonata\AdminBundle\FieldDescription\FieldDescriptionFactoryInterface;
 use Splash\Admin\Model\ObjectsManager;
@@ -29,14 +30,14 @@ abstract class AbstractAdmin extends BaseAdmin
      *
      * @var string
      */
-    private $serverId;
+    private string $serverId;
 
     /**
      * Current Object Type
      *
      * @var string
      */
-    private $objectType;
+    private string $objectType;
 
     /**
      * @param string       $code
@@ -82,9 +83,13 @@ abstract class AbstractAdmin extends BaseAdmin
     /**
      * Get Current Object Type
      *
+     * @throws Exception
+     *
      * @return string
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public function getObjectType()
+    public function getObjectType(): string
     {
         //====================================================================//
         // Load From cache
@@ -93,13 +98,15 @@ abstract class AbstractAdmin extends BaseAdmin
         }
         //====================================================================//
         // Detect Forced Object Type from Request
-        if ($this->getRequest()->get('ObjectType')) {
-            $this->objectType = $this->getRequest()->get('ObjectType');
+        $objectType = $this->getRequest()->get('ObjectType');
+        if ($objectType && is_string($objectType)) {
+            $this->objectType = $objectType;
         }
         //====================================================================//
         // Detect Object Type from Session
-        if (empty($this->objectType)) {
-            $this->objectType = $this->getRequest()->getSession()->get('ObjectType');
+        $objectType = $this->getRequest()->getSession()->get('ObjectType');
+        if (empty($this->objectType) && !empty($objectType) && is_string($objectType)) {
+            $this->objectType = $objectType;
         }
         //====================================================================//
         // Load Object Types from Connector
@@ -109,7 +116,12 @@ abstract class AbstractAdmin extends BaseAdmin
         //====================================================================//
         // No Object Type? Take First Available from Connector
         if (empty($this->objectType) || !in_array($this->objectType, $objectTypes, true)) {
-            $this->objectType = array_shift($objectTypes);
+            $this->objectType = array_shift($objectTypes) ?? "";
+        }
+        //====================================================================//
+        // No Object Type? Throw Exception
+        if (empty($this->objectType)) {
+            throw new Exception("No Object Types Found");
         }
 
         return $this->objectType;

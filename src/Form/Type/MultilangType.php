@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -25,7 +25,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Splash Multilang Fields Form Type
+ * Splash Multi-lang Fields Form Type
  */
 class MultilangType extends KeyValueType
 {
@@ -34,7 +34,7 @@ class MultilangType extends KeyValueType
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->addModelTransformer(new HashToKeyValueArrayTransformer($options['use_container_object']));
+        $builder->addModelTransformer(new HashToKeyValueArrayTransformer(!empty($options['use_container_object'])));
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $e) {
             $input = $e->getData();
@@ -44,7 +44,7 @@ class MultilangType extends KeyValueType
 
                 return;
             }
-
+            /** @var null|array $input */
             if (null === $input) {
                 return;
             }
