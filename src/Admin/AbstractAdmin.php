@@ -40,6 +40,13 @@ abstract class AbstractAdmin extends BaseAdmin
     private string $objectType;
 
     /**
+     * Current Object Definitions
+     *
+     * @var null|array<string, array>
+     */
+    private ?array $objectDefinitions;
+
+    /**
      * @param string       $code
      * @param class-string $class
      * @param string       $baseControllerName
@@ -127,6 +134,24 @@ abstract class AbstractAdmin extends BaseAdmin
         return $this->objectType;
     }
 
+    /**
+     * Get Current Object Type
+     *
+     * @throws Exception
+     *
+     * @return array<string, mixed>
+     */
+    public function getObjectDefinition(): array
+    {
+        if (!isset($this->objectDefinitions)) {
+            /** @var ObjectsManager $modelManager */
+            $modelManager = $this->getModelManager();
+
+            $this->objectDefinitions = $modelManager->getObjectsDefinition();
+        }
+
+        return $this->objectDefinitions[$this->getObjectType()] ?? array();
+    }
     /**
      * Get Current Server Id
      *

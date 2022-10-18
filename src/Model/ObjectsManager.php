@@ -32,9 +32,9 @@ use Sonata\AdminBundle\FieldDescription\FieldDescriptionInterface;
 use Sonata\AdminBundle\Model\LockInterface;
 use Sonata\AdminBundle\Model\ModelManagerInterface;
 use Sonata\DoctrineORMAdminBundle\Admin\FieldDescription;
-use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
 use Sonata\Exporter\Source\ArraySourceIterator;
 use Sonata\Exporter\Source\SourceIteratorInterface;
+use Splash\Admin\Datagrid\SplashQuery;
 use Splash\Bundle\Events\ObjectsIdChangedEvent;
 use Splash\Bundle\Models\AbstractConnector;
 use Splash\Bundle\Services\ConnectorsManager;
@@ -97,6 +97,13 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     private array $fields = array();
 
     /**
+     * Definitions Cache
+     *
+     * @var null|array
+     */
+    private ?array $definitions;
+
+    /**
      * Store New Object ID when Changed during Edit
      *
      * @var null|string
@@ -131,6 +138,16 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
         $this->objectType = $objectType;
 
         return $this;
+    }
+
+    /**
+     * Get Current Splash Object Type
+     *
+     * @return string
+     */
+    public function getObjectType(): string
+    {
+        return $this->objectType;
     }
 
     /**
@@ -241,21 +258,23 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      *
      * @return array
      */
-    public function getObjectsDefinition()
+    public function getObjectsDefinition(): array
     {
-        //====================================================================//
-        // Read Objects Type List
-        $objectTypes = $this->getConnector()->getAvailableObjects();
-        //====================================================================//
-        // Read Description of All Objects
-        $objects = array();
-        foreach ($objectTypes as $objectType) {
-            $objects[$objectType] = $this->getConnector()->getObjectDescription(
-                $objectType
-            );
+        if (!isset($this->definitions)) {
+            //====================================================================//
+            // Read Objects Type List
+            $objectTypes = $this->getConnector()->getAvailableObjects();
+            //====================================================================//
+            // Read Description of All Objects
+            $this->definitions = array();
+            foreach ($objectTypes as $objectType) {
+                $this->definitions[$objectType] = $this->getConnector()->getObjectDescription(
+                    $objectType
+                );
+            }
         }
 
-        return $objects;
+        return $this->definitions;
     }
 
     /**
@@ -633,12 +652,12 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      * @param class-string $class
      * @param string       $alias
      *
-     * @return ProxyQuery
+     * @return ProxyQueryInterface
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function createQuery($class, $alias = 'o')
     {
-        return new ProxyQuery(new QueryBuilder($this->entityManager));
+        return new SplashQuery($this->manager, $this);
     }
 
     /**

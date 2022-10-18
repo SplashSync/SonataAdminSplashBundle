@@ -87,32 +87,22 @@ class ObjectsController extends CRUDController
                 'log' => Splash::log()->GetHtmlLog(true),
             ));
         }
-
+        //====================================================================//
+        // Prepare DataGrid & Pager
         $this->getObjectsManager()->setObjectType($objectType);
-        //====================================================================//
-        // Prepare List Parameters
-        /** @var null|scalar $listPage */
-        $listPage = $this->getRequest()->get("page", 1);
-        $listParams = array(
-            "max" => self::LIST_MAX,
-            "offset" => (((int) $listPage - 1) * self::LIST_MAX),
-        );
-        //====================================================================//
-        // Read Object List
-        $objectsList = $this->getObjectsManager()->findBy($objectType, $listParams);
-        $objectsMeta = $objectsList["meta"] ?? array();
-        unset($objectsList['meta']);
+        $dataGrid = $this->admin->getDatagrid();
+        $formView = $dataGrid->getForm()->createView();
         //====================================================================//
         // Render Connector Profile Page
         return $this->render('@SplashAdmin/Objects/list.html.twig', array(
             'action' => 'list',
             'admin' => $this->admin,
+            'datagrid' => $dataGrid,
+            'form' => $formView,
             'log' => Splash::log()->GetHtmlLog(true),
-            'ObjectType' => $objectType,
             'objects' => $this->getObjectsManager()->getObjectsDefinition(),
             'fields' => $this->getObjectsManager()->getObjectFields(),
-            'list' => $objectsList,
-            'meta' => $objectsMeta,
+            'csrf_token' => $this->getCsrfToken('sonata.batch')
         ));
     }
 

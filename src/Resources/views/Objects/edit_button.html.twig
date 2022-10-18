@@ -13,9 +13,15 @@
 
 #}
 
-{% if objects[ObjectType].allow_push_updated is not empty and objects[ObjectType].allow_push_updated != "0"  %}
-    <a class="sonata-action-element" href="{{ admin.generateUrl('edit', {"id": object.id|default(0), "ObjectType":ObjectType} ) }}">
+{% set allowed = admin.objectDefinition().allow_push_updated|default(false) %}
+
+{% if allowed and allowed != "0"  %}
+    <a class="sonata-action-element" href="{{ admin.generateUrl('edit', {
+        "id": object.id|default(0),
+        "ObjectType":ObjectType|default(admin.getObjectType())
+    } ) }}">
         <i class="fa fa-edit" aria-hidden="true"></i>
         {{ 'link_action_edit'|trans({}, 'SonataAdminBundle') }}
     </a>
+    &nbsp;
 {% endif %}

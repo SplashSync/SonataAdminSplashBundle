@@ -34,56 +34,11 @@
 {% block list_table %}
 
     {% include "@SplashAdmin/Core/logs.html.twig" %}
-    
-    <section class="content">
-        <div class="row">
-            <div class="col-xs-12 col-md-12">
-                <div class="box box-primary" style="margin-bottom: 20px;">
-                    <div class="box-body table-responsive no-padding">
-                        <table class="table table-bordered table-striped table-hover sonata-ba-list">
 
-                            <thead>
-                                <tr class="sonata-ba-list-field-header">
-                                    <th class="sonata-ba-list-field-header">Id</th>
-                                {% for field in fields if field.inlist is not empty and field.inlist != "0" %}
-                                    <th class="sonata-ba-list-field-header">{{ field.name }}</th>
-                                {% endfor %}
-                                    <th class="sonata-ba-list-field-header pull-right">Actions</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                {% for object in list %}
-                                <tr>
-                                        <td class="sonata-ba-list-field">{{ object.id | default("No ID???")}}</td>
-                                    {% for field in fields if field.inlist is not empty and field.inlist != "0" %}
-                                        <td class="sonata-ba-list-field">{{ Fields.data(field.type, object[field.id], admin) }}</td>
-                                    {% endfor %}
-                                        <td class="sonata-ba-list-field pull-right">
-                                            {% include "@SplashAdmin/Objects/show_button.html.twig" %}
-                                            &nbsp;
-                                            {% include "@SplashAdmin/Objects/edit_button.html.twig" %}
-                                            &nbsp;
-                                            {% include "@SplashAdmin/Objects/delete_button.html.twig" %}
-                                        </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>  
-                          
-    {% include "@SplashAdmin/CRUD/list_pager.html.twig" %}
+    {{ parent() }}
         
 {% endblock %}
 
 {% block list_filters_actions %}
     {% include "@SplashAdmin/Objects/object__selector.html.twig" %}
-{% endblock %}
-
-{% block list_filters %}
 {% endblock %}

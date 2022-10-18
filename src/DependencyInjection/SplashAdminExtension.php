@@ -16,6 +16,7 @@
 namespace Splash\Admin\DependencyInjection;
 
 use ArrayObject;
+use Sonata\AdminBundle\Datagrid\Pager;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
@@ -121,6 +122,7 @@ class SplashAdminExtension extends Extension implements PrependExtensionInterfac
         // Build Service Tags Array
         $tags = array(
             "manager_type" => "orm",
+            "pager_type" => Pager::TYPE_SIMPLE,
             "group" => $name,
             "label" => ucwords($type),
             "icon" => '<span class="fa fa-server"></span>',

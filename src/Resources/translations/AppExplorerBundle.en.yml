@@ -25,42 +25,58 @@ field:
 # ==============================================================================
 fields:
     list:
-        title:  Object Fields List
+        title:      "Object Fields List"
     required:
-        label:  Required
-        desc:   This field is required for creation of a new object. 
-        ico:    fa-exclamation-triangle
-        tooltip: <h5>Requied</h5>This field is required for creation of a new object. If empty new object won't be exported to this server.
+        label:      "Required"
+        desc:       "This field is required for creation of a new object."
+        ico:        "fa fa-exclamation-triangle"
+        tooltip:    "<h3 class='text-danger'>Requied</h3>This field is required for creation of a new object. 
+                    </br></br>  
+                    <span class='text-danger'>If empty new object won't be exported to this server.</span>"
+    primary:
+        label:      "Primary"
+        desc:       "This field is a Database Primary Key."
+        ico:        "fa fa-database"
+        tooltip:    "<h3 class='text-danger'>Primary</h3>This field is a Database Primary Key. 
+                    </br></br>
+                    Splash may use it to automatically identify and merge objects."
+    index:
+        label:      "Indexed"
+        desc:       "This field is indexed for text search on your Database."
+        ico:        "fa fa-search"
+        tooltip:    "<h3 class='text-success'>Indexed</h3>This field is indexed for text search on your Database. 
+                    </br></br>
+                    If your objects define at least One fields as required or indexed, 
+                    only those fields will be indexed for text search.
+                    </br></br> 
+                    <span class='text-success'>Using fields indexes highly increase your database performances!</span>"
     inlist:
-        label:  In List
-        desc:   This field is returned in list requests. 
-        ico:    fa-list
-        tooltip: <h5>In List</h5>This field is returned in list requests. It may also be used for automated Objects linking.
-    notest:
-        label:  Not Tested
-        desc:   This field isn't covered by automated tests. 
-        ico:    fa-exclamation
-        tooltip: <h5>Not Tested</h5>This field isn't covered by automated tests. It may be tested on special sequences, or not...
+        label:      "In List"
+        desc:       "This field is returned in list requests."
+        ico:        "fa fa-list"
+        tooltip:    "<h3 class='text-success'>In List</h3>This field is returned in list requests. It may also be used for automated Objects linking."
     schema:
-        label:  Has MicroData
-        desc:   This field is associated to a MicroData Schema Definition. 
-        ico:    fa-globe
-        tooltip: <h5>Has Schema</h5>This field is associated to a MicroData Schema Definition. </br>See <a href="http://schema.org" target="_blank">http://schema.org</a> for more informations.
+        label:      "Has MicroData"
+        desc:       "This field is associated to a MicroData Schema Definition."
+        ico:        "fa fa-globe"
+        tooltip:    "<h3 class='text-success'>Has Schema</h3>This field is associated to a MicroData Schema Definition. 
+                    </br>
+                    See <a href='http://schema.org' target='_blank'>http://schema.org</a> for more informations."
     tag:
-        label:  Is Tagged
-        desc:   This field is tagged for automated linking. 
-        ico:    fa-flash
-        tooltip: <h5>Is Tagged</h5>This field is tagged for automated linking.
+        label:      "Is Tagged"
+        desc:       "This field is tagged for automated linking."
+        ico:        "fa fa-magic"
+        tooltip:    "<h3 class='text-warning'>Is Tagged</h3>This field is tagged for automated linking."
     readonly:
-        label:  Read-Only
-        desc:   This field is read-only, cannot be written via webservice. 
-        ico:    fa-key
-        tooltip: <h5>Read-Only</h5>This field is read-only, cannot be written via webservice. 
+        label:      "Read-Only"
+        desc:       "This field is read-only, cannot be written via webservice."
+        ico:        "fa fa-eye text-white"
+        tooltip:    "<h3 class='text-primary'>Read-Only</h3>This field is read-only, cannot be written via webservice."
     writeonly:
-        label:  Write-Only
-        desc:   This field is write-only, only written via webservice, no read. 
-        ico:    fa-key
-        tooltip: <h5>Write-Only</h5>This field is write-only, only written via webservice, no read.  
+        label:      "Write-Only"
+        desc:       "This field is write-only, only written via webservice, no read."
+        ico:        "fa fa-pencil-alt text-white"
+        tooltip:    "<h3 class='text-info'>Write-Only</h3>This field is write-only, only written via webservice, no read."
     bool:
         label:  BOOL
         desc:   Boolean Number (1/0 or True/False) 

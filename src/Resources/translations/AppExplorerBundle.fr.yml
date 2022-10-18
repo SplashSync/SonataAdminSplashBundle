@@ -25,42 +25,54 @@ field:
 # ==============================================================================
 fields:
     list:
-        title:  List des Champs Objet
+        title:      "List des Champs Objet"
     required:
-        label:  Requis
-        desc:   Ce champ est requis pour la création d'un nouvel Objet. 
-        ico:    fa-exclamation-triangle
-        tooltip: <h5>Requis</h5>Ce champ est requis pour la création d'un nouvel Objet. Si vide le nouvel object ne sera pas exporté vers cet serveur.
+        label:      "Requis"
+        desc:       "Ce champ est requis pour la création d'un nouvel Objet."
+        tooltip:    "<h3 class='text-danger'>Requis</h3>Ce champ est requis pour la création d'un nouvel Objet.
+                    </br></br>   
+                    <span class='text-danger'>Si vide le nouvel object ne sera pas exporté vers cet serveur.</span>"
+    primary:
+        label:      "Primary"
+        desc:       "Ce champ est une clé primaire."
+        tooltip:    "<h3 class='text-danger'>Primary</h3>Ce champ est une clé primaire de base de données. 
+                    </br></br> 
+                    Splash peut l'utiliser pour identifier et fusionner automatiquement des objets."
+    index:
+        label:      "Indexé"
+        desc:       "Ce champ est indexé pour la recherche par texte sur votre base de données."
+        tooltip:    "<h3 class='text-success'>Indexed</h3>This field is indexed for text search on your Database. 
+                    </br></br>
+                    Si vos objets définissent au moins un champ comme requis ou indexé, 
+                    seuls ces champs seront indexés pour la recherche de texte.
+                    </br></br> 
+                    <span class='text-success'>L'utilisation d'index de champs augmentera fortement les performances de votre base de données !</span>"
+
     inlist:
-        label:  Listé
-        desc:   Ce champ est présent dans les listes d'Objets. 
-        ico:    fa-list
-        tooltip: <h5>Listé</h5>Ce champ est présent dans les listes d'Objets. Il peu aussi être utilisé pour la fusion automatique d'Objets.
-    notest:
-        label:  Non Testé
-        desc:   Ce champ n'est pas couvert par les test automatiques. 
-        ico:    fa-exclamation
-        tooltip: <h5>Non Testé</h5>Ce champ n'est pas couvert par les test automatiques. Il peut aussi être testé dans une séquence spéciale, ou pas...        
+        label:      "Listé"
+        desc:       "Ce champ est présent dans les listes d'Objets."
+        tooltip:    "<h3 class='text-success'>Listé</h3>Ce champ est présent dans les listes d'Objets. 
+                    Il peu aussi être utilisé pour la fusion automatique d'Objets."
     schema:
-        label:  MicroData
-        desc:   Ce champs est associé à un Schéma de MicroData.  
-        ico:    fa-globe
-        tooltip: <h5>MicroData</h5>Ce champs est associé à un Schéma de MicroData. </br>Rendez-vous sur <a href="http://schema.org" target="_blank">http://schema.org</a> pour plus d'informations.
+        label:      "MicroData"
+        desc:       "Ce champs est associé à un Schéma de MicroData."
+        tooltip:    "<h3 class='text-success'>MicroData</h3>Ce champs est associé à un Schéma de MicroData. 
+                    </br></br>
+                    Rendez-vous sur <a href='http://schema.org' target='_blank'>http://schema.org</a> pour plus d'informations."
     tag:
-        label:  Taggé
-        desc:   Ce champs est taggé et peu donc être configuré automatiquement. 
-        ico:    fa-flash
-        tooltip: <h5>Taggé</h5> Ce champs est taggé et peu donc être configuré automatiquement. 
+        label:      "Taggé"
+        desc:       "Ce champs est taggé et peu donc être configuré automatiquement."
+        tooltip:    "<h3 class='text-warning'>Taggé</h3> Ce champs est taggé et peu donc être configuré automatiquement."
     readonly:
-        label:  Lecture Seule
-        desc:   Ce champs est en Lecture Seule, il ne peut pas être modifié à distance. 
-        ico:    fa-key
-        tooltip: <h5>Lecture Seule</h5> Ce champs est en Lecture Seule, il ne peut pas être modifié à distance.
+        label:      "Lecture Seule"
+        desc:       "Ce champs est en Lecture Seule, il ne peut pas être modifié à distance."
+        tooltip:    "<h3 class='text-primary'>Lecture Seule</h3> Ce champs est en Lecture Seule, 
+                    il ne peut pas être modifié à distance."
     writeonly:
-        label:  Ecriture Seule
-        desc:   Ce champs est en Ecriture Seule, il ne peut pas être lu à distance. 
-        ico:    fa-key
-        tooltip: <h5>Ecriture Seule</h5> Ce champs est en Ecriture Seule, il ne peut pas être lu à distance.  
+        label:      "Ecriture Seule"
+        desc:       "Ce champs est en Ecriture Seule, il ne peut pas être lu à distance."
+        tooltip:    "<h3 class='text-primary'>Ecriture Seule</h3> Ce champs est en Ecriture Seule, il ne peut pas être lu à distance."
+
     bool:
         label:  BOOL
         desc:   Nombre Booléen (1/0 ou True/False) 

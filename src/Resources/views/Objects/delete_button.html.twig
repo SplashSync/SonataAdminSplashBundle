@@ -13,7 +13,9 @@
 
 #}
 
-{% if objects[ObjectType].allow_push_deleted is not empty and objects[ObjectType].allow_push_deleted != "0"  %}
+{% set allowed = admin.objectDefinition.allow_push_deleted|default(false) %}
+
+{% if allowed and allowed != "0"  %}
     <a class="sonata-action-element" href="{{ admin.generateObjectUrl('delete', object) }}">
         <i class="fa fa-trash" aria-hidden="true"></i>
         {{ 'action_delete'|trans({}, 'SonataAdminBundle') }}

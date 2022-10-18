@@ -16,21 +16,35 @@
 namespace Splash\Admin\Admin;
 
 use ArrayObject;
+use Exception;
+use Sonata\AdminBundle\Datagrid\DatagridMapper;
+use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Form\Type\CollectionType;
 use Sonata\AdminBundle\Mapper\BaseGroupedMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Splash\Admin\Fields\FormHelper;
+use Splash\Admin\Filter\ListFilter;
+use Splash\Admin\Filter\PrimaryFilter;
 use Splash\Admin\Form\FieldsTransformer;
 use Splash\Admin\Form\Type\FieldsListType;
 use Splash\Admin\Model\ObjectsManager;
+use Splash\Bundle\Interfaces\Connectors\PrimaryKeysInterface;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
  * Objects Admin Class for Splash Connectors Explorer
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ObjectsAdmin extends AbstractAdmin
 {
+    /**
+     * @var int
+     */
+    protected $maxPerPage = 25;
+
     /**
      * Build Splash Objects Single Field Form.
      *
@@ -175,11 +189,107 @@ class ObjectsAdmin extends AbstractAdmin
     }
 
     /**
+     * {@inheritdoc}
+     */
+    protected function configureListFields(ListMapper $listMapper): void
+    {
+        $listMapper->addIdentifier('id', TextType::class);
+        //====================================================================//
+        // Load Object Fields
+        /** @var ObjectsManager $modelManager */
+        $modelManager = $this->getModelManager();
+        $objectFields = $modelManager->getObjectFields();
+        //====================================================================//
+        // Walk on Object Fields
+        foreach ($objectFields as $field) {
+            //====================================================================//
+            // Filter Non Listed Fields
+            if (empty($field["inlist"])) {
+                continue;
+            }
+            //====================================================================//
+            // Add Single Field to List Mapper
+            $listMapper->add($field["id"], TextType::class, array(
+                'label' => $field["name"]
+            ));
+        }
+        //====================================================================//
+        // Add Actions
+        $listMapper
+            ->add('_action', null, array(
+                'actions' => array(
+                    'show' => array('template' => '@SplashAdmin/Objects/show_button.html.twig'),
+                    'edit' => array('template' => '@SplashAdmin/Objects/edit_button.html.twig'),
+                    'delete' => array('template' => '@SplashAdmin/Objects/delete_button.html.twig'),
+                )
+            ))
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @throws Exception
+     */
+    protected function configureDatagridFilters(DatagridMapper $datagridMapper): void
+    {
+        /** @var ObjectsManager $modelManager */
+        $modelManager = $this->getModelManager();
+
+        //====================================================================//
+        // Add Text Filter
+        $datagridMapper->add(
+            'filter',
+            ListFilter::class,
+            array(
+                'label' => 'Filter',
+                'show_filter' => true,
+                'field_type' => TextType::class,
+            )
+        );
+        //====================================================================//
+        // Load Object Fields
+        $objectFields = $modelManager->getObjectFields();
+        //====================================================================//
+        // Walk on Object Fields to Search Primary Fields
+        $hasPrimary = false;
+        foreach ($objectFields as $field) {
+            if (empty($field["primary"])) {
+                continue;
+            }
+            $hasPrimary = true;
+            //====================================================================//
+            // Add Primary Filter
+            $datagridMapper->add(
+                $field["id"],
+                PrimaryFilter::class,
+                array(
+                    'label' => '[Primary] '.$field["name"],
+                    'show_filter' => true,
+                    'field_type' => TextType::class,
+                )
+            );
+        }
+        if (!$hasPrimary) {
+            return;
+        }
+        //====================================================================//
+        // Check if Connector is Primary Aware
+        $connector = $modelManager->getConnector();
+        if (!$connector instanceof PrimaryKeysInterface) {
+            throw new Exception(sprintf(
+                "Your Object define a Primary Key but your Connector is not a %s",
+                PrimaryKeysInterface::class
+            ));
+        }
+    }
+
+    /**
      * @param FormMapper|ShowMapper $mapper
      *
      * @return void
      */
-    protected function configureFields($mapper)
+    private function configureFields($mapper)
     {
         $lists = array();
         //====================================================================//

@@ -13,7 +13,11 @@
 
 #}
 
-<a class="sonata-action-element" href="{{ admin.generateUrl('show', {"id": object.id|default(0), "ObjectType":ObjectType} ) }}">
+<a class="sonata-action-element" href="{{ admin.generateUrl('show', {
+    "id": object.id|default(0),
+    "ObjectType":ObjectType|default(admin.getObjectType())
+} ) }}">
     <i class="fa fa-eye" aria-hidden="true"></i>
     {{ 'link_action_show'|trans({}, 'SonataAdminBundle') }}
 </a>
+&nbsp;

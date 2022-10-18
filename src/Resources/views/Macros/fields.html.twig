@@ -257,35 +257,36 @@
             </div>
             
             <div class="media-body">
-            {% if Data.name is defined and Data.name is not empty %}
-                <h4 class="media-heading">{{ Data.name }}
-            {% elseif Data.filename is defined and Data.filename is not empty %}
-                <h4 class="media-heading">{{ Data.filename }}
-            {% endif %}
-            {% if Admin and Data.path is defined and Data.md5 is defined %}
-                    {% set Url = Admin.generateUrl('image', {"path": Data.path|base64_encode|e("html_attr")  , "md5": Data.md5|default("no-md5")} ) %}
-                    <a class="btn btn-xs btn-primary" href="{{ Url }}" target="_blank">
-                        <i class="fa fa-eye"></i>
-                        View
-                    </a>
-            {% endif %}
+                <h4 class="media-heading">
+                    {% if Data.name is defined and Data.name is not empty %}
+                        {{ Data.name }}
+                    {% elseif Data.filename is defined and Data.filename is not empty %}
+                        {{ Data.filename }}
+                    {% endif %}
+                    {% if Admin and Data.path is defined and Data.md5 is defined %}
+                            {% set Url = Admin.generateUrl('image', {"path": Data.path|base64_encode|e("html_attr")  , "md5": Data.md5|default("no-md5")} ) %}
+                            <a class="btn btn-xs btn-primary" href="{{ Url }}" target="_blank">
+                                <i class="fa fa-eye"></i>
+                                View
+                            </a>
+                    {% endif %}
                 </h4>
-                
-            <ul>
-                {% if Data.filename is defined %}
-                    <li> {{ ('fields.file.file')|trans({}, 'AppExplorerBundle') }}&nbsp;:&nbsp;{{ Data.filename }}</li>
-                {% endif %}
-                {% if Data.width is defined %}
-                    <li>{{ ('fields.image.dim')|trans({}, 'AppExplorerBundle') }}&nbsp;:&nbsp;{{ Data.width }}&nbsp;x&nbsp;{{ Data.height }}</li>
-                {% endif %}
-                {% if Data.md5 is defined %}
-                    <li> {{ ('fields.file.md5')|trans({}, 'AppExplorerBundle') }}&nbsp;:&nbsp;{{ Data.md5 }}</li>
-                {% endif %}
-                {% if Data.size is defined %}
-                    <li> {{ ('fields.file.size')|trans({}, 'AppExplorerBundle') }}&nbsp;:&nbsp;{{ Data.size }}</li>
-                {% endif %}
-            </ul>    
-          </div>
+
+                <ul>
+                    {% if Data.filename is defined %}
+                        <li> {{ ('fields.file.file')|trans({}, 'AppExplorerBundle') }}&nbsp;:&nbsp;{{ Data.filename }}</li>
+                    {% endif %}
+                    {% if Data.width is defined %}
+                        <li>{{ ('fields.image.dim')|trans({}, 'AppExplorerBundle') }}&nbsp;:&nbsp;{{ Data.width }}&nbsp;x&nbsp;{{ Data.height }}</li>
+                    {% endif %}
+                    {% if Data.md5 is defined %}
+                        <li> {{ ('fields.file.md5')|trans({}, 'AppExplorerBundle') }}&nbsp;:&nbsp;{{ Data.md5 }}</li>
+                    {% endif %}
+                    {% if Data.size is defined %}
+                        <li> {{ ('fields.file.size')|trans({}, 'AppExplorerBundle') }}&nbsp;:&nbsp;{{ Data.size }}</li>
+                    {% endif %}
+                </ul>
+            </div>
         </div>            
             
     {% elseif Format == "file" or Format == "stream" %}
@@ -307,19 +308,20 @@
             </div>
             
             <div class="media-body">
-                {% if Data.name is defined and Data.name is not empty %}
-                    <h4 class="media-heading">{{ Data.name }}
-                {% elseif Data.filename is defined and Data.filename is not empty %}
-                    <h4 class="media-heading">{{ Data.filename }}
-                {% endif %}
-                {% if Data.path is defined and Data.md5 is defined %}
+                <h4 class="media-heading">
+                    {% if Data.name is defined and Data.name is not empty %}
+                        {{ Data.name }}
+                    {% elseif Data.filename is defined and Data.filename is not empty %}
+                        {{ Data.filename }}
+                    {% endif %}
+                    {% if Data.path is defined and Data.md5 is defined %}
                         {% set Url = Admin.generateUrl('file', {"path": Data.path|base64_encode|e("html_attr") , "md5": Data.md5|default("no-md5")} ) %}
                         <a class="btn btn-xs btn-primary" href="{{ Url }}" target="_blank">
                             <i class="fa fa-eye"></i>
                             View
                         </a>
-                {% endif %}
-                    </h4>
+                    {% endif %}
+                </h4>
 
                 <ul>
                     {% if Data.filename is defined %}
@@ -358,48 +360,86 @@
 {% endmacro %}
 
 {#
-    Generate an Html Field definition Flags Block
+Generate an Html Field definition Flags Block
 #}
 {% macro flags(field) %}
+    {% import _self as Macros %}
+
     <!-- Objects Fields Flags Block -->
+
+    {# Required Flag #}
     {% if field.required == 1 %}
-        <span data-placement="top" data-toggle="popover" data-html="TRUE" data-content="{{ 'fields.required.tooltip'|trans({}, 'AppExplorerBundle') }}">
-            <span class="label label-danger"><i class="fa {{ 'fields.required.ico'|trans({}, 'AppExplorerBundle')|raw }}"></i></span>
-        </span>
+        {{ Macros.fieldFlag('danger', 'required') }}
     {% endif %}
+
+    {# Primary Flag #}
+    {% if field.primary|default(false) == 1 %}
+        {{ Macros.fieldFlag('danger', 'primary') }}
+        {# Index Flag #}
+    {% elseif field.index|default(false) == 1 %}
+        {{ Macros.fieldFlag('primary', 'index') }}
+    {% endif %}
+
     {% if field.itemtype is defined and field.itemtype is not empty  %}
-        <span data-placement="top" data-toggle="popover" data-html="TRUE" data-content="{{ 'fields.schema.tooltip'|trans({}, 'AppExplorerBundle') }}">
-            <span class="label label-success"><i class="fa {{ 'fields.schema.ico'|trans({}, 'AppExplorerBundle')|raw }}"></i></span>
-        </span>
+        {{ Macros.fieldFlag('success', 'schema') }}
     {% endif %}
+
     {% if field.read == 0 %}
-        <span data-placement="top" data-toggle="popover" data-html="TRUE" data-content="{{ 'fields.writeonly.tooltip'|trans({}, 'AppExplorerBundle') }}">
-            <span class="label label-primary"><i class="fa {{ 'fields.writeonly.ico'|trans({}, 'AppExplorerBundle')|raw }}"></i></span>
-        </span>
+        {{ Macros.fieldFlag('primary', 'writeonly') }}
     {% endif %}
+
     {% if field.write == 0  %}
-        <span data-placement="top" data-toggle="popover" data-html="TRUE" data-content="{{ 'fields.readonly.tooltip'|trans({}, 'AppExplorerBundle') }}">
-            <span class="label label-primary"><i class="fa {{ 'fields.readonly.ico'|trans({}, 'AppExplorerBundle')|raw }}"></i></span>
-        </span>
+        {{ Macros.fieldFlag('primary', 'readonly') }}
     {% endif %}
+
     {% if field.tag is not empty  %}
-        <span data-placement="top" data-toggle="popover" data-html="TRUE" data-content="{{ 'fields.tag.tooltip'|trans({}, 'AppExplorerBundle') }}">
-            <span class="label label-warning"><i class="fa {{ 'fields.tag.ico'|trans({}, 'AppExplorerBundle')|raw }}"></i></span>
-        </span>
+        {{ Macros.fieldFlag('warning text-white', 'tag') }}
     {% endif %}
+
     {% if field.inlist == 1  %}
-        <span data-placement="top" data-toggle="popover" data-html="TRUE" data-content="{{ 'fields.inlist.tooltip'|trans({}, 'AppExplorerBundle') }}">
-            <span class="label label-primary"><i class="fa {{ 'fields.inlist.ico'|trans({}, 'AppExplorerBundle')|raw }}"></i></span>
-        </span>
+        {{ Macros.fieldFlag('success', 'inlist') }}
     {% endif %}
-    {% if field.notest == 1  %}
-        <span data-placement="top" data-toggle="popover" data-html="TRUE" data-content="{{ 'fields.notest.tooltip'|trans({}, 'AppExplorerBundle') }}">
-            <span class="label label-warning"><i class="fa {{ 'fields.notest.ico'|trans({}, 'AppExplorerBundle')|raw }}"></i></span>
-        </span>
-    {% endif %}    
+
+    {# Language Flag by ISO Code #}
     {% if field.options.language is defined %}
-        {% import   _self   as  Fields %}
-        {{ Fields.lang(field.options.language) }}
-    {% endif %}       
+        {{ Macros.langFlag(field.options.language, field.options.language|language_name ~ ' ('~ field.options.language ~ ')') }}
+    {% endif %}
+
     <!-- End Objects Fields Flags Block -->
+
+    <script type="text/javascript">
+        window.addEventListener('DOMContentLoaded', (event) => {
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            })
+        });
+
+
+    </script>
+{% endmacro %}
+
+{#
+    Generate an Html Field Icon Block
+#}
+{% macro fieldFlag(class, translation_key, name = false) %}
+    <span role="tooltip"
+          data-toggle="tooltip"
+          data-placement="top" data-html="true"
+          data-title="{{ ('fields.'~translation_key~'.tooltip')|trans({}, 'AppExplorerBundle') }}"
+    >
+            <span class="badge label-{{ class }}">
+                <i class="{{ ('fields.'~translation_key~'.ico')|trans({}, 'AppExplorerBundle')|raw }}"></i>
+                {% if name %}&nbsp;{{ ('fields.'~translation_key~'.label')|trans({}, 'AppExplorerBundle')|raw }}{% endif %}
+            </span>
+    </span>
+{% endmacro %}
+
+{#
+    Generate an Html Language Field Icon Block
+#}
+{% macro langFlag(isoCode, title) %}
+    {% if isoCode is not empty %}
+        {% set flag = isoCode|split('_', 2) %}
+        <span class="flag-icon flag-icon-{{ flag[1]|default(flag[0]|default("")) | lower }}" title="{{ title | capitalize  }}"></span>
+    {% endif %}
 {% endmacro %}
