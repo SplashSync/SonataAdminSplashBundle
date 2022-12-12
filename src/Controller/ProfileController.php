@@ -17,6 +17,7 @@ namespace Splash\Admin\Controller;
 
 use ArrayObject;
 use Sonata\AdminBundle\Controller\CRUDController;
+use Splash\Admin\Admin\ProfileAdmin;
 use Splash\Admin\Model\ObjectManagerAwareTrait;
 use Splash\Core\SplashCore as Splash;
 use Symfony\Component\HttpFoundation\Response;
@@ -94,15 +95,38 @@ class ProfileController extends CRUDController
     public function showAction($id = null)
     {
         //====================================================================//
+        // Enable Fields List SideMenu
+        ProfileAdmin::$objectType = (string) $id;
+        //====================================================================//
         // Setup Connector
         $connector = $this->getConnector();
         //====================================================================//
+        // Filter Fields List if Requested
+        /** @var null|string $filter */
+        $filter = $this->getRequest()->get("filter");
+        /** @var array[] $allFields */
+        $allFields = $connector->getObjectFields((string) $id);
+        $fields = array_filter($allFields, function ($field) use ($filter) {
+            switch ($filter) {
+                case "required":
+                case "inlist":
+                case "primary":
+                case "write":
+                case "index":
+                case "notest":
+                    return $field[$filter] ?? false;
+                default:
+                    return true;
+            }
+        });
+        //====================================================================//
         // Render Connector Profile Page
-        return $this->render("@SplashAdmin/Profile/show.html.twig", array(
+        return $this->renderWithExtraParams("@SplashAdmin/Profile/show.html.twig", array(
             'action' => 'list',
             "profile" => $connector->getProfile(),
             "object" => $connector->getObjectDescription((string) $id),
-            "fields" => $connector->getObjectFields((string) $id),
+            "fields" => $fields,
+            "filter" => $this->getRequest()->get("filter"),
             "log" => Splash::log()->GetHtmlLog(true),
         ));
     }
