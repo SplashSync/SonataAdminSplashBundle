@@ -106,7 +106,7 @@ class ProfileController extends CRUDController
         $filter = $this->getRequest()->get("filter");
         /** @var array[] $allFields */
         $allFields = $connector->getObjectFields((string) $id);
-        $fields = array_filter($allFields, function ($field) use ($filter) {
+        $fields = $filter ? array_filter($allFields, function ($field) use ($filter) {
             switch ($filter) {
                 case "required":
                 case "inlist":
@@ -119,7 +119,7 @@ class ProfileController extends CRUDController
                 default:
                     return true;
             }
-        });
+        }) : $allFields;
         //====================================================================//
         // Render Connector Profile Page
         return $this->renderWithExtraParams("@SplashAdmin/Profile/show.html.twig", array(
