@@ -112,9 +112,10 @@ class ProfileController extends CRUDController
                 case "inlist":
                 case "primary":
                 case "write":
-                case "index":
                 case "notest":
                     return $field[$filter] ?? false;
+                case "index":
+                    return ($field[$filter] ?? false) || ($field["primary"] ?? false);
                 default:
                     return true;
             }
