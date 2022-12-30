@@ -15,6 +15,7 @@
 
 namespace Splash\Admin\Controller;
 
+use Exception;
 use Sonata\AdminBundle\Controller\CRUDController;
 use Splash\Admin\Model\ObjectManagerAwareTrait;
 use Splash\Admin\Services\WidgetFactoryService;
@@ -31,9 +32,11 @@ class WidgetsController extends CRUDController
     /**
      * List action.
      *
+     * @throws Exception
+     *
      * @return Response
      */
-    public function listAction()
+    public function listAction(): Response
     {
         //====================================================================//
         // Setup Connector
@@ -54,7 +57,7 @@ class WidgetsController extends CRUDController
             'admin' => $this->admin,
             'profile' => $connector->getProfile(),
             'Widgets' => $widgets,
-            'log' => Splash::log()->GetHtmlLog(true),
+            'log' => Splash::log()->getHtmlLog(true),
         ));
     }
 }

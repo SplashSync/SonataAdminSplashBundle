@@ -234,7 +234,7 @@ class WidgetFactoryService implements WidgetProviderInterface
             //====================================================================//
             // Add Single Fields to Form
             $builder->add(
-                $field->id,
+                $field['id'],
                 FormHelper::formType($field),
                 FormHelper::formOptions($field)
             );
