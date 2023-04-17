@@ -37,7 +37,7 @@
         "burgov/key-value-form-bundle": "@stable",
         
         "splash/php-bundle":            "dev-master",
-        "badpixxel/widgets-bundle":     "dev-master",
+        "badpixxel/widgets-bundle":     "^1.2",
         "splash/console":               "dev-master"
     },
     
