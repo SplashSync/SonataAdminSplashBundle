@@ -1,14 +1,27 @@
 
 services:
-    
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
     ########################################################################
     # Splash Model Manager 
-    sonata.admin.manager.splash:
-        class: Splash\Admin\Model\ObjectsManager
+    Splash\Admin\Model\ObjectsManager:
         arguments: [ '@splash.connectors.manager', "@doctrine.orm.entity_manager" ]
-        public: true
         tags:
             - { name: kernel.event_listener, event: splash.connectors.rename,   method: onObjectIdChangedEvent,  priority: 0 }   
+
+    ################################################################################
+    # AutoWire for Controllers
+    Splash\Admin\Controller\:
+        resource: '../../Controller'
+        tags: ['controller.service_arguments', 'container.service_subscriber']
+
+    ################################################################################
+    # AutoWire for Sonata Admin Filters
+    Splash\Admin\Filter\:
+        resource: '../../Filter'
+        tags: ['sonata.admin.filter.type']
 
     ########################################################################
     # Render Fields View 
@@ -17,14 +30,14 @@ services:
         tags:   ["twig.extension"]
 
     ########################################################################
-    # Event Listner to Catch Commit & Config Save Events 
+    # Event Listener to Catch Commit & Config Save Events
     splash.admin.subscriber:
         class: Splash\Admin\EventSubscriber\EventsSubscriber
         arguments: [ '@splash.connectors.manager', "@doctrine.orm.entity_manager" ]
         tags:       ["kernel.event_subscriber"]
 
     ########################################################################
-    # Splash Admin Widgets Factroy Service
+    # Splash Admin Widgets Factory Service
     splash.admin.widget.factory:
         class: Splash\Admin\Services\WidgetFactoryService
         public: true
