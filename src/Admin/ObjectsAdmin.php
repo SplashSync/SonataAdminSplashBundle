@@ -15,14 +15,13 @@
 
 namespace Splash\Admin\Admin;
 
-use ArrayObject;
 use Exception;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Form\Type\CollectionType;
 use Sonata\AdminBundle\Mapper\BaseGroupedMapper;
-use Sonata\AdminBundle\Route\RouteCollection;
+use Sonata\AdminBundle\Route\RouteCollectionInterface;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Splash\Admin\Fields\FormHelper;
 use Splash\Admin\Filter\ListFilter;
@@ -31,6 +30,7 @@ use Splash\Admin\Form\FieldsTransformer;
 use Splash\Admin\Form\Type\FieldsListType;
 use Splash\Admin\Model\ObjectsManager;
 use Splash\Bundle\Interfaces\Connectors\PrimaryKeysInterface;
+use stdClass;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
@@ -41,19 +41,16 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class ObjectsAdmin extends AbstractAdmin
 {
     /**
-     * @var int
-     */
-    protected $maxPerPage = 25;
-
-    /**
      * Build Splash Objects Single Field Form.
      *
      * @param BaseGroupedMapper $mapper
      * @param array             $field
      *
+     * @throws Exception
+     *
      * @return $this
      */
-    public function buildFieldForm($mapper, array $field)
+    public function buildFieldForm(BaseGroupedMapper $mapper, array $field): static
     {
         // This Should never happen, but required for PhpStan
         if (!($mapper instanceof FormMapper) && !($mapper instanceof ShowMapper)) {
@@ -61,19 +58,24 @@ class ObjectsAdmin extends AbstractAdmin
         }
 
         $options = ($mapper instanceof ShowMapper)
-                ? FormHelper::showOptions($field)
-                : FormHelper::formOptions($field);
+            ? FormHelper::showOptions($field)
+            : FormHelper::formOptions($field)
+        ;
 
-        $mapper->with(FormHelper::formGroup($field), array('class' => 'col-md-6'));
+        $groupName = FormHelper::formGroup($field);
+        $mapper->tab($groupName);
+        $mapper->with($groupName, array(
+            'label' => FormHelper::formGroupLabel($this->getObjectType(), $groupName)
+        ));
         $mapper->add(
             $field["id"],
             FormHelper::formType($field),
             $options
         );
         $mapper->end();
+        $mapper->end();
 
         if ($mapper instanceof FormMapper) {
-            /** @phpstan-ignore-next-line  */
             $mapper->get($field["id"])->addModelTransformer(
                 new FieldsTransformer($field["type"], !empty($field["choices"]) ? $field["choices"] : null)
             );
@@ -89,9 +91,11 @@ class ObjectsAdmin extends AbstractAdmin
      * @param string                $name
      * @param array                 $objectFields
      *
+     * @throws Exception
+     *
      * @return $this
      */
-    public function buildFieldListForm($mapper, string $name, array $objectFields)
+    public function buildFieldListForm(FormMapper|ShowMapper $mapper, string $name, array $objectFields): static
     {
         $options = array(
             'entry_type' => FieldsListType::class,
@@ -109,8 +113,12 @@ class ObjectsAdmin extends AbstractAdmin
         }
 
         $mapper
-            ->with($name, array('class' => 'col-md-6'))
+            ->tab($name)
+            ->with($name, array(
+                'label' => FormHelper::formGroupLabel($this->getObjectType(), $name)
+            ))
             ->add($name, CollectionType::class, $options)
+            ->end()
             ->end()
         ;
 
@@ -120,10 +128,10 @@ class ObjectsAdmin extends AbstractAdmin
     /**
      * {@inheritdoc}
      */
-    public function getNewInstance()
+    public function alterNewInstance(object $object): void
     {
-        $newObject = new ArrayObject(array('id' => null), ArrayObject::ARRAY_AS_PROPS);
-
+        /** @var stdClass $object */
+        $object->id = null;
         //====================================================================//
         // Load Object Fields
         /** @var ObjectsManager $modelManager */
@@ -136,23 +144,22 @@ class ObjectsAdmin extends AbstractAdmin
             // Add Empty List Field to Object
             $list = FormHelper::isListField($field["id"]);
             if ($list) {
-                $newObject[$list['listname']] = null;
+                $object->{$list['listname']} = null;
 
                 continue;
             }
             //====================================================================//
             // Add Empty Single Field to Object
-            $newObject[$field["id"]] = null;
+            $object->{$field["id"]} = null;
         }
-
-        return $newObject;
     }
 
     /**
-     * @param RouteCollection $collection
+     * @param RouteCollectionInterface $collection
      */
-    protected function configureRoutes(RouteCollection $collection): void
+    protected function configureRoutes(RouteCollectionInterface $collection): void
     {
+        $collection->remove('export');
         $collection->add('switch', 'switch');
         $collection->add('image', 'i/{path}/{md5}');
         $collection->add('file', 'f/{path}/{md5}');
@@ -161,39 +168,38 @@ class ObjectsAdmin extends AbstractAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureShowFields(ShowMapper $showMapper): void
+    protected function configureShowFields(ShowMapper $show): void
     {
         //====================================================================//
         // Override Sonata Base View Template
-        // @phpstan-ignore-next-line
         $this
             ->getTemplateRegistry()
-            ->setTemplate("show", "@SplashAdmin/CRUD/show_object.html.twig");
+            ->setTemplate("show", "@SplashAdmin/CRUD/show_object.html.twig")
+        ;
 
-        $this->configureFields($showMapper);
+        $this->configureFields($show);
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function configureFormFields(FormMapper $formMapper): void
+    protected function configureFormFields(FormMapper $form): void
     {
         //====================================================================//
         // Override Sonata Base View Template
-        // @phpstan-ignore-next-line
         $this
             ->getTemplateRegistry()
             ->setTemplate("edit", "@SplashAdmin/CRUD/edit_object.html.twig");
 
-        $this->configureFields($formMapper);
+        $this->configureFields($form);
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function configureListFields(ListMapper $listMapper): void
+    protected function configureListFields(ListMapper $list): void
     {
-        $listMapper->addIdentifier('id', TextType::class);
+        $list->addIdentifier('id', TextType::class);
         //====================================================================//
         // Load Object Fields
         /** @var ObjectsManager $modelManager */
@@ -209,14 +215,14 @@ class ObjectsAdmin extends AbstractAdmin
             }
             //====================================================================//
             // Add Single Field to List Mapper
-            $listMapper->add($field["id"], TextType::class, array(
+            $list->add($field["id"], TextType::class, array(
                 'label' => $field["name"]
             ));
         }
         //====================================================================//
         // Add Actions
-        $listMapper
-            ->add('_action', null, array(
+        $list
+            ->add(ListMapper::NAME_ACTIONS, null, array(
                 'actions' => array(
                     'show' => array('template' => '@SplashAdmin/Objects/show_button.html.twig'),
                     'edit' => array('template' => '@SplashAdmin/Objects/edit_button.html.twig'),
@@ -231,14 +237,14 @@ class ObjectsAdmin extends AbstractAdmin
      *
      * @throws Exception
      */
-    protected function configureDatagridFilters(DatagridMapper $datagridMapper): void
+    protected function configureDatagridFilters(DatagridMapper $filter): void
     {
         /** @var ObjectsManager $modelManager */
         $modelManager = $this->getModelManager();
 
         //====================================================================//
         // Add Text Filter
-        $datagridMapper->add(
+        $filter->add(
             'filter',
             ListFilter::class,
             array(
@@ -260,7 +266,7 @@ class ObjectsAdmin extends AbstractAdmin
             $hasPrimary = true;
             //====================================================================//
             // Add Primary Filter
-            $datagridMapper->add(
+            $filter->add(
                 $field["id"],
                 PrimaryFilter::class,
                 array(
@@ -289,7 +295,7 @@ class ObjectsAdmin extends AbstractAdmin
      *
      * @return void
      */
-    private function configureFields($mapper)
+    private function configureFields(FormMapper|ShowMapper $mapper): void
     {
         $lists = array();
         //====================================================================//

@@ -15,7 +15,7 @@
 
 namespace Splash\Admin\Admin;
 
-use Sonata\AdminBundle\Route\RouteCollection;
+use Sonata\AdminBundle\Route\RouteCollectionInterface;
 
 /**
  * Connectors Configuration Admin Class for Splash Connectors Explorer
@@ -23,9 +23,11 @@ use Sonata\AdminBundle\Route\RouteCollection;
 class ConfigurationAdmin extends AbstractAdmin
 {
     /**
-     * @param RouteCollection $collection
+     * Configure Connector Configuration Routes
+     *
+     * @param RouteCollectionInterface $collection
      */
-    protected function configureRoutes(RouteCollection $collection): void
+    protected function configureRoutes(RouteCollectionInterface $collection): void
     {
         $collection->remove('batch');
         $collection->remove('create');

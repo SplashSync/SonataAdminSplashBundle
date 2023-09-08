@@ -18,6 +18,7 @@ namespace Splash\Admin\Admin;
 use Exception;
 use Sonata\AdminBundle\Admin\AbstractAdmin as BaseAdmin;
 use Sonata\AdminBundle\FieldDescription\FieldDescriptionFactoryInterface;
+use Splash\Admin\FieldDescription\FieldDescriptionFactory;
 use Splash\Admin\Model\ObjectsManager;
 
 /**
@@ -26,18 +27,11 @@ use Splash\Admin\Model\ObjectsManager;
 abstract class AbstractAdmin extends BaseAdmin
 {
     /**
-     * Current Server Id
-     *
-     * @var string
-     */
-    private string $serverId;
-
-    /**
      * Current Object Type
      *
-     * @var string
+     * @var null|string
      */
-    private string $objectType;
+    private ?string $objectType = null;
 
     /**
      * Current Object Definitions
@@ -47,18 +41,17 @@ abstract class AbstractAdmin extends BaseAdmin
     private ?array $objectDefinitions;
 
     /**
-     * @param string       $code
-     * @param class-string $class
-     * @param string       $baseControllerName
-     * @param string       $serverId
-     * @param string       $type
+     * Base Splash Admin Class Constructor
+     *
+     * @param string $adminType Type Name for Admin Class
+     * @param string $serverId  Splash Server ID
      */
-    public function __construct($code, $class, $baseControllerName, $serverId, $type)
-    {
-        parent::__construct($code, $class, $baseControllerName);
-        $this->baseRouteName = 'sonata_admin_'.$code.'_'.$type;
-        $this->baseRoutePattern = $serverId.'/'.$type;
-        $this->setServerId($serverId);
+    public function __construct(
+        private ObjectsManager $splashModelManager,
+        private string $adminType,
+        private string $serverId,
+    ) {
+        parent::__construct();
     }
 
     //====================================================================//
@@ -72,15 +65,15 @@ abstract class AbstractAdmin extends BaseAdmin
     {
         //====================================================================//
         // Setup Model Manager
-        $this->configureModelManager();
+        $this->splashModelManager->setServerId($this->serverId);
     }
 
     /**
      *  Disable Usage of Field Description Factory
      */
-    public function getFieldDescriptionFactory(): ?FieldDescriptionFactoryInterface
+    public function getFieldDescriptionFactory(): FieldDescriptionFactoryInterface
     {
-        return null;
+        return new FieldDescriptionFactory();
     }
 
     //====================================================================//
@@ -157,49 +150,32 @@ abstract class AbstractAdmin extends BaseAdmin
      *
      * @return string
      */
-    public function getServerId()
+    public function getServerId(): string
     {
         return $this->serverId;
     }
 
     /**
-     * Configure Splash Objects Manager
+     * @param bool $isChildAdmin
+     *
+     * @return string
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    protected function configureModelManager(): void
+    protected function generateBaseRouteName(bool $isChildAdmin = false): string
     {
-        //====================================================================//
-        // Load Container
-        $container = $this->getConfigurationPool()->getContainer();
-        if (empty($container)) {
-            return;
-        }
-        //====================================================================//
-        // Load Model Manager
-        /** @var ObjectsManager $modelManager */
-        $modelManager = $container->get('sonata.admin.manager.splash');
-        //====================================================================//
-        // Setup Model Manager
-        $modelManager->setServerId($this->serverId);
-        //====================================================================//
-        // Override Model Manager
-        $this->setModelManager($modelManager);
+        return 'sonata_admin_'.$this->serverId.'_'.$this->adminType;
     }
 
-    //====================================================================//
-    // Basic Getters & Setters
-    //====================================================================//
-
     /**
-     * Setup Splash Server Id
+     * @param bool $isChildAdmin
      *
-     * @param string $serverId
+     * @return string
      *
-     * @return self
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    protected function setServerId(string $serverId)
+    protected function generateBaseRoutePattern(bool $isChildAdmin = false): string
     {
-        $this->serverId = $serverId;
-
-        return $this;
+        return $this->serverId.'/'.$this->adminType;
     }
 }

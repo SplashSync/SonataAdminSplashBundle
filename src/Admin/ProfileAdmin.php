@@ -17,7 +17,7 @@ namespace Splash\Admin\Admin;
 
 use Knp\Menu\ItemInterface;
 use Sonata\AdminBundle\Admin\AdminInterface;
-use Sonata\AdminBundle\Route\RouteCollection;
+use Sonata\AdminBundle\Route\RouteCollectionInterface;
 
 /**
  * Profile View Admin Class for Splash Connectors Explorer
@@ -30,9 +30,11 @@ class ProfileAdmin extends AbstractAdmin
     public static ?string $objectType = null;
 
     /**
-     * @param RouteCollection $collection
+     * Configure Connector Profile Routes
+     *
+     * @param RouteCollectionInterface $collection
      */
-    protected function configureRoutes(RouteCollection $collection): void
+    protected function configureRoutes(RouteCollectionInterface $collection): void
     {
         $collection->remove('batch');
         $collection->remove('create');

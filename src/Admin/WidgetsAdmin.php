@@ -15,7 +15,7 @@
 
 namespace Splash\Admin\Admin;
 
-use Sonata\AdminBundle\Route\RouteCollection;
+use Sonata\AdminBundle\Route\RouteCollectionInterface;
 
 /**
  * Splash Widgets Viewer Admin Class for Splash Connectors
@@ -23,9 +23,9 @@ use Sonata\AdminBundle\Route\RouteCollection;
 class WidgetsAdmin extends AbstractAdmin
 {
     /**
-     * @param RouteCollection $collection
+     * @param RouteCollectionInterface $collection
      */
-    protected function configureRoutes(RouteCollection $collection): void
+    protected function configureRoutes(RouteCollectionInterface $collection): void
     {
         $collection->remove('batch');
         $collection->remove('create');
