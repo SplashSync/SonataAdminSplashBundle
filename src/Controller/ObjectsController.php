@@ -44,11 +44,7 @@ class ObjectsController extends CRUDController
     /**
      * Switch Between Object Types
      *
-     * @param Request $request
-     *
      * @throws Exception
-     *
-     * @return Response
      */
     public function switchAction(Request $request): Response
     {
@@ -63,13 +59,11 @@ class ObjectsController extends CRUDController
     }
 
     /**
-     * List action.
+     * {@inheritDoc}
      *
      * @throws Exception
-     *
-     * @return Response
      */
-    public function listAction(): Response
+    public function listAction(Request $request): Response
     {
         //====================================================================//
         // Detect Current Object Type
@@ -79,6 +73,7 @@ class ObjectsController extends CRUDController
             //====================================================================//
             // Add Error To Splash Log
             Splash::log()->err("No Object Type found on this Server.");
+
             //====================================================================//
             // Render Connector Profile Page
             return $this->render('@SplashAdmin/Objects/empty.html.twig', array(
@@ -92,6 +87,7 @@ class ObjectsController extends CRUDController
         $this->getObjectsManager()->setObjectType($objectType);
         $dataGrid = $this->admin->getDatagrid();
         $formView = $dataGrid->getForm()->createView();
+
         //====================================================================//
         // Render Connector Profile Page
         return $this->render('@SplashAdmin/Objects/list.html.twig', array(
@@ -107,15 +103,11 @@ class ObjectsController extends CRUDController
     }
 
     /**
-     * Show action.
-     *
-     * @param int|string $objectId
+     * {@inheritDoc}
      *
      * @throws Exception
-     *
-     * @return Response
      */
-    public function showAction($objectId = null): Response
+    public function showAction(Request $request): Response
     {
         //====================================================================//
         // Detect Current Object Type
@@ -125,26 +117,27 @@ class ObjectsController extends CRUDController
         try {
             //====================================================================//
             // Base Admin Action
-            return parent::showAction($objectId);
+            return parent::showAction($request);
         } catch (NotFoundHttpException $ex) {
+            /** @var null|string $objectId */
+            $objectId = $request->get("id");
             //====================================================================//
             // Redirect to Objects List
-            $this->addFlash("warning", "Object ".$objectId." was not found on this Server");
+            $this->addFlash(
+                "warning",
+                sprintf("Object %s was not found on this Server", $objectId)
+            );
 
-            return $this->listAction();
+            return $this->listAction($request);
         }
     }
 
     /**
-     * Edit action.
-     *
-     * @param int|string $objectId
+     * {@inheritDoc}
      *
      * @throws Exception
-     *
-     * @return Response
      */
-    public function editAction($objectId = null): Response
+    public function editAction(Request $request): Response
     {
         //====================================================================//
         // Detect Current Object Type
@@ -153,7 +146,7 @@ class ObjectsController extends CRUDController
         try {
             //====================================================================//
             // Base Admin Action
-            $response = parent::editAction($objectId);
+            $response = parent::editAction($request);
         } catch (NotFoundHttpException $ex) {
             //====================================================================//
             // Detect Object Id Changed
@@ -165,11 +158,16 @@ class ObjectsController extends CRUDController
 
                 return $this->redirect($redirectUrl);
             }
+            /** @var null|string $objectId */
+            $objectId = $request->get("id");
             //====================================================================//
             // Redirect to Objects List
-            $this->addFlash("warning", "Object ".$objectId." was not found on this Server");
+            $this->addFlash(
+                "warning",
+                sprintf("Object %s was not found on this Server", $objectId)
+            );
 
-            return $this->listAction();
+            return $this->listAction($request);
         }
 
         //====================================================================//
@@ -181,36 +179,32 @@ class ObjectsController extends CRUDController
      * Create action.
      *
      * @throws Exception
-     *
-     * @return Response
      */
-    public function createAction(): Response
+    public function createAction(Request $request): Response
     {
         //====================================================================//
         // Detect Current Object Type
         $this->getObjectsManager()->setObjectType($this->admin->getObjectType());
+
         //====================================================================//
         // Base Admin Action
-        return parent::createAction();
+        return parent::createAction($request);
     }
 
     /**
      * Delete action.
      *
-     * @param int|string $objectId
-     *
      * @throws Exception
-     *
-     * @return Response
      */
-    public function deleteAction($objectId = null): Response
+    public function deleteAction(Request $request): Response
     {
         //====================================================================//
         // Detect Current Object Type
         $this->getObjectsManager()->setObjectType($this->admin->getObjectType());
+
         //====================================================================//
         // Base Admin Action
-        return parent::deleteAction($objectId);
+        return parent::deleteAction($request);
     }
 
     /**

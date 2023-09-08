@@ -17,8 +17,10 @@ declare(strict_types=1);
 namespace Splash\Admin\Datagrid;
 
 use ArrayObject;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use InvalidArgumentException;
-use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
+use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQueryInterface;
 use Splash\Admin\Model\ObjectsManager;
 use Splash\Bundle\Interfaces\Connectors\PrimaryKeysInterface;
 use Splash\Bundle\Services\ConnectorsManager;
@@ -29,16 +31,6 @@ use Splash\Components\FieldsManager;
  */
 class SplashQuery implements ProxyQueryInterface
 {
-    /**
-     * @var ConnectorsManager
-     */
-    protected ConnectorsManager $connectorsManager;
-
-    /**
-     * @var ObjectsManager
-     */
-    protected ObjectsManager $objectsManager;
-
     /**
      * @var null|string
      */
@@ -78,18 +70,18 @@ class SplashQuery implements ProxyQueryInterface
      */
     private int $maxResults = 25;
 
-    /**
-     * @param ConnectorsManager $connectorsManager
-     * @param ObjectsManager    $objectsManager
-     */
-    public function __construct(ConnectorsManager $connectorsManager, ObjectsManager $objectsManager)
-    {
-        $this->connectorsManager = $connectorsManager;
-        $this->objectsManager = $objectsManager;
+    public function __construct(
+        private ConnectorsManager $connectorsManager,
+        private ObjectsManager $objectsManager,
+        private QueryBuilder $queryBuilder
+    ) {
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $name
+     * @param array  $args
+     *
+     * @return mixed
      */
     public function __call($name, $args)
     {
@@ -105,7 +97,7 @@ class SplashQuery implements ProxyQueryInterface
         //====================================================================//
         // Load Current Connector
         $connector = $this->objectsManager->getConnector();
-        $objectsType = $this->objectsManager->getObjectType();
+        $objectsType = (string) $this->objectsManager->getObjectType();
         $objectsFields = $this->objectsManager->getObjectFields();
         //====================================================================//
         // Check if Connector is Primary Aware
@@ -139,7 +131,7 @@ class SplashQuery implements ProxyQueryInterface
             //====================================================================//
             // Load Objects List from Splash Connector
             $objectsList = $connector->getObjectList(
-                $this->objectsManager->getObjectType(),
+                $objectsType,
                 $this->getFilterBy(),
                 $this->getQueryParameters()
             );
@@ -187,20 +179,15 @@ class SplashQuery implements ProxyQueryInterface
         return $this;
     }
 
-    /**
-     * @return null|string
-     */
     public function getSortBy(): ?string
     {
         return $this->sortBy;
     }
 
     /**
-     * @param $sortOrder
-     *
-     * @return $this
+     * {@inheritDoc}
      */
-    public function setSortOrder($sortOrder): self
+    public function setSortOrder(string $sortOrder): self
     {
         if (!in_array(strtoupper($sortOrder), $validSortOrders = array('ASC', 'DESC'), true)) {
             throw new InvalidArgumentException(sprintf(
@@ -227,7 +214,7 @@ class SplashQuery implements ProxyQueryInterface
      *
      * @deprecated since sonata-project/doctrine-orm-admin-bundle 3.31, to be removed in 4.0.
      */
-    public function getSingleScalarResult()
+    public function getSingleScalarResult(): int
     {
         return $this->execute()->count();
     }
@@ -345,5 +332,18 @@ class SplashQuery implements ProxyQueryInterface
     public function entityJoin(array $associationMappings): string
     {
         return "o";
+    }
+
+    public function getQueryBuilder(): QueryBuilder
+    {
+        return $this->queryBuilder;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getDoctrineQuery(): Query
+    {
+        return $this->getQueryBuilder()->getQuery();
     }
 }

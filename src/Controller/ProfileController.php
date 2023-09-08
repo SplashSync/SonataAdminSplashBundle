@@ -20,6 +20,7 @@ use Sonata\AdminBundle\Controller\CRUDController;
 use Splash\Admin\Admin\ProfileAdmin;
 use Splash\Admin\Model\ObjectManagerAwareTrait;
 use Splash\Core\SplashCore as Splash;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -32,11 +33,9 @@ class ProfileController extends CRUDController
     use ObjectManagerAwareTrait;
 
     /**
-     * List action.
-     *
-     * @return Response
+     * {@inheritDoc}
      */
-    public function listAction()
+    public function listAction(Request $request):Response
     {
         $results = array();
         //====================================================================//
@@ -69,6 +68,7 @@ class ProfileController extends CRUDController
         foreach ($connector->getAvailableObjects() as $objectType) {
             $objects[$objectType] = $connector->getObjectDescription($objectType);
         }
+
         //====================================================================//
         // Render Connector Profile Page
         return $this->render("@SplashAdmin/Profile/list.html.twig", array(
@@ -86,26 +86,24 @@ class ProfileController extends CRUDController
     }
 
     /**
-     * Show action.
-     *
-     * @param null|int|string $id
-     *
-     * @return Response
+     * {@inheritDoc}
      */
-    public function showAction($id = null)
+    public function showAction(Request $request): Response
     {
         //====================================================================//
         // Enable Fields List SideMenu
-        ProfileAdmin::$objectType = (string) $id;
+        /** @var scalar $objectType */
+        $objectType = $request->get("id");
+        ProfileAdmin::$objectType = $objectType = (string) $objectType;
         //====================================================================//
         // Setup Connector
         $connector = $this->getConnector();
         //====================================================================//
         // Filter Fields List if Requested
         /** @var null|string $filter */
-        $filter = $this->getRequest()->get("filter");
+        $filter = $request->get("filter");
         /** @var array[] $allFields */
-        $allFields = $connector->getObjectFields((string) $id);
+        $allFields = $connector->getObjectFields($objectType);
         $fields = $filter ? array_filter($allFields, function ($field) use ($filter) {
             switch ($filter) {
                 case "required":
@@ -120,14 +118,15 @@ class ProfileController extends CRUDController
                     return true;
             }
         }) : $allFields;
+
         //====================================================================//
         // Render Connector Profile Page
         return $this->renderWithExtraParams("@SplashAdmin/Profile/show.html.twig", array(
             'action' => 'list',
             "profile" => $connector->getProfile(),
-            "object" => $connector->getObjectDescription((string) $id),
+            "object" => $connector->getObjectDescription($objectType),
             "fields" => $fields,
-            "filter" => $this->getRequest()->get("filter"),
+            "filter" => $filter,
             "log" => Splash::log()->GetHtmlLog(true),
         ));
     }

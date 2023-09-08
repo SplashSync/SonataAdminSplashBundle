@@ -20,6 +20,7 @@ use Sonata\AdminBundle\Controller\CRUDController;
 use Splash\Admin\Model\ObjectManagerAwareTrait;
 use Splash\Admin\Services\WidgetFactoryService;
 use Splash\Core\SplashCore as Splash;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -30,13 +31,11 @@ class WidgetsController extends CRUDController
     use ObjectManagerAwareTrait;
 
     /**
-     * List action.
+     * {@inheritDoc}
      *
      * @throws Exception
-     *
-     * @return Response
      */
-    public function listAction(): Response
+    public function listAction(Request $request): Response
     {
         //====================================================================//
         // Setup Connector
@@ -50,6 +49,7 @@ class WidgetsController extends CRUDController
                 'type' => $widgetType.'@'.$connector->getWebserviceId(),
             );
         }
+
         //====================================================================//
         // Render Connector Profile Page
         return $this->render('@SplashAdmin/Widgets/list.html.twig', array(

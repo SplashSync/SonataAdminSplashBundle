@@ -42,7 +42,7 @@ class ConfigurationController extends CRUDController
      *
      * @return Response
      */
-    public function listAction(Request $request = null)
+    public function listAction(Request $request = null): Response
     {
         //====================================================================//
         // Setup Connector
@@ -85,6 +85,7 @@ class ConfigurationController extends CRUDController
         $formView = $form->createView();
         // set the theme for the current Admin Form
         $this->setFormTheme($formView, $this->admin->getFormTheme());
+
         //====================================================================//
         // Render Connector Profile Page
         return $this->render('@SplashAdmin/Config/list.html.twig', array(
@@ -97,22 +98,5 @@ class ConfigurationController extends CRUDController
             'informations' => isset($informations) ? $informations : new ArrayObject(array()),
             'form' => $formView,
         ));
-    }
-
-    /**
-     * Sets the admin form theme to form view. Used for compatibility between Symfony versions.
-     *
-     * @param FormView $formView
-     * @param array    $theme
-     *
-     * @return void
-     */
-    private function setFormTheme(FormView $formView, array $theme = null): void
-    {
-        /** @var \Twig\Environment $twig */
-        $twig = $this->get('twig');
-        /** @var \Symfony\Component\Form\FormRenderer $formRenderer */
-        $formRenderer = $twig->getRuntime(FormRenderer::class);
-        $formRenderer->setTheme($formView, $theme);
     }
 }
