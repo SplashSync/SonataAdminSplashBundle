@@ -63,6 +63,19 @@ class FormHelper
     }
 
     /**
+     * Build Form Group Label
+     *
+     * @param string $objectType
+     * @param string $fieldName
+     *
+     * @return string
+     */
+    public static function formGroupLabel(string $objectType, string $fieldName): string
+    {
+        return sprintf("%s Object - %s", ucfirst($objectType), ucfirst($fieldName));
+    }
+
+    /**
      * Detect form type to Use for Editing a Field
      *
      * @param array $field
@@ -185,6 +198,9 @@ class FormHelper
             //====================================================================//
             // Manage Required Tag
             "required" => !empty($field["required"]),
+            "row_attr" => array(
+                "class" => "col-md-6"
+            )
         ));
     }
 

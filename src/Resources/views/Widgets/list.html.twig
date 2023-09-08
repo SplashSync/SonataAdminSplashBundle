@@ -1,5 +1,5 @@
 
-{% extends "@SonataAdmin/CRUD/base_list.html.twig" %}
+{% extends "@SonataAdmin/standard_layout.html.twig" %}
 
 {%- block actions -%}{%- endblock -%}
 
@@ -30,12 +30,13 @@
         
         <div class="row">
             {% for Widget in Widgets %}
-                {{ render(controller('SplashWidgetsBundle:View:delayed', { 
-                    'service' : Widget.service,  
-                    'type' : Widget.type, 
-                    'options': { 'Mode': "bs3" } | json_encode() 
-                })) }}
-            {% endfor %} 
+                {{ sonata_block_render({ type: "splash.widgets.blocks.simple" }, {
+                    'service' : Widget.service,
+                    'type' : Widget.type,
+                    'options': { 'Mode': "bs3" }
+
+                }) }}
+            {% endfor %}
         </div>  
     </div>
 

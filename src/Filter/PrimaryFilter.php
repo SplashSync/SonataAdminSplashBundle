@@ -17,9 +17,9 @@ declare(strict_types=1);
 
 namespace Splash\Admin\Filter;
 
-use Sonata\AdminBundle\Datagrid\ProxyQueryInterface as BaseProxyQueryInterface;
+use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 use Sonata\AdminBundle\Filter\Filter;
-use Sonata\AdminBundle\Form\Type\Filter\ChoiceType;
+use Sonata\AdminBundle\Filter\Model\FilterData;
 use Splash\Admin\Datagrid\SplashQuery;
 
 /**
@@ -28,35 +28,20 @@ use Splash\Admin\Datagrid\SplashQuery;
 class PrimaryFilter extends Filter
 {
     /**
-     * @param BaseProxyQueryInterface $query
-     * @param string                  $alias
-     * @param string                  $field
-     * @param mixed                   $data
-     *
-     * @return void
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * {@inheritDoc}
      */
-    public function filter(BaseProxyQueryInterface $query, $alias, $field, $data)
+    public function apply(ProxyQueryInterface $query, FilterData $filterData): void
     {
-    }
-
-    /**
-     * @param BaseProxyQueryInterface $query
-     * @param array|scalar            $filterData
-     *
-     * @return void
-     */
-    public function apply($query, $filterData)
-    {
-        if (\is_array($filterData) && \array_key_exists('value', $filterData)) {
-            if ($query instanceof SplashQuery) {
-                $query->addPrimary($this->getName(), $filterData['value']);
-            }
+        if (!$filterData->hasValue() || !($query instanceof SplashQuery)) {
+            return;
+        }
+        $value = $filterData->getValue();
+        if ($value && is_scalar($value)) {
+            $query->addPrimary($this->getName(), (string) $value);
         }
     }
 
-    public function getDefaultOptions()
+    public function getDefaultOptions(): array
     {
         return array(
             // NEXT_MAJOR: Remove the "format" option.
@@ -70,12 +55,8 @@ class PrimaryFilter extends Filter
         );
     }
 
-    public function getRenderSettings()
+    public function getFormOptions(): array
     {
-        return array(ChoiceType::class, array(
-            'field_type' => $this->getFieldType(),
-            'field_options' => $this->getFieldOptions(),
-            'label' => $this->getLabel(),
-        ));
+        return array();
     }
 }

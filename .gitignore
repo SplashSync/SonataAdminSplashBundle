@@ -53,3 +53,5 @@
 /.gh-pages/
 /.idea/
 /.php-cs-fixer.cache
+/yarn.lock
+/yarn-error.log

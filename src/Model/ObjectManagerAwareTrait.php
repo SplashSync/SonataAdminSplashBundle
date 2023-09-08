@@ -26,11 +26,11 @@ trait ObjectManagerAwareTrait
     /**
      * @abstract    Get Splash Object Manager
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @return ObjectsManager
      */
-    public function getObjectsManager()
+    public function getObjectsManager(): ObjectsManager
     {
         //====================================================================//
         // Get Object Manager
@@ -43,21 +43,14 @@ trait ObjectManagerAwareTrait
     }
 
     /**
-     * @abstract    Get Currently Used Connector
+     * Get Currently Used Connector
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @return AbstractConnector
      */
-    public function getConnector()
+    public function getConnector(): AbstractConnector
     {
-        //====================================================================//
-        // Get Object Manager
-        $objectManager = $this->admin->getModelManager();
-        if (!($objectManager instanceof ObjectsManager)) {
-            throw new Exception('Splash Object Manager Not Found');
-        }
-
-        return $objectManager->getConnector();
+        return $this->getObjectsManager()->getConnector();
     }
 }

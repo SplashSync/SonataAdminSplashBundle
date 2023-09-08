@@ -25,10 +25,21 @@ version: "3.5"
 services:
 
     ################################################################################
+    # PHP 8.1
+    php-8.1:
+        image:          registry.gitlab.com/badpixxel-projects/php-sdk:php-8.1
+        container_name: splash-sonata-admin-8.1
+        environment:
+            - COMPOSER_MEMORY_LIMIT=-1
+        volumes:
+            - ./:/var/www/html
+            - vendor-php81:/var/www/html/vendor
+
+    ################################################################################
     # PHP 8.0
     php-8.0:
         image:          registry.gitlab.com/badpixxel-projects/php-sdk:php-8.0
-        container_name: sonata-admin-splash-8.0
+        container_name: splash-sonata-admin-8.0
         environment:
             - COMPOSER_MEMORY_LIMIT=-1
         volumes:
@@ -36,16 +47,16 @@ services:
             - vendor-php80:/var/www/html/vendor
 
     ################################################################################
-    # PHP 7.4
-    php-7.4:
-        image:      registry.gitlab.com/badpixxel-projects/php-sdk:php-7.4
-        container_name: sonata-admin-splash-7.4
-        environment:
-            - COMPOSER_MEMORY_LIMIT=-1
+    # Node JS Container
+    node:
+        image:              'node:18-alpine'
+        user:               'node'
+        container_name:     splash-sonata-admin-node
+        tty:                true
         volumes:
-            - ./:/var/www/html
-            - vendor-php74:/var/www/html/vendor
+            - './:/srv'
+        working_dir: '/srv'
 
 volumes:
+    vendor-php81: ~
     vendor-php80: ~
-    vendor-php74: ~

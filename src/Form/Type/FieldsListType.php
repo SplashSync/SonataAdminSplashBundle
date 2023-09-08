@@ -15,7 +15,6 @@
 
 namespace Splash\Admin\Form\Type;
 
-use Sonata\AdminBundle\Show\ShowMapper;
 use Splash\Admin\Fields\FormHelper;
 use Splash\Admin\Form\FieldsTransformer;
 use Symfony\Component\Form\AbstractType;
@@ -45,16 +44,11 @@ class FieldsListType extends AbstractType
                 continue;
             }
             //====================================================================//
-            // Detect Edit or Show
-            $options = ($builder instanceof ShowMapper)
-                    ? FormHelper::showOptions($field)
-                    : FormHelper::formOptions($field);
-            //====================================================================//
             // Generate Field Form Entry
             $builder->add(
                 $list["fieldname"],
                 FormHelper::formType($field),
-                $options
+                FormHelper::formOptions($field)
             );
 
             $builder->get($list["fieldname"])->addModelTransformer(

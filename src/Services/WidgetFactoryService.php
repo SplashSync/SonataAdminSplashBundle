@@ -114,6 +114,7 @@ class WidgetFactoryService implements WidgetProviderInterface
             $type,
             $datedParameters
         );
+
         //====================================================================//
         // Return Splash Widget
         return $this->factory->getWidget();
@@ -190,6 +191,7 @@ class WidgetFactoryService implements WidgetProviderInterface
 
             return is_array($parameters) ? $parameters : array();
         }
+
         //====================================================================//
         // Default Widget Options
         return array();
@@ -295,6 +297,7 @@ class WidgetFactoryService implements WidgetProviderInterface
         //====================================================================//
         // Decode Widget Type
         list($widgetType) = explode('@', $type);
+
         //==============================================================================
         // Get Target Widget Description
         return $connector->getWidgetDescription($widgetType);

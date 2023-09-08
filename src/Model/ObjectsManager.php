@@ -15,32 +15,24 @@
 
 namespace Splash\Admin\Model;
 
-use ArrayObject;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-use Exception;
-use PDOException;
 use RuntimeException;
-use Sonata\AdminBundle\Datagrid\DatagridInterface;
 use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 use Sonata\AdminBundle\Exception\ModelManagerException;
-use Sonata\AdminBundle\FieldDescription\FieldDescriptionInterface;
 use Sonata\AdminBundle\Model\LockInterface;
 use Sonata\AdminBundle\Model\ModelManagerInterface;
-use Sonata\DoctrineORMAdminBundle\Admin\FieldDescription;
-use Sonata\Exporter\Source\ArraySourceIterator;
-use Sonata\Exporter\Source\SourceIteratorInterface;
 use Splash\Admin\Datagrid\SplashQuery;
 use Splash\Bundle\Events\ObjectsIdChangedEvent;
 use Splash\Bundle\Models\AbstractConnector;
 use Splash\Bundle\Services\ConnectorsManager;
 use Splash\Components\FieldsManager;
 use Splash\Core\SplashCore as Splash;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use stdClass;
+use Throwable;
 
 /**
  * @abstract Splas Objects Model Manager for Soinata Admin
@@ -55,39 +47,24 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     const ID_SEPARATOR = '~';
 
     /**
-     * @var RegistryInterface
-     */
-    protected $registry;
-
-    /**
      * @var EntityManager[]
      */
-    protected $cache = array();
-
-    /**
-     * @var ConnectorsManager
-     */
-    private $manager;
-
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
+    protected array $cache = array();
 
     /**
      * @var string
      */
-    private $serverId;
+    private string $serverId;
 
     /**
      * @var bool
      */
-    private $isShowMode = false;
+    private bool $isShowMode = false;
 
     /**
-     * @var string
+     * @var null|string
      */
-    private $objectType;
+    private ?string $objectType = null;
 
     /**
      * Fields Cache
@@ -99,7 +76,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     /**
      * Definitions Cache
      *
-     * @var null|array
+     * @var null|array[]
      */
     private ?array $definitions;
 
@@ -112,14 +89,11 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
 
     /**
      * Class Constructor
-     *
-     * @param ConnectorsManager $manager
-     * @param EntityManager     $entityManager
      */
-    public function __construct(ConnectorsManager $manager, EntityManager $entityManager)
-    {
-        $this->manager = $manager;
-        $this->entityManager = $entityManager;
+    public function __construct(
+        private ConnectorsManager $manager,
+        private EntityManager $entityManager
+    ) {
     }
 
     //====================================================================//
@@ -133,7 +107,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      *
      * @return $this
      */
-    public function setObjectType(string $objectType)
+    public function setObjectType(string $objectType): static
     {
         $this->objectType = $objectType;
 
@@ -143,9 +117,9 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     /**
      * Get Current Splash Object Type
      *
-     * @return string
+     * @return null|string
      */
-    public function getObjectType(): string
+    public function getObjectType(): ?string
     {
         return $this->objectType;
     }
@@ -157,7 +131,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      *
      * @return $this
      */
-    public function setServerId(string $serverId)
+    public function setServerId(string $serverId): static
     {
         $this->serverId = $serverId;
 
@@ -169,7 +143,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      *
      * @return $this
      */
-    public function setShowMode()
+    public function setShowMode(): static
     {
         $this->isShowMode = true;
 
@@ -191,7 +165,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      *
      * @return AbstractConnector
      */
-    public function getConnector()
+    public function getConnector(): AbstractConnector
     {
         //====================================================================//
         // Load Connector with DataBase Config if Exists
@@ -214,7 +188,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      *
      * @return array
      */
-    public function getConfiguration()
+    public function getConfiguration(): array
     {
         return $this->getConnector()->getConfiguration();
     }
@@ -248,7 +222,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      *
      * @return null|string
      */
-    public function getNewObjectId()
+    public function getNewObjectId(): ?string
     {
         return $this->newObjectId ?? null;
     }
@@ -268,9 +242,9 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
             // Read Description of All Objects
             $this->definitions = array();
             foreach ($objectTypes as $objectType) {
-                $this->definitions[$objectType] = $this->getConnector()->getObjectDescription(
-                    $objectType
-                );
+                $this->definitions[$objectType] = $this->getConnector()
+                    ->getObjectDescription($objectType)
+                ;
             }
         }
 
@@ -282,8 +256,13 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      *
      * @return array[]
      */
-    public function getObjectFields()
+    public function getObjectFields(): array
     {
+        //====================================================================//
+        // Safety Check
+        if (empty($this->objectType)) {
+            return array();
+        }
         if (!isset($this->fields[$this->objectType])) {
             $this->fields[$this->objectType] = $this->getConnector()->getObjectFields($this->objectType);
         }
@@ -292,64 +271,47 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * @param string $class
+     * @param class-string $class
      *
      * @return ClassMetadata
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function getMetadata($class): ClassMetadata
+    public function getMetadata(string $class): ClassMetadata
     {
         return new ClassMetadata('ArrayObject');
     }
 
     /**
-     * @param string $class
+     * @param class-string $class
      *
      * @return boolean
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function hasMetadata($class)
+    public function hasMetadata(string $class): bool
     {
         return false;
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function getNewFieldDescriptionInstance($class, $name, array $options = array())
-    {
-        if (!is_string($name)) {
-            throw new RuntimeException('The name argument must be a string');
-        }
-        $fieldDescription = new FieldDescription();
-        $fieldDescription->setName($name);
-        $fieldDescription->setOptions($options);
-
-        return $fieldDescription;
-    }
-
-    /**
      * Create A New Object via Connector
      *
-     * @param ArrayObject $object
-     *
      * @throws ModelManagerException
-     *
-     * @return ArrayObject
      */
-    public function create($object): ArrayObject
+    public function create(object $object): void
     {
+        //====================================================================//
+        // Safety Check
+        if (!$object instanceof stdClass) {
+            throw new ModelManagerException(
+                sprintf("Splash Object must be an %s", stdClass::class)
+            );
+        }
         $object->id = null;
-
         //====================================================================//
         // Execute Reverse Transform
-        $objectData = $this
-            ->modelReverseTransform('ArrayObject', $object->getArrayCopy())
-            ->getArrayCopy();
+        $objectData = (array) $object;
         //====================================================================//
         // Remove Null Values
         foreach (array_keys($objectData) as $fieldId) {
@@ -357,18 +319,14 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
                 unset($objectData[$fieldId]);
             }
         }
+
         //====================================================================//
         // Write Object Data
         try {
             $object->id = $this->getConnector()
-                ->setObject($this->objectType, null, $objectData);
-        } catch (PDOException $e) {
-            throw new ModelManagerException(
-                sprintf('Failed to create object: %s', ClassUtils::getClass($object)),
-                $e->getCode(),
-                $e
-            );
-        } catch (Exception $e) {
+                ->setObject((string) $this->objectType, null, $objectData)
+            ;
+        } catch (Throwable $e) {
             throw new ModelManagerException(
                 sprintf('Failed to create object: %s', ClassUtils::getClass($object)),
                 $e->getCode(),
@@ -386,46 +344,42 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
                 sprintf('Failed to create object: %s', ClassUtils::getClass($object))
             );
         }
-
-        //====================================================================//
-        // Return New Object
-        return $object;
     }
 
     /**
      * Update Object via Connector
      *
-     * @param ArrayObject $object
-     *
      * @throws ModelManagerException
      */
-    public function update($object): void
+    public function update(object $object): void
     {
         //====================================================================//
         // Safety Check - Verify Object has Id
-        if (empty($object->id) || !($object instanceof ArrayObject)) {
-            return;
+        if (empty($object->id) || !is_scalar($object->id)) {
+            throw new ModelManagerException("Splash Object: Invalid ID");
+        }
+        //====================================================================//
+        // Safety Check
+        if (!$object instanceof stdClass) {
+            throw new ModelManagerException(
+                sprintf("Splash Object must be an %s", stdClass::class)
+            );
         }
         //====================================================================//
         // Execute Reverse Transform
-        $objectId = $object->id;
-        $objectData = $this->modelReverseTransform('ArrayObject', $object->getArrayCopy());
+        $objectId = (string) $object->id;
+
         //====================================================================//
         // Do Object Update
         try {
             //====================================================================//
             // Write Object Data
             $this->getConnector()
-                ->setObject($this->objectType, $objectId, $objectData->getArrayCopy());
-        } catch (PDOException $e) {
+                ->setObject((string) $this->objectType, $objectId, (array) $object)
+            ;
+        } catch (Throwable $e) {
             throw new ModelManagerException(
-                sprintf('Failed to update object: %s', ClassUtils::getClass($object)),
-                $e->getCode(),
-                $e
-            );
-        } catch (Exception $e) {
-            throw new ModelManagerException(
-                sprintf('Failed to update object: %s', ClassUtils::getClass($object)),
+                sprintf('Failed to update object: %s (%s)', ClassUtils::getClass($object), $e->getMessage()),
                 $e->getCode(),
                 $e
             );
@@ -438,24 +392,23 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     /**
      * Delete Object via Connector
      *
-     * @param ArrayObject $object
-     *
      * @throws ModelManagerException
      */
-    public function delete($object): void
+    public function delete(object $object): void
     {
+        //====================================================================//
+        // Safety Check
+        if (!$object instanceof stdClass) {
+            throw new ModelManagerException(
+                sprintf("Splash Object must be an %s", stdClass::class)
+            );
+        }
+
         try {
             //====================================================================//
             // Delete Object Data
-            $this->getConnector()
-                ->deleteObject($this->objectType, $object->id);
-        } catch (PDOException $e) {
-            throw new ModelManagerException(
-                sprintf('Failed to delete object: %s', ClassUtils::getClass($object)),
-                $e->getCode(),
-                $e
-            );
-        } catch (Exception $e) {
+            $this->getConnector()->deleteObject((string) $this->objectType, $object->id);
+        } catch (Throwable $e) {
             throw new ModelManagerException(
                 sprintf('Failed to delete object: %s', ClassUtils::getClass($object)),
                 $e->getCode(),
@@ -475,7 +428,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
         $metadata = $this->getMetadata(ClassUtils::getClass($object));
 
         if (!$metadata->isVersioned || is_null($metadata->reflFields[$metadata->versionField])) {
-            return;
+            return null;
         }
 
         return $metadata->reflFields[$metadata->versionField]->getValue($object);
@@ -492,17 +445,14 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * @param class-string    $class
-     * @param null|int|string $objectId
-     *
-     * @return ArrayObject|false
+     * {@inheritdoc}
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function find($class, $objectId)
+    public function find($class, $id): ?stdClass
     {
-        if (!isset($objectId)) {
-            return false;
+        if (!$this->objectType || empty($id)) {
+            return null;
         }
         //====================================================================//
         // Prepare Readable Fields List
@@ -512,13 +462,14 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
         );
         //====================================================================//
         // Read Object Data
-        $object = $this->getConnector()->getObject($this->objectType, (string) $objectId, $fields);
+        $object = $this->getConnector()->getObject($this->objectType, (string) $id, $fields);
         //====================================================================//
         // Catch Splash Logs
         $this->manager->pushLogToSession(true);
         if (empty($object)) {
-            return new ArrayObject(array());
+            return null;
         }
+
         //====================================================================//
         // Return Object
         return $this->modelTransform('ArrayObject', $object);
@@ -526,10 +477,8 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function findBy($class, array $criteria = array())
+    public function findBy(string $class, array $criteria = array()): array
     {
         //====================================================================//
         // Load Objects List from Splash Connector
@@ -537,20 +486,16 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
         //====================================================================//
         // Catch Splash Logs
         $this->manager->pushLogToSession(true);
+
         //====================================================================//
         // Return Objects List
         return $list;
     }
 
     /**
-     * @param string       $class
-     * @param array|object $instance
-     *
-     * @return ArrayObject
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function modelTransform($class, $instance)
+    public function modelTransform(string $class, array $instance): stdClass
     {
         //====================================================================//
         // Detect Empty Lists
@@ -568,18 +513,17 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
         // Remove Read Only Fields
         $filtered = FieldsManager::filterData($instance, array_merge(array('id'), $writeFields));
         if (is_null($filtered)) {
-            return new ArrayObject(array(), ArrayObject::ARRAY_AS_PROPS);
+            return new stdClass();
         }
+
         //====================================================================//
         // Return Object
-        return new ArrayObject($filtered, ArrayObject::ARRAY_AS_PROPS);
+        return (object) $filtered;
     }
 
     /**
      * @param array $field
      * @param array $instance
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function modelCompleteField(array $field, &$instance): void
     {
@@ -609,11 +553,11 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     /**
      * {@inheritdoc}
      */
-    public function modelReverseTransform($class, array $array = array()): ArrayObject
+    public function reverseTransform(object $object, array $array = array()): void
     {
         unset($array['id']);
 
-        return new ArrayObject($array, ArrayObject::ARRAY_AS_PROPS);
+        $object = (object) $array;
     }
 
     //====================================================================//
@@ -625,53 +569,19 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function findOneBy($class, array $criteria = array())
+    public function findOneBy($class, array $criteria = array()): ?stdClass
     {
-        return new ArrayObject();
+        return new stdClass();
     }
 
     /**
-     * @param array        $parentAssocMapping
-     * @param class-string $class
+     * @param object $query
      *
-     * @return mixed
+     * @return bool
      */
-    public function getParentFieldDescription($parentAssocMapping, $class)
+    public function supportsQuery(object $query): bool
     {
-        $fieldName = $parentAssocMapping['fieldName'];
-        $metadata = $this->getMetadata($class);
-        $associatingMapping = $metadata->associationMappings[$fieldName];
-        $fieldDescription = $this->getNewFieldDescriptionInstance($class, $fieldName);
-        $fieldDescription->setName($fieldName);
-        $fieldDescription->setAssociationMapping($associatingMapping);
-
-        return $fieldDescription;
-    }
-
-    /**
-     * @param class-string $class
-     * @param string       $alias
-     *
-     * @return ProxyQueryInterface
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function createQuery($class, $alias = 'o')
-    {
-        return new SplashQuery($this->manager, $this);
-    }
-
-    /**
-     * @param Query|QueryBuilder $query
-     *
-     * @return mixed
-     */
-    public function executeQuery($query)
-    {
-        if ($query instanceof QueryBuilder) {
-            return $query->getQuery()->execute();
-        }
-
-        return $query->execute();
+        return $query instanceof SplashQuery;
     }
 
     /**
@@ -679,7 +589,34 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function getModelIdentifier($class)
+    public function createQuery(string $class): ProxyQueryInterface
+    {
+        return new SplashQuery($this->manager, $this, $this->entityManager->createQueryBuilder());
+    }
+
+    /**
+     * @param Query|QueryBuilder $query
+     *
+     * @return stdClass[]
+     */
+    public function executeQuery(object $query): iterable
+    {
+        if ($query instanceof QueryBuilder) {
+            $result = $query->getQuery()->execute();
+        } else {
+            $result = $query->execute();
+        }
+
+        /** @var iterable<stdClass> $result */
+        return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function getModelIdentifier(string $class): string
     {
         return 'id';
     }
@@ -689,7 +626,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function getIdentifierValues($model)
+    public function getIdentifierValues(object $model): array
     {
         return array();
     }
@@ -699,7 +636,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function getIdentifierFieldNames($class)
+    public function getIdentifierFieldNames($class): array
     {
         return $this->getMetadata($class)->getIdentifierFieldNames();
     }
@@ -732,7 +669,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      *
      * @return string
      */
-    public function getUrlsafeIdentifier($model): string
+    public function getUrlSafeIdentifier($model): string
     {
         return (string) $this->getNormalizedIdentifier($model);
     }
@@ -742,7 +679,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function addIdentifiersToQuery($class, ProxyQueryInterface $queryProxy, array $idx): void
+    public function addIdentifiersToQuery($class, ProxyQueryInterface $query, array $idx): void
     {
     }
 
@@ -751,27 +688,8 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function batchDelete($class, ProxyQueryInterface $queryProxy): void
+    public function batchDelete($class, ProxyQueryInterface $query): void
     {
-    }
-
-    /**
-     * @param DatagridInterface $datagrid
-     * @param array             $fields
-     * @param null|int          $firstResult
-     * @param null|int          $maxResult
-     *
-     * @return SourceIteratorInterface
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function getDataSourceIterator(
-        DatagridInterface $datagrid,
-        array $fields,
-        $firstResult = null,
-        $maxResult = null
-    ) {
-        return new ArraySourceIterator(array());
     }
 
     /**
@@ -779,7 +697,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function getExportFields($class)
+    public function getExportFields($class): array
     {
         $metadata = $this->entityManager->getClassMetadata($class);
 
@@ -787,128 +705,15 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function getModelInstance($class)
-    {
-        return new ArrayObject(array(), ArrayObject::ARRAY_AS_PROPS);
-    }
-
-    /**
-     * @param FieldDescriptionInterface $fieldDescription
-     * @param DatagridInterface         $datagrid
-     *
-     * @return array
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function getSortParameters(FieldDescriptionInterface $fieldDescription, DatagridInterface $datagrid): array
-    {
-        return array();
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function getPaginationParameters(DatagridInterface $datagrid, $page)
-    {
-        $values = $datagrid->getValues();
-
-        $values['_sort_by'] = $values['_sort_by']->getName();
-        $values['_page'] = $page;
-
-        return array('filter' => $values);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
      * @param class-string $class
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function getDefaultSortValues($class)
-    {
-        return array(
-            '_sort_order' => 'ASC',
-            '_sort_by' => implode(',', array($this->getModelIdentifier($class))),
-            '_page' => (string) 1,
-            '_per_page' => (string) 25,
-        );
-    }
-
-    /**
-     * {@inheritdoc}
+     * @return stdClass
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function getModelCollectionInstance($class)
+    public function getModelInstance(string $class): stdClass
     {
-        return new ArrayCollection();
-    }
-
-    /**
-     * @param array|ArrayCollection $collection
-     *
-     * @return void
-     */
-    public function collectionClear(&$collection)
-    {
-        if (is_array($collection)) {
-            $collection = array();
-
-            return;
-        }
-
-        $collection->clear();
-    }
-
-    /**
-     * @param array|ArrayCollection $collection
-     * @param object                $element
-     *
-     * @return bool
-     */
-    public function collectionHasElement(&$collection, &$element)
-    {
-        if (is_array($collection)) {
-            return false;
-        }
-
-        return $collection->contains($element);
-    }
-
-    /**
-     * @param array|ArrayCollection $collection
-     * @param object                $element
-     *
-     * @return bool
-     */
-    public function collectionAddElement(&$collection, &$element)
-    {
-        if (is_array($collection)) {
-            return false;
-        }
-
-        return $collection->add($element);
-    }
-
-    /**
-     * @param array|ArrayCollection $collection
-     * @param object                $element
-     *
-     * @return bool
-     */
-    public function collectionRemoveElement(&$collection, &$element)
-    {
-        if (is_array($collection)) {
-            return false;
-        }
-
-        return $collection->removeElement($element);
+        return new stdClass();
     }
 
     /**
@@ -918,7 +723,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
      *
      * @return mixed
      */
-    protected function camelize($property)
+    protected function camelize(string $property): mixed
     {
         return str_replace(' ', '', ucwords(str_replace('_', ' ', $property)));
     }

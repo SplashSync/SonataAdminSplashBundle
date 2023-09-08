@@ -17,9 +17,9 @@ declare(strict_types=1);
 
 namespace Splash\Admin\Filter;
 
-use Sonata\AdminBundle\Datagrid\ProxyQueryInterface as BaseProxyQueryInterface;
+use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 use Sonata\AdminBundle\Filter\Filter;
-use Sonata\AdminBundle\Form\Type\Filter\ChoiceType;
+use Sonata\AdminBundle\Filter\Model\FilterData;
 use Splash\Admin\Datagrid\SplashQuery;
 
 /**
@@ -28,31 +28,16 @@ use Splash\Admin\Datagrid\SplashQuery;
 class ListFilter extends Filter
 {
     /**
-     * @param BaseProxyQueryInterface $query
-     * @param string                  $alias
-     * @param string                  $field
-     * @param mixed                   $data
-     *
-     * @return void
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * {@inheritDoc}
      */
-    public function filter(BaseProxyQueryInterface $query, $alias, $field, $data)
+    public function apply(ProxyQueryInterface $query, FilterData $filterData): void
     {
-    }
-
-    /**
-     * @param BaseProxyQueryInterface $query
-     * @param array|scalar            $filterData
-     *
-     * @return void
-     */
-    public function apply($query, $filterData)
-    {
-        if (\is_array($filterData) && \array_key_exists('value', $filterData)) {
-            if ($query instanceof SplashQuery) {
-                $query->setFilterBy($filterData['value']);
-            }
+        if (!$filterData->hasValue() || !($query instanceof SplashQuery)) {
+            return;
+        }
+        $value = $filterData->getValue();
+        if ($value && is_scalar($value)) {
+            $query->setFilterBy((string) $value);
         }
     }
 
@@ -73,15 +58,8 @@ class ListFilter extends Filter
         );
     }
 
-    /**
-     * @return array
-     */
-    public function getRenderSettings(): array
+    public function getFormOptions(): array
     {
-        return array(ChoiceType::class, array(
-            'field_type' => $this->getFieldType(),
-            'field_options' => $this->getFieldOptions(),
-            'label' => $this->getLabel(),
-        ));
+        return array();
     }
 }

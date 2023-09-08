@@ -1,9 +1,9 @@
 {
-    "name":                 "splash/sonata-admin-splash-bundle",
+    "name":                 "splash/sonata-admin",
     "license":              "MIT",
     "type":                 "symfony-bundle",
     "description":          "This Bundle provides a Object Manager for Splash Connectors and Sonata Admin.",
-    "keywords":             ["Symfony3", "Symfony4", "splalh", "sync", "connectors", "synchronization", "sonata", "sonata-project", "admin", "explorer"],
+    "keywords":             ["Symfony",  "Splash", "Splash Sync", "connectors", "synchronization", "sonata", "sonata-project", "admin", "explorer"],
     "minimum-stability":    "dev",
     "prefer-stable":        true,
 
@@ -19,30 +19,36 @@
     ],
 
     "require": {
-        "php":                          "^8.0",
+        "php":                                          "^8.0",
         
-        "symfony/cache":                "^4.0",
-        "psr/simple-cache":             "^1.0",
+        "symfony/cache":                                "^5.4",
+        "symfony/twig-bundle":                          "^5.4",
+        "psr/simple-cache":                             "^1.0",
 
-        "doctrine/doctrine-bundle":     "^2.6",
-        "doctrine/orm":                 "^2.7",
+        "doctrine/doctrine-bundle":                     "^2.6",
+        "doctrine/orm":                                 "^2.7",
 
-        "sonata-project/admin-bundle":  "^3.100",
-        "sonata-project/doctrine-orm-admin-bundle": ">=3.0",
+        "sonata-project/admin-bundle":                  "^4.0",
+        "sonata-project/doctrine-orm-admin-bundle":     "^4.0",
 
-        "twig/twig":                    "^2.0",
-        "twig/extra-bundle":            "^2.0",
-        "twig/intl-extra":              "^2.0",
+        "twig/twig":                                    "^2.0",
+        "twig/extra-bundle":                            "^2.0",
+        "twig/intl-extra":                              "^2.0",
 
-        "burgov/key-value-form-bundle": "@stable",
+        "burgov/key-value-form-bundle":                 "@stable",
         
-        "splash/php-bundle":            "dev-master",
-        "badpixxel/widgets-bundle":     "^1.2",
-        "splash/console":               "dev-master"
+        "splash/php-bundle":                            "dev-master",
+        "splash/console":                               "dev-master",
+
+        "badpixxel/widgets-bundle":                     "dev-master"
     },
     
     "require-dev": {
-        "badpixxel/php-sdk":            "dev-main"
+        "symfony/http-kernel":                          "^5.4",
+        "symfony/runtime":                              "^5.4",
+        "symfony/webpack-encore-bundle":                "^1.16",
+
+        "badpixxel/php-sdk":                            "dev-main"
     },
     
     "autoload": {
@@ -50,9 +56,16 @@
             "Splash\\Admin\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Splash\\Admin\\Test\\": "test/"
+        }
+    },
+
     "config": {
         "allow-plugins": {
-            "phpro/grumphp": true
+            "phpro/grumphp": true,
+            "symfony/runtime": true
         }
     }
 }

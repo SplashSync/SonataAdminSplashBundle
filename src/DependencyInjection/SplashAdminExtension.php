@@ -15,12 +15,14 @@
 
 namespace Splash\Admin\DependencyInjection;
 
-use ArrayObject;
 use Sonata\AdminBundle\Datagrid\Pager;
+use Splash\Admin\Model\ObjectsManager;
+use stdClass;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -49,7 +51,7 @@ class SplashAdminExtension extends Extension implements PrependExtensionInterfac
     /**
      * @var ContainerBuilder
      */
-    private $container;
+    private ContainerBuilder $container;
 
     /**
      * {@inheritdoc}
@@ -110,43 +112,39 @@ class SplashAdminExtension extends Extension implements PrependExtensionInterfac
     /**
      * Add Admin Service to Container
      *
-     * @param string $type
+     * @param string $adminType
      * @param string $tagId
      * @param string $name
      *
      * @return void
      */
-    private function addAdminService(string $type, string $tagId, string $name): void
+    private function addAdminService(string $adminType, string $tagId, string $name): void
     {
-        //====================================================================//
-        // Build Service Tags Array
-        $tags = array(
-            "manager_type" => "orm",
-            "pager_type" => Pager::TYPE_SIMPLE,
-            "group" => $name,
-            "label" => ucwords($type),
-            "icon" => '<span class="fa fa-server"></span>',
-        );
-        //====================================================================//
-        // Build Admin Class Name
-        $adminClass = "Splash\\Admin\\Admin\\".ucwords($type)."Admin";
-        $controllerClass = "Splash\\Admin\\Controller\\".ucwords($type)."Controller";
-
-        //====================================================================//
-        // Build Service Configurations
-        $args = array(
-            null,
-            ArrayObject::class,     // Data Type
-            $controllerClass,       // Controller Class Name
-            $tagId,                    // Splash Server Id
-            $type,                   // Admin Type Name
-        );
-
         //====================================================================//
         // Create Sonata Admin Service
         $this->container
-            ->register('splash.admin.'.$tagId.'.'.$type, $adminClass)
-            ->addTag("sonata.admin", $tags)
-            ->setArguments($args);
+            ->register(
+                'splash.admin.'.$tagId.'.'.$adminType,
+                "Splash\\Admin\\Admin\\".ucwords($adminType)."Admin"
+            )
+            ->setAutowired(true)
+            ->addMethodCall(
+                "setModelManager",
+                array(new Reference(ObjectsManager::class))
+            )
+            ->setArgument("\$serverId", $tagId)
+            ->setArgument("\$adminType", $adminType)
+            //====================================================================//
+            // Build Service Tags Array
+            ->addTag("sonata.admin", array(
+                "model_class" => stdClass::class,
+                "manager_type" => "orm",
+                "controller" => "Splash\\Admin\\Controller\\".ucwords($adminType)."Controller",
+                "pager_type" => Pager::TYPE_SIMPLE,
+                "group" => $name,
+                "label" => ucwords($adminType),
+                "icon" => '<span class="fa fa-server"></span>',
+            ))
+        ;
     }
 }
