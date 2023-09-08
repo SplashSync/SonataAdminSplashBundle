@@ -1,0 +1,12 @@
+{
+  "entrypoints": {
+    "admin": {
+      "css": [
+        "/bundles/splashadmin/js/admin.css"
+      ],
+      "js": [
+        "/bundles/splashadmin/js/admin.js"
+      ]
+    }
+  }
+}
