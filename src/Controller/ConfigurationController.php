@@ -21,8 +21,6 @@ use Sonata\AdminBundle\Controller\CRUDController;
 use Splash\Admin\Model\ObjectManagerAwareTrait;
 use Splash\Core\SplashCore as Splash;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\FormRenderer;
-use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
