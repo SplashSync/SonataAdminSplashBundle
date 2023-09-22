@@ -368,6 +368,8 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
         //====================================================================//
         // Execute Reverse Transform
         $objectId = (string) $object->id;
+        $objectData = (array) $object;
+        unset($objectData['id']);
 
         //====================================================================//
         // Do Object Update
@@ -375,7 +377,7 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
             //====================================================================//
             // Write Object Data
             $this->getConnector()
-                ->setObject((string) $this->objectType, $objectId, (array) $object)
+                ->setObject((string) $this->objectType, $objectId, $objectData)
             ;
         } catch (Throwable $e) {
             throw new ModelManagerException(

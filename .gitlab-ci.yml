@@ -16,55 +16,27 @@
 ################################################################################
 
 ################################################################
-# Set any variables we need
-variables:
-    COMPOSER_MEMORY_LIMIT:  -1
+# Include Pipeline Templates
+include:
+  - remote: 'https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/gitlab/php/defaults.yaml'
 
 ################################################################
-# Defined Pipeline Stages
-stages:
-  - quality
-  - deploy
-
-################################################################
-# Code Quality Checks
+# Quality Tests
 ################################################################
 
-.quality_tests:    &quality_tests
-    stage:      quality
-    tags:       ['Dedicated']
-    retry:      2
-    ################################################################################
-    # Run Test Script
-    script:
-      ################################################################################
-      # Build Module (Composer)
-      - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/composer.sh | bash
-      ################################################################
-      # Execute Code Quality Analyze
-      - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/grumphp.sh | sh
-    ################################################################################
-    # Run After Script
-    after_script:
-      - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/after.sh | sh
+quality:php-8.2:
+  extends: .quality
+  image: registry.gitlab.com/badpixxel-projects/php-sdk:php-8.2
 
-################################################################################
-# PHP 8.1
-tests:php-8.1:
-    image: registry.gitlab.com/badpixxel-projects/php-sdk:php-8.1
-    <<: *quality_tests
+quality:php-8.1:
+  extends: .quality
+  image: registry.gitlab.com/badpixxel-projects/php-sdk:php-8.1
 
-################################################################################
-# PHP 8.0
-tests:php-8.0:
-    image: registry.gitlab.com/badpixxel-projects/php-sdk:php-8.0
-    <<: *quality_tests
-
-#################################################################
-## Trigger Toolkit Docker Build
-#################################################################
+################################################################
+# Trigger Toolkit Docker Build
+################################################################
 toolkit:
-    stage:      deploy
+    stage:        Builds
     trigger:
         project:  SplashSync/Toolkit
         strategy: depend
