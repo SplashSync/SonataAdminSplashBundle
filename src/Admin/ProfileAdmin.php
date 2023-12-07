@@ -44,15 +44,11 @@ class ProfileAdmin extends AbstractAdmin
     }
 
     /**
-     * Configure Child Admins (Notary!!).
-     *
-     * @param ItemInterface  $menu
-     * @param string         $action
-     * @param AdminInterface $childAdmin
+     * Configure Tab Menu.
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    protected function configureSideMenu(ItemInterface $menu, $action, AdminInterface $childAdmin = null): void
+    protected function configureTabMenu(ItemInterface $menu, string $action, ?AdminInterface $childAdmin = null): void
     {
         //==============================================================================
         // SHOW Fields Mode
