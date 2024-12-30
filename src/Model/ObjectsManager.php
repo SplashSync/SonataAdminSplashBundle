@@ -308,7 +308,11 @@ class ObjectsManager implements ModelManagerInterface, LockInterface
                 sprintf("Splash Object must be an %s", stdClass::class)
             );
         }
-        $object->id = null;
+        //====================================================================//
+        // Ensure Removal of Empty ID
+        if (empty($object->id)) {
+            $object->id = null;
+        }
         //====================================================================//
         // Execute Reverse Transform
         $objectData = (array) $object;

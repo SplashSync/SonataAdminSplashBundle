@@ -48,7 +48,7 @@
         "symfony/runtime":                              "^5.4",
         "symfony/webpack-encore-bundle":                "^1.16",
 
-        "badpixxel/php-sdk":                            "dev-main"
+        "badpixxel/php-sdk":                            "^2.0"
     },
     
     "autoload": {
@@ -65,7 +65,8 @@
     "config": {
         "allow-plugins": {
             "phpro/grumphp": true,
-            "symfony/runtime": true
+            "symfony/runtime": true,
+            "phpro/grumphp-shim": false
         }
     }
 }
