@@ -1,7 +1,8 @@
 #!/usr/bin/env php
 <?php
 
-use Splash\Admin\Test\Kernel;
+use Splash\Toolkit\Kernel;
+
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 
 require_once dirname(__DIR__).'/vendor/autoload_runtime.php';

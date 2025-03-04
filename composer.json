@@ -9,12 +9,12 @@
 
     "authors": [
         {
-            "name":"Splash Sync",
-            "email":"contact@splashsync.com"
+            "name":         "Splash Sync",
+            "email":        "contact@splashsync.com"
         },
         {
-            "name": "Bernard Paquier",
-            "email": "eshop.bpaquier@gmail.com"
+            "name":         "Bernard Paquier",
+            "email":        "eshop.bpaquier@gmail.com"
         }
     ],
 
@@ -44,6 +44,7 @@
     },
     
     "require-dev": {
+        "splash/toolkit":                               "dev-master",
         "symfony/http-kernel":                          "^5.4",
         "symfony/runtime":                              "^5.4",
         "symfony/webpack-encore-bundle":                "^1.16",
@@ -58,7 +59,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Splash\\Admin\\Test\\": "test/"
+            "Splash\\Admin\\Test\\": "tests/"
         }
     },
 
@@ -68,5 +69,25 @@
             "symfony/runtime": true,
             "phpro/grumphp-shim": false
         }
+    },
+
+    "scripts": {
+        "auto-scripts": [
+            "php bin/console cache:clear",
+            "php bin/console assets:install --relative",
+            "php bin/console doctrine:schema:update --force --complete --no-interaction --no-debug"
+        ],
+        "post-install-cmd": [
+            "@auto-scripts",
+            "php bin/console sonata:user:create Toolkit toolkit@splashsync.com toolkit --super-admin || exit 0"
+        ],
+        "post-update-cmd": [
+            "@auto-scripts"
+        ]
+    },
+
+
+    "extra": {
+        "public-dir": "tests/public"
     }
 }

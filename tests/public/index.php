@@ -13,9 +13,10 @@
  *  file that was distributed with this source code.
  */
 
-return array(
-    //==============================================================================
-    // Symfony Bundles
-    Symfony\Bundle\FrameworkBundle\FrameworkBundle::class => array("all" => true),
-    Symfony\WebpackEncoreBundle\WebpackEncoreBundle::class => array("all" => true),
-);
+use Splash\Toolkit\Kernel;
+
+require_once dirname(__DIR__, 2).'/vendor/autoload_runtime.php';
+
+return function (array $context): Kernel {
+    return new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
+};

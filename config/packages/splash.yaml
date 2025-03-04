@@ -1,0 +1,34 @@
+
+splash:
+    ################################################################################
+    # List of Availables Connector Connections
+    ################################################################################
+    connections:
+
+        ########################################################################
+        # Faker Server
+        faker:
+            id:                 ThisIsFakerWsId
+            key:                ThisIsNotASecretKeyForFaker
+            name:               Serveur 1 (Faker)
+            host:               "http://127.0.0.1:8000/ws/soap"
+            server_host:        "http://127.0.0.1:8000"
+
+        ########################################################################
+        # Soap Server
+        soap:
+            id:                 ThisIsSoapWsId
+            key:                ThisIsNotASecretKeyForSoap
+            name:               Serveur 2 (Soap)
+            host:               "http://127.0.0.1:8000/ws/splash"
+            server_host:        "http://127.0.0.1:8000"
+            connector:          soap
+            config:
+                Extended:           true
+                WsIdentifier:       ThisIsFakerWsId
+                WsEncryptionKey:    ThisIsNotASecretKeyForFaker
+                WsHost:             http://127.0.0.1:8000
+                WsPath:             /ws/splash
+                HttpAuth:           true
+                HttpUser:           PhpUnit
+                HttpPassword:       PhpUnitPwd

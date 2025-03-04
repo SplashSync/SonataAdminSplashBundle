@@ -15810,3 +15810,5 @@
 /node_modules/yargs-parser/package.json
 /node_modules/yargs-parser/README.md
 /node_modules/.yarn-integrity
+/tests/public/bundles/
+/.env

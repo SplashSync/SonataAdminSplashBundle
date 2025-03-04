@@ -16,23 +16,34 @@
 #
 ################################################################################
 
+set -e
+
+################################################################################
+# Docker Compose Container you want to check
+CONTAINERS="php-8.1,php-8.2"
+WORKDIR="/var/www/html"
 ################################################################################
 # Start Docker Compose Stack
 echo '===> Start Docker Stack'
-docker-compose up -d
+docker compose up -d
 
-################################################################################
-# PHP 8.1
-echo '===> Checks Php 8.1'
-docker-compose exec php-8.1 bash ci/install.sh
-docker-compose exec php-8.1 php vendor/bin/grumphp run --testsuite=travis
-docker-compose exec php-8.1 php vendor/bin/grumphp run --testsuite=csfixer
-docker-compose exec php-8.1 php vendor/bin/grumphp run --testsuite=phpstan
+######################################
+# Run Grumphp Test Suites Locally
+php vendor/bin/grumphp run --testsuite=travis
+php vendor/bin/grumphp run --testsuite=csfixer
 
-################################################################################
-# PHP 8.0
-echo '===> Checks Php 8.0'
-docker-compose exec php-8.0 bash ci/install.sh
-docker-compose exec php-8.0 php vendor/bin/grumphp run --testsuite=travis
-docker-compose exec php-8.0 php vendor/bin/grumphp run --testsuite=csfixer
-docker-compose exec php-8.0 php vendor/bin/grumphp run --testsuite=phpstan
+######################################
+# Walk on Docker Compose Container
+for ID in $(echo $CONTAINERS | tr "," "\n")
+do
+    echo "----------------------------------------------------"
+    echo "===> CHECKS ON $ID"
+    echo "----------------------------------------------------"
+    # Ensure Git is Installed
+    docker compose exec $ID apt update
+    docker compose exec $ID apt install git -y
+    docker compose exec $ID composer update
+    # Run Grumphp Test Suites
+    docker compose exec -w $WORKDIR $ID php vendor/bin/grumphp run --testsuite=travis
+    docker compose exec -w $WORKDIR $ID php vendor/bin/grumphp run --testsuite=phpstan
+done

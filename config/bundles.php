@@ -13,17 +13,6 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Admin\Test;
-
-use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
-use Symfony\Component\HttpKernel\Kernel as BaseKernel;
-
-class Kernel extends BaseKernel
-{
-    use MicroKernelTrait;
-
-    protected function getConfigDir(): string
-    {
-        return $this->getProjectDir().'/test/config';
-    }
-}
+return array(
+    Symfony\WebpackEncoreBundle\WebpackEncoreBundle::class => array('dev' => true),
+);
