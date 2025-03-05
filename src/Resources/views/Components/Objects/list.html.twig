@@ -1,22 +1,22 @@
 
-    <div class="box box-primary">
-        <div class="box-body ">
-            <div class="info-box">
+<div class="box box-primary">
+    <div class="box-body ">
+        <div class="info-box no-margin">
 
                 <span class="info-box-icon bg-aqua">
                     {{ objects | length }}
                 </span>
 
-                <div class="info-box-content">
+            <div class="info-box-content">
 
-                    <span class="info-box-text">Available Objects</span>
+                <span class="info-box-text">Available Objects</span>
 
-                    <div class="progress">
-                        <div class="progress-bar" style="width: 00%"></div>
-                    </div>
-                    
-                    <span class="progress-description">
-                    <table class="table table-bordered table-striped table-hover sonata-ba-list">
+                <div class="progress">
+                    <div class="progress-bar" style="width: 0"></div>
+                </div>
+
+                <div class="progress-description">
+                    <table class="table table-bordered table-striped table-hover sonata-ba-list no-margin">
                         <thead>
                             <tr class="sonata-ba-list-field-header">
                                 <th>Type</th>
@@ -26,26 +26,30 @@
                         </thead>
                         <tbody>
                             {% for type, object in objects %}
-                            <tr>
+                                <tr>
                                 <td>{{ type }}</td>
                                 <td>
                                     <i class="{{ object.icon }}">&nbsp;</i>
                                     {{ object.name }}
                                 </td>
-                                <td>
-                                    <a href="{{ admin.generateUrl('show', { "id" : type} ) }}" class="btn btn-sm btn-default view_link" title="{{ 'action_show'|trans({}, 'SonataAdminBundle') }}">
+                                <td class="text-center">
+                                    <a
+                                            href="{{ admin.generateUrl('show', { "id" : type} ) }}"
+                                            class="btn btn-xs btn-default view_link"
+                                            title="{{ 'action_show'|trans({}, 'SonataAdminBundle') }}"
+                                    >
                                         <i class="fa fa-eye" aria-hidden="true"></i>
                                         {{ 'action_show'|trans({}, 'SonataAdminBundle') }}
-                                    </a>                                    
+                                    </a>
                                 </td>
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
-                    </span>
-                    
                 </div>
+
             </div>
         </div>
     </div>
+</div>
 

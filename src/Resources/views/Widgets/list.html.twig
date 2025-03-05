@@ -24,25 +24,22 @@
 
 {% block list_filters %}
 
-    {% include "@SplashAdmin/Core/logs.html.twig" %}
+    <twig:SplashAdmin:Server:Logs />
     
     <div class="col-xs-12">
         
         <div class="row">
-            {% for Widget in Widgets %}
-                {{ sonata_block_render({ type: "splash.widgets.blocks.simple" }, {
-                    'service' : Widget.service,
-                    'type' : Widget.type,
-                    'options': { 'Mode': "bs3" }
 
-                }) }}
+            {% for configurator in configurators %}
+
+                <twig:Widget
+                        :configurator="configurator"
+                        :parameters="configurator.parameters"
+                        :configuration="configuration"
+                />
+
             {% endfor %}
         </div>  
     </div>
 
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    {{ encore_entry_script_tags('admin') }}
 {% endblock %}

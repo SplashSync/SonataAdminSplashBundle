@@ -13,6 +13,25 @@
  *  file that was distributed with this source code.
  */
 
-return array(
-    Symfony\WebpackEncoreBundle\WebpackEncoreBundle::class => array('dev' => true),
-);
+namespace Splash\Admin\TwigComponent;
+
+/**
+ * Abstract base class for components that require a connector.
+ */
+abstract class AbstractConnectorTestAware extends AbstractConnectorAware
+{
+    /**
+     * Title
+     */
+    public string $title = "Tests Results Block";
+
+    /**
+     * Tests Results
+     */
+    public bool $result = false;
+
+    /**
+     * Server Logs
+     */
+    public string $logs = "";
+}

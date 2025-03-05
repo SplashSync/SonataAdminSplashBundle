@@ -43,7 +43,6 @@ class SplashAdminExtension extends AbstractExtension
             new TwigFilter('filetype', array($this, "filetypeFilter")),
             new TwigFilter('base64_encode', array($this, "base64Encode")),
             new TwigFilter('base64_decode', array($this, "base64Decode")),
-            new TwigFilter('htmlLogs', array($this, "getHtmlLogs")),
             new TwigFilter('inline_decode', array(InlineHelper::class, "toArray")),
         );
     }
@@ -182,16 +181,6 @@ class SplashAdminExtension extends AbstractExtension
     public function base64Decode(string $input): ?string
     {
         return base64_decode($input, true) ?: null;
-    }
-
-    /**
-     * Read Raw Logs from Splash Module as Html List
-     *
-     * @return string
-     */
-    public function getHtmlLogs(): string
-    {
-        return Splash::log()->getHtmlLog(true);
     }
 
     /**

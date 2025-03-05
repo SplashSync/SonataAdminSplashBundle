@@ -1,0 +1,47 @@
+
+<div class="box box-primary">
+    <div class="box-body ">
+
+        <div class="info-box no-margin">
+
+            <span class="info-box-icon bg-orange-active">
+                <i class="fa fa-cogs text-default" aria-hidden="true"></i>                          
+            </span>
+
+            <div class="info-box-content">
+
+                <span class="info-box-text">
+                    WebService Configuration
+                </span>
+
+                <div class="progress">
+                    <div class="progress-bar" style="width: 0"></div>
+                </div>
+                <div class="progress-description">
+
+                    <table class="table table-bordered table-striped table-hover sonata-ba-list no-margin">
+                        <tbody>
+                            <tr>
+                                <td>Id</td>
+                                <td>{{ config.WsIdentifier | default('?') }}</td>
+                            </tr>
+                            <tr>
+                                <td>Key</td>
+                                <td>{{ config.WsEncryptionKey | default('?') }}</td>
+                            </tr>
+                            <tr>
+                                <td>Host</td>
+                                <td>{{ config.WsHost | default('?') }}</td>
+                            </tr>
+                            <tr>
+                                <td>Method</td>
+                                <td>{{ config.WsMethod | default('?') }}</td>
+                            </tr>
+                        </tbody>
+                    </table>                                
+
+                </div>
+            </div>
+        </div>                                
+    </div>
+</div>
