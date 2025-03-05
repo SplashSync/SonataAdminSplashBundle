@@ -90,7 +90,6 @@ class ConfigurationController extends CRUDController
             'action' => 'list',
             'admin' => $this->admin,
             'profile' => $connector->getProfile(),
-            'log' => Splash::log()->GetHtmlLog(true),
             'connector' => $connector,
             'configuration' => $this->getObjectsManager()->getConfiguration(),
             'informations' => isset($informations) ? $informations : new ArrayObject(array()),

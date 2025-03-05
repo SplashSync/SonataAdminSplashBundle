@@ -95,7 +95,6 @@ class ObjectsController extends CRUDController
             'admin' => $this->admin,
             'datagrid' => $dataGrid,
             'form' => $formView,
-            'log' => Splash::log()->GetHtmlLog(true),
             'objects' => $this->getObjectsManager()->getObjectsDefinition(),
             'fields' => $this->getObjectsManager()->getObjectFields(),
             'csrf_token' => $this->getCsrfToken('sonata.batch')

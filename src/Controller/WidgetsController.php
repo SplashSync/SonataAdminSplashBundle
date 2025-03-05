@@ -15,10 +15,12 @@
 
 namespace Splash\Admin\Controller;
 
+use BadPixxel\Widgets\Dictionary\Widgets\RenderingModes;
+use BadPixxel\Widgets\Helpers\RenderingConfiguration;
+use BadPixxel\Widgets\Services\Widgets\WidgetsResolver;
 use Exception;
 use Sonata\AdminBundle\Controller\CRUDController;
 use Splash\Admin\Model\ObjectManagerAwareTrait;
-use Splash\Admin\Services\WidgetFactoryService;
 use Splash\Core\SplashCore as Splash;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,6 +32,11 @@ class WidgetsController extends CRUDController
 {
     use ObjectManagerAwareTrait;
 
+    public function __construct(
+        private readonly WidgetsResolver $widgetsResolver,
+    ) {
+    }
+
     /**
      * {@inheritDoc}
      *
@@ -37,26 +44,24 @@ class WidgetsController extends CRUDController
      */
     public function listAction(Request $request): Response
     {
+        $serverId = $this->getObjectsManager()->getServerId();
         //====================================================================//
-        // Setup Connector
-        $connector = $this->getConnector();
+        // Rendering Config for Sonata Admin
+        $configuration = new RenderingConfiguration(
+            mode: RenderingModes::BS3
+        );
         //====================================================================//
-        // Generate Splash Widgets
-        $widgets = array();
-        foreach ($connector->getAvailableWidgets() as $widgetType) {
-            $widgets[$widgetType] = array(
-                'service' => WidgetFactoryService::SERVICE,
-                'type' => $widgetType.'@'.$connector->getWebserviceId(),
-            );
-        }
+        // Get All Widget Configurators for this Server
+        $configurators = $this->widgetsResolver->findAll($serverId);
 
         //====================================================================//
         // Render Connector Profile Page
         return $this->render('@SplashAdmin/Widgets/list.html.twig', array(
             'action' => 'list',
             'admin' => $this->admin,
-            'profile' => $connector->getProfile(),
-            'Widgets' => $widgets,
+            'profile' => $this->getConnector()->getProfile(),
+            'configurators' => $configurators,
+            'configuration' => $configuration,
             'log' => Splash::log()->getHtmlLog(true),
         ));
     }

@@ -1,7 +1,10 @@
+parameters:
+    # Adds a fallback HOST if the env var is not set.
+    env(SPLASH_HOST): 'http://localhost'
 
 splash:
     ################################################################################
-    # List of Availables Connector Connections
+    # List of Available Connector Connections
     ################################################################################
     connections:
 
@@ -11,8 +14,9 @@ splash:
             id:                 ThisIsFakerWsId
             key:                ThisIsNotASecretKeyForFaker
             name:               Serveur 1 (Faker)
-            host:               "http://127.0.0.1:8000/ws/soap"
-            server_host:        "http://127.0.0.1:8000"
+            host:               "%env(SPLASH_HOST)%/ws/splash"
+            server_host:        "%env(SPLASH_HOST)%"
+            connector:          faker
 
         ########################################################################
         # Soap Server
@@ -20,15 +24,15 @@ splash:
             id:                 ThisIsSoapWsId
             key:                ThisIsNotASecretKeyForSoap
             name:               Serveur 2 (Soap)
-            host:               "http://127.0.0.1:8000/ws/splash"
-            server_host:        "http://127.0.0.1:8000"
+            host:               "%env(SPLASH_HOST)%/ws/splash"
+            server_host:        "%env(SPLASH_HOST)%"
             connector:          soap
             config:
                 Extended:           true
                 WsIdentifier:       ThisIsFakerWsId
                 WsEncryptionKey:    ThisIsNotASecretKeyForFaker
-                WsHost:             http://127.0.0.1:8000
-                WsPath:             /ws/splash
+                WsHost:             "%env(SPLASH_HOST)%"
+                WsPath:             "/ws/splash"
                 HttpAuth:           true
                 HttpUser:           PhpUnit
                 HttpPassword:       PhpUnitPwd

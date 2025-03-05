@@ -23,6 +23,21 @@ services:
         resource: '../../Filter'
         tags: ['sonata.admin.filter.type']
 
+    ################################################################################
+    # AutoWire for BadPixxel Widgets
+    Splash\Admin\Widgets\:
+        resource: '../../Widgets'
+
+    ################################################################################
+    # AutoWire for Services
+    Splash\Admin\Services\:
+        resource: '../../Services'
+
+    ########################################################################
+    # AutoWire for Twig Components
+    Splash\Admin\TwigComponent\:
+        resource: '../../TwigComponent'
+
     ########################################################################
     # Render Fields View 
     splash.admin.twig.extension:
@@ -35,12 +50,3 @@ services:
         class: Splash\Admin\EventSubscriber\EventsSubscriber
         arguments: [ '@splash.connectors.manager', "@doctrine.orm.entity_manager" ]
         tags:       ["kernel.event_subscriber"]
-
-    ########################################################################
-    # Splash Admin Widgets Factory Service
-    splash.admin.widget.factory:
-        class: Splash\Admin\Services\WidgetFactoryService
-        public: true
-        arguments: 
-            -   "@splash.widgets.factory"
-            -   "@splash.connectors.manager"

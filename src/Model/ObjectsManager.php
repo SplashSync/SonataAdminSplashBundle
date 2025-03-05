@@ -35,7 +35,7 @@ use stdClass;
 use Throwable;
 
 /**
- * @abstract Splas Objects Model Manager for Soinata Admin
+ * Splash Objects Model Manager for Sonata Admin
  *
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
