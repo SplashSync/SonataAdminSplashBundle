@@ -38,5 +38,6 @@ quality:php-8.1:
 toolkit:
     stage:        Builds
     trigger:
-        project:  SplashSync/Toolkit
+        project:  'SplashSync/Toolkit'
+        branch:   '3.0'
         strategy: depend
