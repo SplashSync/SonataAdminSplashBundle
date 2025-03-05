@@ -149,8 +149,9 @@ class RemoteNodeWidget extends AbstractWidget implements ConfigurableWidgetInter
     private function getConnector(): AbstractConnector
     {
         Assert::stringNotEmpty($wsId = $this->getParameter("webserviceId"));
+        Assert::notNull($connector = $this->manager->get($wsId));
 
-        return $this->manager->get($wsId);
+        return $connector;
     }
 
     /**
